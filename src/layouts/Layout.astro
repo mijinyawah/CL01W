@@ -65,7 +65,7 @@ const {} = Astro.props;
 		height: 0;
 	}
 
-	/* Sidebar — fluid width between 260px and 340px, ~30% of row */
+	/* Sidebar — fluid width, content scales to fit (no scroll, no clip) */
 	.sidebar {
 		flex: 0 0 30%;
 		min-width: 260px;
@@ -77,8 +77,8 @@ const {} = Astro.props;
 		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
-		overflow: hidden;
+		gap: clamp(12px, 2vh, 24px);
+		overflow: visible;
 	}
 
 	.sidebar__toggle {
@@ -98,7 +98,7 @@ const {} = Astro.props;
 	.sidebar__tagline {
 		font-family: var(--font-sidebar);
 		font-weight: 700;
-		font-size: clamp(20px, 2vw, 25px);
+		font-size: clamp(16px, 2vw, 22px);
 		line-height: 1.3;
 		color: var(--sidebar-text);
 		margin: 0;
@@ -108,8 +108,8 @@ const {} = Astro.props;
 	.sidebar__about {
 		font-family: var(--font-sidebar);
 		font-weight: 400;
-		font-size: 16px;
-		line-height: 24px;
+		font-size: 14px;
+		line-height: 22px;
 		color: var(--sidebar-text);
 		margin: 0;
 		max-width: 100%;
@@ -128,15 +128,15 @@ const {} = Astro.props;
 	.sidebar__connect {
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
+		gap: clamp(8px, 1.5vh, 16px);
 	}
 
 	.sidebar__nav a,
 	.sidebar__connect a {
 		font-family: var(--font-sidebar);
 		font-weight: 500;
-		font-size: 16px;
-		line-height: 28px;
+		font-size: 14px;
+		line-height: 24px;
 		color: var(--sidebar-nav);
 		text-decoration: none;
 	}
@@ -154,7 +154,7 @@ const {} = Astro.props;
 		min-height: 0;
 		background: var(--content-bg);
 		border-radius: var(--radius-container);
-		padding: 0;
+		padding: clamp(12px, 2vw, 24px);
 		overflow-y: auto;
 	}
 
@@ -180,6 +180,7 @@ const {} = Astro.props;
 	.content__inner {
 		position: relative;
 		z-index: 1;
+		padding: 0;
 	}
 
 	/* Footer */

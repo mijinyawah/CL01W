@@ -156,10 +156,18 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 		padding: 0 8px;
 	}
 
+	/* Single column when content area is narrow (~900px viewport with sidebar) */
+	@media (max-width: 900px) {
+		.projects-grid {
+			grid-template-columns: 1fr;
+			margin: 0;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.projects-grid {
 			grid-template-columns: 1fr;
-			margin: 0 24px;
+			margin: 0;
 		}
 	}
 </style>
