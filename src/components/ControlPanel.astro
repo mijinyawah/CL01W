@@ -190,15 +190,134 @@ interface Props {}
 		gridOpacity: 100,
 		gridGlow: 100,
 		strokeOpacity: 100,
+		strokeWidth: 0.5,
 		cellSize: 44,
 		highlightColor: '#001a2b',
 		highlightOpacity: 20,
-		customCursor: false,
+		customCursor: true,
 		cursorSize: 8,
 		cursorOpacity: 80,
 		trailLength: 8,
 		trailTightness: 50,
 		trailOpacity: 100,
+	};
+
+	/** HSL (h 0–360, s/l 0–100) to hex */
+	function hslToHex(h, s, l) {
+		s /= 100;
+		l /= 100;
+		const a = s * Math.min(l, 1 - l);
+		const f = (n) => {
+			const k = (n + h / 30) % 12;
+			return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+		};
+		return '#' + [f(0), f(8), f(4)].map((x) => Math.round(x * 255).toString(16).padStart(2, '0')).join('');
+	}
+
+	const rand = (min, max) => Math.random() * (max - min) + min;
+	const randInt = (min, max) => Math.floor(rand(min, max + 0.999));
+
+	/** Pick HSL from range arrays [min, max] */
+	function hslFromRange(hRange, sRange, lRange) {
+		return hslToHex(randInt(hRange[0], hRange[1]), randInt(sRange[0], sRange[1]), randInt(lRange[0], lRange[1]));
+	}
+
+	/** Map opacity 0.4–1.0 to stored 0–100 */
+	function opacityToStored(o) {
+		return Math.round(Math.max(0, Math.min(100, ((o - 0.4) / 0.6) * 100)));
+	}
+
+	const MOODS = {
+		neon: {
+			stroke: { h: [170, 320], s: [90, 100], l: [50, 70], opacity: [0.7, 1.0] },
+			bg: { h: [220, 280], s: [30, 60], l: [5, 15] },
+			trail: { h: [150, 330], s: [90, 100], l: [55, 75], opacity: [0.7, 1.0] },
+			highlight: { h: [160, 300], s: [80, 100], l: [45, 65] },
+			trailLength: [15, 30],
+			strokeWidth: [1, 2],
+			cursorSize: [8, 16],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [40, 80],
+			gridOpacity: [80, 100],
+			gridGlow: [70, 100],
+			cellSize: [24, 40],
+			highlightOpacity: [40, 80],
+		},
+		midnight: {
+			stroke: { h: [200, 270], s: [60, 90], l: [40, 65], opacity: [0.5, 0.9] },
+			bg: { h: [220, 250], s: [40, 70], l: [8, 20] },
+			trail: { h: [200, 280], s: [70, 100], l: [50, 70], opacity: [0.6, 0.9] },
+			highlight: { h: [210, 260], s: [60, 90], l: [35, 55] },
+			trailLength: [10, 25],
+			strokeWidth: [0.5, 1.5],
+			cursorSize: [6, 14],
+			cursorOpacity: [0.6, 0.9],
+			trailTightness: [30, 70],
+			gridOpacity: [70, 100],
+			gridGlow: [50, 90],
+			cellSize: [20, 38],
+			highlightOpacity: [30, 70],
+		},
+		ember: {
+			stroke: { h: [0, 45], s: [80, 100], l: [45, 65], opacity: [0.6, 1.0] },
+			bg: { h: [10, 30], s: [40, 70], l: [8, 18] },
+			trail: { h: [20, 50], s: [85, 100], l: [50, 70], opacity: [0.7, 1.0] },
+			highlight: { h: [15, 40], s: [75, 100], l: [40, 60] },
+			trailLength: [12, 25],
+			strokeWidth: [1, 2],
+			cursorSize: [8, 18],
+			cursorOpacity: [0.6, 1.0],
+			trailTightness: [35, 75],
+			gridOpacity: [75, 100],
+			gridGlow: [60, 100],
+			cellSize: [22, 42],
+			highlightOpacity: [35, 75],
+		},
+		matrix: {
+			stroke: { h: [110, 140], s: [80, 100], l: [40, 60], opacity: [0.7, 1.0] },
+			bg: { h: [120, 140], s: [20, 40], l: [3, 10] },
+			trail: { h: [115, 145], s: [85, 100], l: [45, 65], opacity: [0.8, 1.0] },
+			highlight: { h: [115, 135], s: [70, 100], l: [35, 55] },
+			trailLength: [20, 30],
+			strokeWidth: [0.5, 1],
+			cursorSize: [6, 12],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [50, 90],
+			gridOpacity: [80, 100],
+			gridGlow: [40, 80],
+			cellSize: [20, 36],
+			highlightOpacity: [40, 80],
+		},
+		vapor: {
+			stroke: { h: [270, 340], s: [70, 100], l: [55, 75], opacity: [0.6, 0.9] },
+			bg: { h: [260, 300], s: [30, 60], l: [10, 22] },
+			trail: { h: [160, 200], s: [70, 100], l: [55, 70], opacity: [0.6, 0.9] },
+			highlight: { h: [280, 320], s: [60, 95], l: [50, 70] },
+			trailLength: [15, 28],
+			strokeWidth: [1, 2],
+			cursorSize: [10, 20],
+			cursorOpacity: [0.6, 0.9],
+			trailTightness: [20, 60],
+			gridOpacity: [70, 100],
+			gridGlow: [50, 90],
+			cellSize: [24, 44],
+			highlightOpacity: [35, 70],
+		},
+		mono: {
+			stroke: { h: [0, 0], s: [0, 5], l: [70, 100], opacity: [0.6, 1.0] },
+			bg: { h: [0, 0], s: [0, 5], l: [2, 8] },
+			trail: { h: [0, 0], s: [0, 5], l: [80, 100], opacity: [0.7, 1.0] },
+			highlight: { h: [0, 0], s: [0, 10], l: [60, 90] },
+			trailLength: [10, 20],
+			strokeWidth: [1, 2],
+			cursorSize: [6, 12],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [40, 80],
+			gridOpacity: [85, 100],
+			gridGlow: [30, 70],
+			cellSize: [28, 44],
+			highlightOpacity: [40, 80],
+		},
 	};
 
 	function load() {
@@ -221,12 +340,29 @@ interface Props {}
 		document.body.style.setProperty('--page-bg', hex);
 	}
 
-	function randomHex() {
-		return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
-	}
+	function runRandomize(settings) {
+		const moodNames = Object.keys(MOODS);
+		const mood = MOODS[moodNames[randInt(0, moodNames.length - 1)]];
+		const m = mood;
 
-	function randomInt(min, max) {
-		return Math.floor(Math.random() * (max - min + 1)) + min;
+		settings.strokeColor = hslFromRange(m.stroke.h, m.stroke.s, m.stroke.l);
+		settings.strokeOpacity = opacityToStored(rand(m.stroke.opacity[0], m.stroke.opacity[1]));
+		settings.strokeWidth = Math.round(rand(m.strokeWidth[0], m.strokeWidth[1]) * 10) / 10;
+		settings.pageBg = hslFromRange(m.bg.h, m.bg.s, m.bg.l);
+		settings.cursorFill = hslFromRange(m.trail.h, m.trail.s, m.trail.l);
+		settings.highlightColor = hslFromRange(m.highlight.h, m.highlight.s, m.highlight.l);
+
+		settings.trailLength = randInt(m.trailLength[0], m.trailLength[1]);
+		settings.trailOpacity = randInt(Math.round(m.trail.opacity[0] * 100), Math.round(m.trail.opacity[1] * 100));
+		settings.trailTightness = randInt(m.trailTightness[0], m.trailTightness[1]);
+		settings.cursorSize = randInt(m.cursorSize[0], m.cursorSize[1]);
+		settings.cursorOpacity = randInt(Math.round(m.cursorOpacity[0] * 100), Math.round(m.cursorOpacity[1] * 100));
+		settings.customCursor = true;
+
+		settings.gridOpacity = randInt(m.gridOpacity[0], m.gridOpacity[1]);
+		settings.gridGlow = randInt(m.gridGlow[0], m.gridGlow[1]);
+		settings.cellSize = randInt(m.cellSize[0], m.cellSize[1]);
+		settings.highlightOpacity = randInt(m.highlightOpacity[0], m.highlightOpacity[1]);
 	}
 
 	function init() {
@@ -252,18 +388,15 @@ interface Props {}
 		const randomizeBtn = document.getElementById('randomize-grid');
 		if (randomizeBtn) {
 			randomizeBtn.addEventListener('click', () => {
-				settings.gridOpacity = randomInt(0, 100);
-				settings.gridGlow = randomInt(0, 100);
-				settings.strokeOpacity = randomInt(0, 100);
-				settings.cellSize = randomInt(16, 48);
-				settings.highlightColor = randomHex();
-				settings.highlightOpacity = randomInt(0, 100);
-				settings.customCursor = Math.random() > 0.5;
-				settings.cursorSize = randomInt(4, 24);
-				settings.cursorOpacity = randomInt(0, 100);
-				settings.trailLength = randomInt(0, 50);
-				settings.trailTightness = randomInt(0, 100);
-				settings.trailOpacity = randomInt(0, 100);
+				runRandomize(settings);
+				// Sync color inputs so pickers show new values
+				const strokeInput = document.getElementById('stroke-color');
+				const pageBgInput = document.getElementById('page-bg');
+				const cursorInput = document.getElementById('cursor-fill');
+				if (strokeInput) strokeInput.value = settings.strokeColor;
+				if (pageBgInput) pageBgInput.value = settings.pageBg;
+				if (cursorInput) cursorInput.value = settings.cursorFill;
+				applyPageBg(settings.pageBg);
 				save(settings);
 			});
 		}

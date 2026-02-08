@@ -71,7 +71,6 @@ interface Props {}
 
 <script>
 	const DECAY = 0.95;
-	const GRID_LINE_WIDTH = 0.5;
 	const MOBILE_BREAKPOINT = 800;
 	const STORAGE_KEY = 'cl01w-control';
 
@@ -92,6 +91,7 @@ interface Props {}
 					gridGlow: Number(p.gridGlow) ?? 100,
 					strokeColor: p.strokeColor || '#ffffff',
 					strokeOpacity: Math.min(100, Math.max(0, Number(p.strokeOpacity) ?? 100)),
+					strokeWidth: Math.min(2, Math.max(0.5, Number(p.strokeWidth) ?? 0.5)),
 					highlightColor: p.highlightColor || '#001a2b',
 					highlightOpacity: Math.min(100, Math.max(0, Number(p.highlightOpacity) ?? 20)),
 				};
@@ -103,6 +103,7 @@ interface Props {}
 			gridGlow: 100,
 			strokeColor: '#ffffff',
 			strokeOpacity: 100,
+			strokeWidth: 0.5,
 			highlightColor: '#001a2b',
 			highlightOpacity: 20,
 		};
@@ -150,11 +151,11 @@ interface Props {}
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = settings.gridOpacity / 100;
 
-			// Stroke color (manual) + opacity (randomizable)
+			// Stroke: color + opacity 0.4–1.0 + width (randomizable)
 			const [sr, sg, sb] = hexToRgb(settings.strokeColor);
-			const strokeAlpha = 0.05 + (settings.strokeOpacity / 100) * 0.25;
+			const strokeAlpha = 0.4 + (settings.strokeOpacity / 100) * 0.6;
 			ctx.strokeStyle = `rgba(${sr}, ${sg}, ${sb}, ${strokeAlpha})`;
-			ctx.lineWidth = GRID_LINE_WIDTH;
+			ctx.lineWidth = settings.strokeWidth;
 
 			const cols = Math.ceil(width / cellSize) + 1;
 			const rows = Math.ceil(height / cellSize) + 1;
