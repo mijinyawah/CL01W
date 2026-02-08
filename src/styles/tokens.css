@@ -1,0 +1,45 @@
+/**
+ * Design system tokens (from Figma wireframes)
+ */
+
+:root {
+	/* Typography */
+	--font-pixel: 'Tiny5', monospace; /* article titles, 48px/52px */
+	--font-body: 'Roboto', sans-serif; /* body text, 17px/28px */
+	--font-sidebar: system-ui, sans-serif; /* sidebar text, placeholder for Neue Einstellung */
+
+	/* Colors — Sidebar (light) */
+	--sidebar-bg: #ffffff;
+	--sidebar-text: #001a2b;
+	--sidebar-nav: rgba(0, 0, 0, 0.44);
+	--sidebar-divider: #d9d9d9;
+
+	/* Colors — Content (dark) */
+	--content-bg: #0d1316;
+	--content-title: rgba(255, 255, 255, 0.8);
+	--content-heading: rgba(215, 223, 228, 0.8);
+	--content-body: rgba(209, 224, 235, 0.4);
+	--content-caption: #97d2ff;
+
+	/* Colors — Components */
+	--snippet-bg: rgba(7, 81, 135, 0.19);
+	--snippet-border: #aaaaaa;
+	--codeblock-bg: #0c1e2b;
+	--meta-border: #acb8bf;
+	--meta-text: rgba(215, 223, 228, 0.8);
+
+	/* Colors — Interactive effects */
+	--grid-line: rgba(255, 255, 255, 0.06);
+	--grid-highlight: rgba(45, 212, 160, 0.3);
+	--cursor-trail: #2dd4a0;
+	--glow-color: rgba(45, 212, 160, 0.15);
+
+	/* Spacing */
+	--page-padding: 56px;
+	--nav-content-gap: 20px;
+	--nav-width: 340px;
+	--content-width: 770px;
+	--content-max: 720px;
+	--radius-container: 20px;
+	--radius-card: 15px;
+}

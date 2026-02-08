@@ -1,0 +1,325 @@
+---
+import InteractiveGrid from '../components/InteractiveGrid.astro';
+
+interface Props {}
+
+const {} = Astro.props;
+---
+
+<div class="base-layout">
+	<main class="base-layout__main">
+		<aside class="sidebar">
+			<input type="checkbox" id="nav-toggle" class="sidebar__toggle" aria-hidden="true" />
+			<div class="sidebar__header">
+				<p class="sidebar__tagline">
+					A human and an AI named Claude built this website as an experiment.
+				</p>
+				<label for="nav-toggle" class="sidebar__menu-btn" aria-label="Toggle menu">
+					<span class="sidebar__menu-btn-icon"></span>
+				</label>
+			</div>
+			<p class="sidebar__about">
+				I'm a brand and mograph designer who likes to experiment with new mediums.
+			</p>
+			<hr class="sidebar__divider" />
+			<nav class="sidebar__nav" aria-label="Main">
+				<a href="/">Home</a>
+				<a href="/projects/">Projects</a>
+				<a href="/articles/">Articles</a>
+			</nav>
+			<hr class="sidebar__divider" />
+			<div class="sidebar__connect">
+				<a href="#">portfolio</a>
+				<a href="#">bluesky</a>
+			</div>
+		</aside>
+		<div class="content">
+			<InteractiveGrid />
+			<div class="content__inner">
+				<slot />
+			</div>
+		</div>
+	</main>
+	<footer class="footer">
+		©2026 Hafsah Mijinyawa
+	</footer>
+</div>
+
+<style>
+	.base-layout {
+		min-height: 100vh;
+		padding: 0 var(--page-padding);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.base-layout__main {
+		display: flex;
+		gap: var(--nav-content-gap);
+		padding-top: 83px;
+		flex: 1;
+	}
+
+	/* Sidebar */
+	.sidebar {
+		width: var(--nav-width);
+		flex-shrink: 0;
+		background: var(--sidebar-bg);
+		border-radius: var(--radius-container);
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 44px;
+	}
+
+	.sidebar__toggle {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.sidebar__header {
+		display: block;
+	}
+
+	.sidebar__menu-btn {
+		display: none;
+	}
+
+	.sidebar__tagline {
+		font-family: var(--font-sidebar);
+		font-weight: 700;
+		font-size: 25px;
+		line-height: 1.3;
+		color: var(--sidebar-text);
+		margin: 0;
+		max-width: 280px;
+	}
+
+	.sidebar__about {
+		font-family: var(--font-sidebar);
+		font-weight: 400;
+		font-size: 20px;
+		line-height: 1.6;
+		color: var(--sidebar-text);
+		margin: 0;
+		max-width: 300px;
+	}
+
+	.sidebar__divider {
+		width: 300px;
+		max-width: 100%;
+		height: 1px;
+		margin: 0;
+		border: none;
+		background: var(--sidebar-divider);
+	}
+
+	.sidebar__nav,
+	.sidebar__connect {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.sidebar__nav a,
+	.sidebar__connect a {
+		font-family: var(--font-sidebar);
+		font-weight: 500;
+		font-size: 20px;
+		line-height: 1.6;
+		color: var(--sidebar-nav);
+		text-decoration: none;
+	}
+
+	.sidebar__nav a:hover,
+	.sidebar__connect a:hover {
+		text-decoration: underline;
+	}
+
+	/* Content area */
+	.content {
+		position: relative;
+		width: var(--content-width);
+		flex-shrink: 0;
+		background: var(--content-bg);
+		border-radius: var(--radius-container);
+		padding: 0;
+	}
+
+	.content__inner {
+		position: relative;
+		z-index: 1;
+	}
+
+	/* Footer */
+	.footer {
+		padding: 50px 50px 40px;
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 1.6;
+		color: rgba(0, 0, 0, 0.4);
+	}
+
+	/* ---------- Tablet (768px - 1024px) ---------- */
+	@media (max-width: 1024px) {
+		.base-layout {
+			padding: 0 var(--page-padding);
+		}
+
+		.base-layout__main {
+			flex-direction: column;
+			padding-top: 40px;
+		}
+
+		.sidebar {
+			width: 100%;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: 24px;
+			padding: 16px 20px;
+		}
+
+		.sidebar__header {
+			flex: 0 1 auto;
+		}
+
+		.sidebar__tagline {
+			max-width: none;
+			font-size: 22px;
+		}
+
+		.sidebar__about,
+		.sidebar__connect,
+		.sidebar__divider {
+			display: none;
+		}
+
+		.sidebar__nav {
+			flex-direction: row;
+			gap: 24px;
+		}
+
+		.content {
+			width: 100%;
+			max-width: none;
+		}
+	}
+
+	/* ---------- Mobile (<768px) ---------- */
+	@media (max-width: 767px) {
+		.base-layout {
+			padding: 0 16px;
+		}
+
+		.base-layout__main {
+			padding-top: 24px;
+		}
+
+		.sidebar {
+			flex-direction: column;
+			align-items: stretch;
+			padding: 16px;
+		}
+
+		.sidebar__header {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.sidebar__tagline {
+			font-size: 18px;
+			flex: 1;
+			min-width: 0;
+		}
+
+		.sidebar__menu-btn {
+			display: flex;
+			flex-shrink: 0;
+			align-items: center;
+			justify-content: center;
+			width: 44px;
+			height: 44px;
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+			appearance: none;
+		}
+
+		.sidebar__menu-btn-icon {
+			display: block;
+			width: 24px;
+			height: 18px;
+			position: relative;
+			background: var(--sidebar-text);
+			background-clip: content-box;
+			background-origin: content-box;
+			padding: 8px 0;
+			box-sizing: border-box;
+		}
+
+		.sidebar__menu-btn-icon::before,
+		.sidebar__menu-btn-icon::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 2px;
+			background: var(--sidebar-text);
+			border-radius: 1px;
+		}
+
+		.sidebar__menu-btn-icon::before {
+			top: 0;
+		}
+
+		.sidebar__menu-btn-icon::after {
+			bottom: 0;
+		}
+
+		.sidebar__about,
+		.sidebar__connect,
+		.sidebar__divider {
+			display: none;
+		}
+
+		.sidebar__nav {
+			display: none;
+			flex-direction: column;
+			gap: 16px;
+			padding-top: 16px;
+			border-top: 1px solid var(--sidebar-divider);
+		}
+
+		.sidebar__toggle:checked ~ .sidebar__nav {
+			display: flex;
+		}
+
+		.content {
+			width: 100%;
+			max-width: none;
+		}
+
+		.content__inner {
+			padding: 24px;
+		}
+
+		.footer {
+			padding: 24px 16px 32px;
+		}
+	}
+
+	/* Article titles scale (used by content inside slot) */
+	@media (max-width: 767px) {
+		.content :global(h1),
+		.content :global(.article-title) {
+			font-size: 32px;
+		}
+	}
+</style>

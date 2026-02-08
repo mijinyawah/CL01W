@@ -1,0 +1,145 @@
+---
+interface Props {}
+---
+
+<div class="interactive-grid" aria-hidden="true">
+	<canvas id="grid-canvas" class="interactive-grid__canvas"></canvas>
+</div>
+
+<style>
+	.interactive-grid {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		border-radius: var(--radius-container);
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.interactive-grid__canvas {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+<script>
+	const CELL_SIZE = 44;
+	const DECAY = 0.95;
+	const GRID_LINE_WIDTH = 0.5;
+
+	function getToken(name: string): string {
+		return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '';
+	}
+
+	function init() {
+		const gridEl = document.querySelector('.interactive-grid');
+		if (!gridEl) return;
+		const contentArea = gridEl.closest('.content') as HTMLElement;
+		if (!contentArea) return;
+
+		const canvas = gridEl.querySelector<HTMLCanvasElement>('#grid-canvas');
+		if (!canvas) return;
+
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		const cellBrightness = new Map<string, number>();
+		let mouseCell: { x: number; y: number } | null = null;
+		let rafId: number;
+		let width = 0;
+		let height = 0;
+		let dpr = 1;
+
+		function setCanvasSize() {
+			dpr = window.devicePixelRatio || 1;
+			width = contentArea.offsetWidth;
+			height = contentArea.offsetHeight;
+			canvas.width = Math.round(width * dpr);
+			canvas.height = Math.round(height * dpr);
+			canvas.style.width = `${width}px`;
+			canvas.style.height = `${height}px`;
+		}
+
+		function cellKey(x: number, y: number): string {
+			return `${x},${y}`;
+		}
+
+		function draw() {
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+			const cols = Math.ceil(width / CELL_SIZE) + 1;
+			const rows = Math.ceil(height / CELL_SIZE) + 1;
+
+			const gridColor = getToken('--grid-line') || 'rgba(255, 255, 255, 0.06)';
+			ctx.strokeStyle = gridColor;
+			ctx.lineWidth = GRID_LINE_WIDTH;
+			ctx.beginPath();
+			for (let i = 0; i <= cols; i++) {
+				const x = i * CELL_SIZE;
+				ctx.moveTo(x, 0);
+				ctx.lineTo(x, height);
+			}
+			for (let i = 0; i <= rows; i++) {
+				const y = i * CELL_SIZE;
+				ctx.moveTo(0, y);
+				ctx.lineTo(width, y);
+			}
+			ctx.stroke();
+
+			const keysToDelete: string[] = [];
+			cellBrightness.forEach((value, key) => {
+				const next = value * DECAY;
+				if (next < 0.01) keysToDelete.push(key);
+				else cellBrightness.set(key, next);
+			});
+			keysToDelete.forEach((k) => cellBrightness.delete(k));
+
+			if (mouseCell !== null) {
+				cellBrightness.set(cellKey(mouseCell.x, mouseCell.y), 1.0);
+			}
+
+			// Highlight color from token (max alpha 0.3), scaled by brightness
+			cellBrightness.forEach((brightness, key) => {
+				if (brightness <= 0) return;
+				const [x, y] = key.split(',').map(Number);
+				const px = x * CELL_SIZE;
+				const py = y * CELL_SIZE;
+				ctx.fillStyle = `rgba(45, 212, 160, ${0.3 * brightness})`;
+				ctx.fillRect(px + 0.5, py + 0.5, CELL_SIZE - 0.5, CELL_SIZE - 0.5);
+			});
+
+			rafId = requestAnimationFrame(draw);
+		}
+
+		function onMouseMove(e: MouseEvent) {
+			const rect = contentArea.getBoundingClientRect();
+			const offsetX = e.clientX - rect.left;
+			const offsetY = e.clientY - rect.top;
+			if (offsetX >= 0 && offsetX < width && offsetY >= 0 && offsetY < height) {
+				mouseCell = {
+					x: Math.floor(offsetX / CELL_SIZE),
+					y: Math.floor(offsetY / CELL_SIZE),
+				};
+			} else {
+				mouseCell = null;
+			}
+		}
+
+		function onMouseLeave() {
+			mouseCell = null;
+		}
+
+		setCanvasSize();
+		draw();
+
+		contentArea.addEventListener('mousemove', onMouseMove, { passive: true });
+		contentArea.addEventListener('mouseleave', onMouseLeave);
+
+		window.addEventListener('resize', setCanvasSize);
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>

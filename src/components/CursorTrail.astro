@@ -1,0 +1,137 @@
+---
+interface Props {}
+---
+
+<div class="cursor-trail" aria-hidden="true">
+	<div class="cursor-trail__dot" data-dot="0"></div>
+	<div class="cursor-trail__dot" data-dot="1"></div>
+	<div class="cursor-trail__dot" data-dot="2"></div>
+	<div class="cursor-trail__dot" data-dot="3"></div>
+	<div class="cursor-trail__dot" data-dot="4"></div>
+	<div class="cursor-trail__dot" data-dot="5"></div>
+	<div class="cursor-trail__dot" data-dot="6"></div>
+	<div class="cursor-trail__dot" data-dot="7"></div>
+</div>
+
+<style is:global>
+	/* Radial glow that follows the mouse */
+	body {
+		position: relative;
+	}
+
+	body::after {
+		content: '';
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		background: radial-gradient(
+			circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+			var(--glow-color, rgba(45, 212, 160, 0.15)) 0%,
+			transparent 300px
+		);
+		z-index: 9998;
+	}
+</style>
+
+<style>
+	.cursor-trail {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 9999;
+	}
+
+	.cursor-trail__dot {
+		position: absolute;
+		border-radius: 50%;
+		background: var(--cursor-trail, #2dd4a0);
+		transform: translate(-50%, -50%);
+		left: 0;
+		top: 0;
+	}
+</style>
+
+<script>
+	const DOT_COUNT = 8;
+	const LERP_START = 0.15;
+	const LERP_END = 0.08;
+	const SIZE_START = 6;
+	const SIZE_END = 2;
+	const OPACITY_START = 0.9;
+	const OPACITY_END = 0.2;
+
+	// Lerp factor for each dot (dot i follows dot i-1 with this factor)
+	function getLerpFactor(index: number): number {
+		if (index <= 0) return 1;
+		const t = (index - 1) / (DOT_COUNT - 2); // 0..1 from dot 1 to dot 7
+		return LERP_START + (LERP_END - LERP_START) * t;
+	}
+
+	function getSize(index: number): number {
+		const t = index / (DOT_COUNT - 1);
+		return SIZE_START + (SIZE_END - SIZE_START) * t;
+	}
+
+	function getOpacity(index: number): number {
+		const t = index / (DOT_COUNT - 1);
+		return OPACITY_START + (OPACITY_END - OPACITY_START) * t;
+	}
+
+	function init() {
+		const container = document.querySelector('.cursor-trail');
+		if (!container) return;
+
+		const dots = container.querySelectorAll<HTMLElement>('.cursor-trail__dot');
+		if (dots.length !== DOT_COUNT) return;
+
+		// Positions: dots[i] = { x, y }
+		const positions = Array.from({ length: DOT_COUNT }, () => ({ x: 0, y: 0 }));
+		let mouseX = 0;
+		let mouseY = 0;
+		let hasMouse = false;
+
+		// Set initial styles for size and opacity
+		dots.forEach((el, i) => {
+			const size = getSize(i);
+			const opacity = getOpacity(i);
+			el.style.width = `${size}px`;
+			el.style.height = `${size}px`;
+			el.style.opacity = String(opacity);
+		});
+
+		function tick() {
+			// Dot 0 follows mouse directly
+			positions[0].x = mouseX;
+			positions[0].y = mouseY;
+
+			// Dots 1..7 follow the previous dot with lerp
+			for (let i = 1; i < DOT_COUNT; i++) {
+				const lerp = getLerpFactor(i);
+				positions[i].x += (positions[i - 1].x - positions[i].x) * lerp;
+				positions[i].y += (positions[i - 1].y - positions[i].y) * lerp;
+			}
+
+			// Update DOM
+			dots.forEach((el, i) => {
+				el.style.left = `${positions[i].x}px`;
+				el.style.top = `${positions[i].y}px`;
+			});
+
+			requestAnimationFrame(tick);
+		}
+
+		function onMouseMove(e: MouseEvent) {
+			mouseX = e.clientX;
+			mouseY = e.clientY;
+			hasMouse = true;
+			document.body.style.setProperty('--mouse-x', `${mouseX}px`);
+			document.body.style.setProperty('--mouse-y', `${mouseY}px`);
+		}
+
+		// Start with dots off-screen until first move (optional: could init to center)
+		requestAnimationFrame(tick);
+		document.addEventListener('mousemove', onMouseMove, { passive: true });
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>
