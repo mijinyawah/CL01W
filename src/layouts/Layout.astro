@@ -74,11 +74,11 @@ const {} = Astro.props;
 		min-height: 0;
 		background: var(--sidebar-bg);
 		border-radius: var(--radius-container);
-		padding: clamp(16px, 1.5vw, 20px);
+		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 36px;
-		overflow-y: auto;
+		gap: 24px;
+		overflow: hidden;
 	}
 
 	.sidebar__toggle {
@@ -108,8 +108,8 @@ const {} = Astro.props;
 	.sidebar__about {
 		font-family: var(--font-sidebar);
 		font-weight: 400;
-		font-size: clamp(16px, 1.5vw, 20px);
-		line-height: 1.6;
+		font-size: 16px;
+		line-height: 24px;
 		color: var(--sidebar-text);
 		margin: 0;
 		max-width: 100%;
@@ -135,8 +135,8 @@ const {} = Astro.props;
 	.sidebar__connect a {
 		font-family: var(--font-sidebar);
 		font-weight: 500;
-		font-size: clamp(16px, 1.5vw, 20px);
-		line-height: 1.6;
+		font-size: 16px;
+		line-height: 28px;
 		color: var(--sidebar-nav);
 		text-decoration: none;
 	}
@@ -144,15 +144,6 @@ const {} = Astro.props;
 	.sidebar__nav a:hover,
 	.sidebar__connect a:hover {
 		text-decoration: underline;
-	}
-
-	.sidebar::-webkit-scrollbar {
-		width: 4px;
-	}
-
-	.sidebar::-webkit-scrollbar-thumb {
-		background: var(--sidebar-divider);
-		border-radius: 2px;
 	}
 
 	/* Content area — takes remaining space, independent scrollbox */
