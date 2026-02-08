@@ -2,6 +2,13 @@
  * Design system tokens (from Figma wireframes)
  */
 
+/* CSS reset: padding/border contained within width so layout doesn't overflow viewport */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 :root {
 	/* Typography */
 	--font-pixel: 'Tiny5', monospace; /* article titles, 48px/52px */
