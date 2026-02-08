@@ -5,6 +5,8 @@ import { getCollection, getEntry } from 'astro:content';
 import TwoColumn from '../../components/TwoColumn.astro';
 import ImageBlock from '../../components/ImageBlock.astro';
 import Callout from '../../components/Callout.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import Lightbox from '../../components/Lightbox.astro';
 
 export async function getStaticPaths() {
 	const articles = await getCollection('articles', (e) => !e.data.draft);
@@ -56,9 +58,11 @@ function formatDate(d: Date): string {
 						TwoColumn,
 						ImageBlock,
 						Callout,
+						VideoEmbed,
 					}}
 				/>
 			</div>
+			<Lightbox />
 
 			<footer class="article__footer">
 				<div class="article__meta">
@@ -184,7 +188,7 @@ function formatDate(d: Date): string {
 	}
 
 	.article__body :global(img) {
-		border-radius: var(--radius-container);
+		cursor: pointer;
 	}
 
 	.article__footer {
@@ -222,5 +226,29 @@ function formatDate(d: Date): string {
 		opacity: 0.4;
 		cursor: default;
 		pointer-events: none;
+	}
+
+	@media (max-width: 800px) {
+		.article__header {
+			padding: 0 24px 32px;
+		}
+
+		.article__body :global(h2) {
+			padding: 0 24px;
+		}
+
+		.article__body :global(p) {
+			padding: 0 24px;
+		}
+
+		.article__body :global(pre) {
+			margin: 24px 24px;
+			max-width: calc(100% - 48px);
+			overflow-x: auto;
+		}
+
+		.article__footer {
+			padding: 40px 24px 0;
+		}
 	}
 </style>

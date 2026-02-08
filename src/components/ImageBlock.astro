@@ -9,7 +9,9 @@ const { src, alt, caption } = Astro.props;
 ---
 
 <figure class="image-block">
-	<img class="image-block__img" src={src} alt={alt} />
+	<button type="button" class="image-block__trigger" data-lightbox data-lightbox-src={src} data-lightbox-type="image" data-lightbox-alt={alt}>
+		<img class="image-block__img" src={src} alt={alt} />
+	</button>
 	{caption && <figcaption class="image-block__caption">{caption}</figcaption>}
 </figure>
 
@@ -19,12 +21,32 @@ const { src, alt, caption } = Astro.props;
 		text-align: center;
 	}
 
+	@media (max-width: 800px) {
+		.image-block {
+			margin: 0 24px;
+		}
+	}
+
+	.image-block__trigger {
+		display: block;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+		text-align: center;
+		width: 100%;
+	}
+
+	.image-block__trigger:hover .image-block__img {
+		opacity: 0.9;
+	}
+
 	.image-block__img {
 		display: block;
 		max-width: 100%;
 		height: auto;
-		border-radius: var(--radius-container);
 		margin: 0 auto;
+		transition: opacity 0.15s ease;
 	}
 
 	.image-block__caption {

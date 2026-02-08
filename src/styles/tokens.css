@@ -42,9 +42,9 @@
 	--cursor-trail: #2dd4a0;
 	--glow-color: rgba(45, 212, 160, 0.15);
 
-	/* Spacing */
-	--page-padding: 56px;
-	--nav-content-gap: 20px;
+	/* Spacing — snap to grid (cell = 44px in InteractiveGrid) */
+	--page-padding: 44px;
+	--nav-content-gap: 44px;
 	--nav-width: 340px;
 	--content-width: 770px;
 	--content-max: 720px;

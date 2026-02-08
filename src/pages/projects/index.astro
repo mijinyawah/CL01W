@@ -4,6 +4,9 @@ import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
+
+/** Editable subtitle for the projects page (replaces author byline) */
+const pageSubtitle = 'Experiments in motion, code, and AI';
 ---
 
 <BaseLayout title="Projects">
@@ -11,10 +14,7 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 		<div class="projects-page">
 			<header class="projects-header">
 				<h1 class="projects-title">Projects</h1>
-				<div class="projects-byline">
-					<span class="projects-byline__name">Hafsah M</span>
-					<span class="projects-byline__role">User</span>
-				</div>
+				<p class="projects-subtitle">{pageSubtitle}</p>
 			</header>
 
 			<div class="projects-grid">
@@ -60,7 +60,7 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 
 	.projects-header {
 		margin-bottom: 32px;
-		padding: 0 50px;
+		padding: 0 0;
 	}
 
 	.projects-title {
@@ -71,24 +71,12 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 		margin: 0 0 16px;
 	}
 
-	.projects-byline {
-		display: flex;
-		flex-direction: column;
-		gap: 0;
-	}
-
-	.projects-byline__name {
+	.projects-subtitle {
 		font-family: var(--font-body);
 		font-size: 13px;
-		line-height: 1.23;
-		color: var(--meta-text);
-	}
-
-	.projects-byline__role {
-		font-family: var(--font-body);
-		font-size: 13px;
-		line-height: 1.23;
+		line-height: 1.4;
 		color: var(--content-body);
+		margin: 0;
 	}
 
 	.projects-grid {
@@ -96,7 +84,7 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 		grid-template-columns: repeat(2, 1fr);
 		gap: 21px;
 		max-width: var(--content-max);
-		margin: 0 50px;
+		margin: 0;
 	}
 
 	.project-card {
@@ -117,7 +105,7 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 
 	.project-card__tag {
 		font-family: var(--font-body);
-		font-size: 12px;
+		font-size: 14px;
 		color: var(--content-caption);
 		margin-bottom: 8px;
 	}
@@ -125,14 +113,14 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 	.project-card__title {
 		font-family: var(--font-body);
 		font-weight: 500;
-		font-size: 18px;
+		font-size: 20px;
 		color: var(--content-heading);
 		margin: 0 0 12px;
 	}
 
 	.project-card__description {
 		font-family: var(--font-body);
-		font-size: 15px;
+		font-size: 16px;
 		line-height: 1.5;
 		color: var(--content-body);
 		margin: 0 0 16px;
@@ -165,6 +153,15 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 	}
 
 	@media (max-width: 800px) {
+		.projects-title {
+			font-size: 40px;
+			line-height: 1.2;
+		}
+
+		.projects-header {
+			padding: 0 24px;
+		}
+
 		.projects-grid {
 			grid-template-columns: 1fr;
 			margin: 0;
