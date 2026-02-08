@@ -35,7 +35,7 @@ const {} = Astro.props;
 					<svg class="sidebar__icon" width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 2v2H4v2h2v2H2v2h4v2h4v-2h2v-2H8V6h4V4H8V2z" /></svg>
 				</a>
 			</div>
-			<a href="javascript:void(0)" class="sidebar__control-link" id="control-panel-toggle" data-control-panel>Control panel</a>
+			<a href="javascript:void(0)" class="sidebar__control-link" id="control-panel-toggle" data-control-panel>try the control panel</a>
 			<p class="sidebar__copyright">©2026 Hafsah Mijinyawa</p>
 		</aside>
 		<div class="content">
@@ -66,7 +66,8 @@ const {} = Astro.props;
 		width: 100%;
 		min-width: 0;
 		gap: 0;
-		padding-top: var(--page-padding);
+		padding-top: 0;
+		padding-bottom: 0;
 		flex: 1;
 		min-height: 0;
 		/* Fixed app shell: main row fills remaining viewport */
@@ -80,7 +81,7 @@ const {} = Astro.props;
 		max-width: 352px;
 		align-self: stretch;
 		min-height: 0;
-		background: rgba(255, 255, 255, 0.25);
+		background: rgba(255, 255, 255, 0.50);
 		border-radius: var(--radius-container);
 		padding: 20px;
 		display: flex;
@@ -266,7 +267,7 @@ const {} = Astro.props;
 			height: auto;
 			min-height: 100vh;
 			overflow: visible;
-			padding: 0 16px;
+			padding: 0;
 		}
 
 		.base-layout__main {
@@ -426,24 +427,26 @@ const {} = Astro.props;
 			color: rgba(255, 255, 255, 0.8);
 		}
 
-		/* Content area: full width, visible below header without closing menu */
+		/* Content area: edge-to-edge dark navy, no side gaps */
 		.content {
 			width: 100%;
 			max-width: none;
 			min-height: 60vh;
 			flex: 1 1 auto;
 			overflow: visible;
-			padding: 24px;
+			margin: 0;
+			padding: 0;
+		}
+
+		/* Internal text padding so content doesn’t touch screen edges */
+		.content__inner {
+			padding: 16px 20px;
 		}
 
 		/* Tighter line-height on stacked */
 		.content :global(p),
 		.content :global(li) {
 			line-height: 1.4;
-		}
-
-		.content__inner {
-			padding: 0;
 		}
 
 		.footer {

@@ -30,12 +30,18 @@ const { title = 'Astro' } = Astro.props;
 
 		<title>{title}</title>
 		<style is:global>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
 			html {
 				scroll-behavior: smooth;
 			}
 
 			body {
-				background:rgb(222, 213, 234);
+				background: var(--page-bg, #ded5ea);
 			}
 
 			.base-layout-wrapper {
