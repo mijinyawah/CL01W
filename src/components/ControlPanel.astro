@@ -1,0 +1,279 @@
+---
+interface Props {}
+---
+
+<div id="control-panel" class="control-panel" role="dialog" aria-label="Control panel" aria-modal="true" hidden>
+	<div class="control-panel__backdrop" data-close-panel></div>
+	<div class="control-panel__card">
+		<div class="control-panel__header">
+			<h2 class="control-panel__title">Control panel</h2>
+			<button type="button" class="control-panel__close" data-close-panel aria-label="Close">×</button>
+		</div>
+		<div class="control-panel__body">
+			<fieldset class="control-panel__section">
+				<legend>Grid</legend>
+				<label class="control-panel__row">
+					<span>Opacity</span>
+					<input type="range" id="grid-opacity" min="0" max="100" value="100" data-setting="gridOpacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Glow</span>
+					<input type="range" id="grid-glow" min="0" max="100" value="100" data-setting="gridGlow" />
+				</label>
+				<label class="control-panel__row">
+					<span>Cell size (px)</span>
+					<input type="range" id="grid-cell-size" min="16" max="48" value="44" data-setting="cellSize" />
+					<output for="grid-cell-size" id="grid-cell-size-out">44</output>
+				</label>
+			</fieldset>
+			<fieldset class="control-panel__section">
+				<legend>Cursor</legend>
+				<label class="control-panel__row control-panel__row--toggle">
+					<input type="checkbox" id="cursor-custom" data-setting="customCursor" />
+					<span>Custom cursor</span>
+				</label>
+				<label class="control-panel__row">
+					<span>Size (px)</span>
+					<input type="range" id="cursor-size" min="4" max="24" value="8" data-setting="cursorSize" />
+				</label>
+				<label class="control-panel__row">
+					<span>Fill color</span>
+					<input type="color" id="cursor-fill" value="#2dd4a0" data-setting="cursorFill" />
+				</label>
+				<label class="control-panel__row">
+					<span>Fill opacity</span>
+					<input type="range" id="cursor-opacity" min="0" max="100" value="80" data-setting="cursorOpacity" />
+				</label>
+				<label class="control-panel__row control-panel__row--toggle">
+					<input type="checkbox" id="cursor-stroke" data-setting="cursorStroke" />
+					<span>Stroke</span>
+				</label>
+				<label class="control-panel__row">
+					<span>Stroke color</span>
+					<input type="color" id="cursor-stroke-color" value="#2dd4a0" data-setting="cursorStrokeColor" />
+				</label>
+				<label class="control-panel__row">
+					<span>Stroke width (px)</span>
+					<input type="range" id="cursor-stroke-width" min="1" max="4" value="1" data-setting="cursorStrokeWidth" />
+				</label>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+<style>
+	.control-panel {
+		position: fixed;
+		inset: 0;
+		z-index: 10001;
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-end;
+		padding: 20px;
+		pointer-events: none;
+	}
+
+	.control-panel[hidden] {
+		display: none !important;
+	}
+
+	.control-panel.is-open {
+		pointer-events: auto;
+	}
+
+	.control-panel__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.3);
+		cursor: pointer;
+	}
+
+	.control-panel__card {
+		position: relative;
+		width: 280px;
+		max-height: 85vh;
+		overflow-y: auto;
+		background: #0d1316;
+		border: 2px solid #2dd4a0;
+		padding: 20px;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+	}
+
+	.control-panel__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 16px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid rgba(45, 212, 160, 0.3);
+	}
+
+	.control-panel__title {
+		font-family: var(--font-sidebar);
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.9);
+		margin: 0;
+	}
+
+	.control-panel__close {
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+		line-height: 1;
+		color: rgba(255, 255, 255, 0.8);
+		background: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.control-panel__close:hover {
+		color: #2dd4a0;
+	}
+
+	.control-panel__section {
+		margin: 0 0 20px;
+		padding: 0;
+		border: none;
+	}
+
+	.control-panel__section legend {
+		font-family: var(--font-sidebar);
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: #2dd4a0;
+		margin-bottom: 10px;
+		padding: 0;
+	}
+
+	.control-panel__row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 10px;
+		font-family: var(--font-sidebar);
+		font-size: 13px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.control-panel__row span:first-child {
+		flex: 0 0 90px;
+	}
+
+	.control-panel__row input[type='range'] {
+		flex: 1;
+		min-width: 0;
+		accent-color: #2dd4a0;
+	}
+
+	.control-panel__row input[type='color'] {
+		width: 32px;
+		height: 28px;
+		padding: 0;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		cursor: pointer;
+	}
+
+	.control-panel__row--toggle {
+		cursor: pointer;
+	}
+
+	.control-panel__row--toggle input {
+		accent-color: #2dd4a0;
+	}
+
+	.control-panel__row output {
+		flex: 0 0 28px;
+		text-align: right;
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'cl01w-control';
+
+	const DEFAULTS = {
+		gridOpacity: 100,
+		gridGlow: 100,
+		cellSize: 44,
+		customCursor: false,
+		cursorSize: 8,
+		cursorFill: '#2dd4a0',
+		cursorOpacity: 80,
+		cursorStroke: false,
+		cursorStrokeColor: '#2dd4a0',
+		cursorStrokeWidth: 1,
+	};
+
+	function load() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const parsed = JSON.parse(raw);
+				return { ...DEFAULTS, ...parsed };
+			}
+		} catch (_) {}
+		return { ...DEFAULTS };
+	}
+
+	function save(settings) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+		window.dispatchEvent(new CustomEvent('cl01w-settings', { detail: settings }));
+	}
+
+	function init() {
+		const panel = document.getElementById('control-panel');
+		const toggle = document.getElementById('control-panel-toggle');
+		if (!panel || !toggle) return;
+
+		const settings = load();
+
+		// Bind inputs
+		panel.querySelectorAll('[data-setting]').forEach((input) => {
+			const key = input.dataset.setting;
+			if (key in settings) {
+				if (input.type === 'checkbox') input.checked = settings[key];
+				else if (input.type === 'range') input.value = settings[key];
+				else if (input.type === 'color') input.value = settings[key];
+			}
+			input.addEventListener('change', () => {
+				let val = input.type === 'checkbox' ? input.checked : input.value;
+				if (input.type === 'range') val = Number(val);
+				settings[key] = val;
+				save(settings);
+				const out = document.getElementById('grid-cell-size-out');
+				if (out && input.id === 'grid-cell-size') out.textContent = val;
+			});
+		});
+
+		const out = document.getElementById('grid-cell-size-out');
+		if (out) out.textContent = settings.cellSize;
+
+		function open() {
+			panel.hidden = false;
+			panel.classList.add('is-open');
+		}
+
+		function close() {
+			panel.hidden = true;
+			panel.classList.remove('is-open');
+		}
+
+		toggle?.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (panel.hidden) open();
+			else close();
+		});
+
+		panel.querySelectorAll('[data-close-panel]').forEach((el) => el.addEventListener('click', close));
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && panel.classList.contains('is-open')) close();
+		});
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>

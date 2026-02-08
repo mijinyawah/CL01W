@@ -1,0 +1,126 @@
+---
+interface Props {}
+---
+
+<div id="custom-cursor" class="custom-cursor" aria-hidden="true" hidden></div>
+
+<style is:global>
+	body[data-custom-cursor] .sidebar,
+	body[data-custom-cursor] .content {
+		cursor: none;
+	}
+</style>
+
+<style>
+	.custom-cursor {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 8px;
+		height: 8px;
+		pointer-events: none;
+		z-index: 9997;
+		transform: translate(-50%, -50%);
+		background: #2dd4a0;
+		opacity: 0.8;
+	}
+
+	.custom-cursor[hidden] {
+		display: none !important;
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'cl01w-control';
+
+	function getSettings() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const p = JSON.parse(raw);
+				return {
+					customCursor: !!p.customCursor,
+					cursorSize: Number(p.cursorSize) || 8,
+					cursorFill: p.cursorFill || '#2dd4a0',
+					cursorOpacity: Number(p.cursorOpacity) ?? 80,
+					cursorStroke: !!p.cursorStroke,
+					cursorStrokeColor: p.cursorStrokeColor || '#2dd4a0',
+					cursorStrokeWidth: Math.min(4, Math.max(1, Number(p.cursorStrokeWidth) || 1)),
+				};
+			}
+		} catch (_) {}
+		return {
+			customCursor: false,
+			cursorSize: 8,
+			cursorFill: '#2dd4a0',
+			cursorOpacity: 80,
+			cursorStroke: false,
+			cursorStrokeColor: '#2dd4a0',
+			cursorStrokeWidth: 1,
+		};
+	}
+
+	function init() {
+		if (window.innerWidth <= 800) return;
+
+		const el = document.getElementById('custom-cursor');
+		if (!el) return;
+
+		let settings = getSettings();
+		let x = 0;
+		let y = 0;
+		let overTarget = false;
+
+		function updateCursorStyle() {
+			el.style.width = `${settings.cursorSize}px`;
+			el.style.height = `${settings.cursorSize}px`;
+			el.style.background = settings.cursorFill;
+			el.style.opacity = String(settings.cursorOpacity / 100);
+			if (settings.cursorStroke) {
+				el.style.border = `${settings.cursorStrokeWidth}px solid ${settings.cursorStrokeColor}`;
+				el.style.boxSizing = 'border-box';
+			} else {
+				el.style.border = 'none';
+			}
+		}
+
+		function tick() {
+			if (settings.customCursor && overTarget) {
+				el.hidden = false;
+				el.style.left = `${x}px`;
+				el.style.top = `${y}px`;
+				updateCursorStyle();
+			} else {
+				el.hidden = true;
+			}
+			requestAnimationFrame(tick);
+		}
+
+		document.addEventListener('mousemove', (e: MouseEvent) => {
+			x = e.clientX;
+			y = e.clientY;
+			const target = e.target as Node;
+			overTarget = !!(
+				target &&
+				(document.querySelector('.sidebar')?.contains(target) || document.querySelector('.content')?.contains(target))
+			);
+		});
+
+		function applyEnabled() {
+			if (settings.customCursor) document.body.setAttribute('data-custom-cursor', '');
+			else document.body.removeAttribute('data-custom-cursor');
+		}
+
+		window.addEventListener('cl01w-settings', ((e: CustomEvent) => {
+			settings = { ...settings, ...e.detail };
+			applyEnabled();
+			updateCursorStyle();
+		}) as EventListener);
+
+		applyEnabled();
+		updateCursorStyle();
+		requestAnimationFrame(tick);
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>

@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, getEntry } from 'astro:content';
-import TwoColumn from '../../components/TwoColumn.astro';
 import ImageBlock from '../../components/ImageBlock.astro';
 import Callout from '../../components/Callout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
@@ -55,7 +54,6 @@ function formatDate(d: Date): string {
 			<div class="article__body">
 				<Content
 					components={{
-						TwoColumn,
 						ImageBlock,
 						Callout,
 						VideoEmbed,
@@ -66,23 +64,23 @@ function formatDate(d: Date): string {
 
 			<footer class="article__footer">
 				<div class="article__meta">
-					<span class="article__pill">{entry.data.category}</span>
-					<span class="article__pill">{entry.data.type}</span>
+					<a href="/articles/" class="article__pill">{entry.data.category}</a>
+					<a href="/articles/" class="article__pill">{entry.data.type}</a>
 				</div>
-				<nav class="article__nav">
+				<nav class="article__nav" aria-label="Article navigation">
 					{prev ? (
 						<a class="article__nav-link" href={`/articles/${prev.slug}/`}>
-							prev
+							{prev.data.title}
 						</a>
 					) : (
-						<span class="article__nav-link article__nav-link--disabled">prev</span>
+						<span class="article__nav-link article__nav-link--placeholder" aria-hidden="true" />
 					)}
 					{next ? (
 						<a class="article__nav-link" href={`/articles/${next.slug}/`}>
-							next
+							{next.data.title}
 						</a>
 					) : (
-						<span class="article__nav-link article__nav-link--disabled">next</span>
+						<span class="article__nav-link article__nav-link--placeholder" aria-hidden="true" />
 					)}
 				</nav>
 			</footer>
@@ -205,9 +203,26 @@ function formatDate(d: Date): string {
 	.article__nav {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
 		width: 100%;
 		max-width: var(--content-max);
 		margin: 0 auto;
+	}
+
+	.article__pill {
+		text-decoration: none;
+	}
+
+	.article__pill:hover {
+		text-decoration: underline;
+	}
+
+	.article__nav-link--placeholder {
+		visibility: hidden;
+		pointer-events: none;
+		width: 0;
+		overflow: hidden;
 	}
 
 	.article__nav-link {
@@ -231,6 +246,10 @@ function formatDate(d: Date): string {
 	@media (max-width: 800px) {
 		.article__header {
 			padding: 0 24px 32px;
+		}
+
+		.article__title {
+			line-height: 1.1;
 		}
 
 		.article__body :global(h2) {

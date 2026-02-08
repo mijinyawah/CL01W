@@ -2,7 +2,8 @@
 interface Props {}
 ---
 
-<div class="interactive-grid" aria-hidden="true">
+<div class="interactive-grid" id="interactive-grid" aria-hidden="true">
+	<div class="interactive-grid__glow" id="grid-glow" aria-hidden="true"></div>
 	<canvas id="grid-canvas" class="interactive-grid__canvas"></canvas>
 	<div class="interactive-grid__static" aria-hidden="true"></div>
 </div>
@@ -16,8 +17,21 @@ interface Props {}
 		pointer-events: none;
 	}
 
+	.interactive-grid__glow {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: radial-gradient(
+			circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+			rgba(45, 212, 160, 0.15) 0%,
+			transparent 300px
+		);
+		opacity: var(--grid-glow, 1);
+	}
+
 	.interactive-grid__canvas {
 		display: block;
+		position: relative;
 		width: 100%;
 		height: 100%;
 	}
@@ -56,26 +70,41 @@ interface Props {}
 </style>
 
 <script>
-	const CELL_SIZE = 44;
 	const DECAY = 0.95;
 	const GRID_LINE_WIDTH = 0.5;
 	const GRID_LINE_COLOR = 'rgba(255, 255, 255, 0.08)';
-	const HIGHLIGHT_COLOR = 'rgba(0, 26, 43, 0.06)';
-
 	const MOBILE_BREAKPOINT = 800;
+	const STORAGE_KEY = 'cl01w-control';
+
+	function getSettings() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const p = JSON.parse(raw);
+				return {
+					cellSize: Number(p.cellSize) || 44,
+					gridOpacity: Number(p.gridOpacity) ?? 100,
+					gridGlow: Number(p.gridGlow) ?? 100,
+				};
+			}
+		} catch (_) {}
+		return { cellSize: 44, gridOpacity: 100, gridGlow: 100 };
+	}
 
 	function init() {
 		if (window.innerWidth <= MOBILE_BREAKPOINT) return;
 
-		const gridEl = document.querySelector('.interactive-grid');
+		const gridEl = document.getElementById('interactive-grid');
 		if (!gridEl) return;
 
 		const canvas = gridEl.querySelector<HTMLCanvasElement>('#grid-canvas');
+		const glowEl = gridEl.querySelector<HTMLElement>('#grid-glow');
 		if (!canvas) return;
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
+		let settings = getSettings();
 		const cellBrightness = new Map<string, number>();
 		let mouseCell: { x: number; y: number } | null = null;
 		let rafId: number;
@@ -98,27 +127,30 @@ interface Props {}
 		}
 
 		function draw() {
+			const cellSize = settings.cellSize;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			ctx.globalAlpha = settings.gridOpacity / 100;
 
-			const cols = Math.ceil(width / CELL_SIZE) + 1;
-			const rows = Math.ceil(height / CELL_SIZE) + 1;
+			const cols = Math.ceil(width / cellSize) + 1;
+			const rows = Math.ceil(height / cellSize) + 1;
 
 			ctx.strokeStyle = GRID_LINE_COLOR;
 			ctx.lineWidth = GRID_LINE_WIDTH;
 			ctx.beginPath();
 			for (let i = 0; i <= cols; i++) {
-				const x = i * CELL_SIZE;
+				const x = i * cellSize;
 				ctx.moveTo(x, 0);
 				ctx.lineTo(x, height);
 			}
 			for (let i = 0; i <= rows; i++) {
-				const y = i * CELL_SIZE;
+				const y = i * cellSize;
 				ctx.moveTo(0, y);
 				ctx.lineTo(width, y);
 			}
 			ctx.stroke();
+			ctx.globalAlpha = 1;
 
 			const keysToDelete: string[] = [];
 			cellBrightness.forEach((value, key) => {
@@ -132,14 +164,13 @@ interface Props {}
 				cellBrightness.set(cellKey(mouseCell.x, mouseCell.y), 1.0);
 			}
 
-			// Subtle dark highlight for light background, scaled by brightness
 			cellBrightness.forEach((brightness, key) => {
 				if (brightness <= 0) return;
 				const [x, y] = key.split(',').map(Number);
-				const px = x * CELL_SIZE;
-				const py = y * CELL_SIZE;
+				const px = x * cellSize;
+				const py = y * cellSize;
 				ctx.fillStyle = `rgba(0, 26, 43, ${0.06 * brightness})`;
-				ctx.fillRect(px + 0.5, py + 0.5, CELL_SIZE - 0.5, CELL_SIZE - 0.5);
+				ctx.fillRect(px + 0.5, py + 0.5, cellSize - 0.5, cellSize - 0.5);
 			});
 
 			rafId = requestAnimationFrame(draw);
@@ -148,10 +179,13 @@ interface Props {}
 		function onMouseMove(e: MouseEvent) {
 			const x = e.clientX;
 			const y = e.clientY;
+			gridEl.style.setProperty('--mouse-x', `${x}px`);
+			gridEl.style.setProperty('--mouse-y', `${y}px`);
+			const cellSize = settings.cellSize;
 			if (x >= 0 && x < width && y >= 0 && y < height) {
 				mouseCell = {
-					x: Math.floor(x / CELL_SIZE),
-					y: Math.floor(y / CELL_SIZE),
+					x: Math.floor(x / cellSize),
+					y: Math.floor(y / cellSize),
 				};
 			} else {
 				mouseCell = null;
@@ -162,7 +196,17 @@ interface Props {}
 			mouseCell = null;
 		}
 
+		function applyGlowOpacity() {
+			gridEl.style.setProperty('--grid-glow', String(settings.gridGlow / 100));
+		}
+
+		window.addEventListener('cl01w-settings', ((e: CustomEvent) => {
+			settings = { ...settings, ...e.detail };
+			applyGlowOpacity();
+		}) as EventListener);
+
 		setCanvasSize();
+		applyGlowOpacity();
 		draw();
 
 		document.addEventListener('mousemove', onMouseMove, { passive: true });

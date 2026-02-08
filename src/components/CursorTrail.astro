@@ -14,28 +14,8 @@ interface Props {}
 </div>
 
 <style is:global>
-	/* Radial glow that follows the mouse */
 	body {
 		position: relative;
-	}
-
-	body::after {
-		content: '';
-		position: fixed;
-		inset: 0;
-		pointer-events: none;
-		background: radial-gradient(
-			circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-			var(--glow-color, rgba(45, 212, 160, 0.15)) 0%,
-			transparent 300px
-		);
-		z-index: 9998;
-	}
-
-	@media (max-width: 800px) {
-		body::after {
-			display: none;
-		}
 	}
 </style>
 
