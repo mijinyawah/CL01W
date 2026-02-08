@@ -46,7 +46,8 @@ const {} = Astro.props;
 	.base-layout {
 		height: 100vh;
 		min-height: 0;
-		padding: 0 var(--page-padding);
+		width: 100%;
+		padding: 0 clamp(24px, 4vw, var(--page-padding));
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
@@ -54,25 +55,30 @@ const {} = Astro.props;
 
 	.base-layout__main {
 		display: flex;
+		width: 100%;
+		min-width: 0;
 		gap: var(--nav-content-gap);
-		padding-top: 83px;
+		padding-top: clamp(40px, 6vh, 83px);
 		flex: 1;
 		min-height: 0;
+		/* Fixed app shell: main row fills remaining viewport */
+		height: 0;
 	}
 
-	/* Sidebar — sticky so it stays in place when content scrolls */
+	/* Sidebar — fluid width between 260px and 340px, ~30% of row */
 	.sidebar {
-		position: sticky;
-		top: 0;
-		align-self: flex-start;
-		width: var(--nav-width);
-		flex-shrink: 0;
+		flex: 0 0 30%;
+		min-width: 260px;
+		max-width: 340px;
+		align-self: stretch;
+		min-height: 0;
 		background: var(--sidebar-bg);
 		border-radius: var(--radius-container);
-		padding: 20px;
+		padding: clamp(16px, 1.5vw, 20px);
 		display: flex;
 		flex-direction: column;
-		gap: 44px;
+		gap: 36px;
+		overflow-y: auto;
 	}
 
 	.sidebar__toggle {
@@ -92,26 +98,26 @@ const {} = Astro.props;
 	.sidebar__tagline {
 		font-family: var(--font-sidebar);
 		font-weight: 700;
-		font-size: 25px;
+		font-size: clamp(20px, 2vw, 25px);
 		line-height: 1.3;
 		color: var(--sidebar-text);
 		margin: 0;
-		max-width: 280px;
+		max-width: 100%;
 	}
 
 	.sidebar__about {
 		font-family: var(--font-sidebar);
 		font-weight: 400;
-		font-size: 20px;
+		font-size: clamp(16px, 1.5vw, 20px);
 		line-height: 1.6;
 		color: var(--sidebar-text);
 		margin: 0;
-		max-width: 300px;
+		max-width: 100%;
 	}
 
 	.sidebar__divider {
-		width: 300px;
-		max-width: 100%;
+		width: 100%;
+		max-width: 300px;
 		height: 1px;
 		margin: 0;
 		border: none;
@@ -129,7 +135,7 @@ const {} = Astro.props;
 	.sidebar__connect a {
 		font-family: var(--font-sidebar);
 		font-weight: 500;
-		font-size: 20px;
+		font-size: clamp(16px, 1.5vw, 20px);
 		line-height: 1.6;
 		color: var(--sidebar-nav);
 		text-decoration: none;
@@ -140,11 +146,20 @@ const {} = Astro.props;
 		text-decoration: underline;
 	}
 
-	/* Content area — independent scrollbox */
+	.sidebar::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.sidebar::-webkit-scrollbar-thumb {
+		background: var(--sidebar-divider);
+		border-radius: 2px;
+	}
+
+	/* Content area — takes remaining space, independent scrollbox */
 	.content {
 		position: relative;
-		width: var(--content-width);
 		flex: 1;
+		min-width: 0;
 		min-height: 0;
 		background: var(--content-bg);
 		border-radius: var(--radius-container);
@@ -187,102 +202,78 @@ const {} = Astro.props;
 		color: rgba(0, 0, 0, 0.4);
 	}
 
-	/* ---------- Mobile (<640px) ---------- */
+	/* ---------- Mobile (<640px) — page scroll, all sidebar content visible ---------- */
 	@media (max-width: 640px) {
 		.base-layout {
+			height: auto;
+			min-height: 100vh;
+			overflow: visible;
 			padding: 0 16px;
 		}
 
 		.base-layout__main {
+			flex: 1 1 auto;
+			height: auto;
+			flex-direction: column;
 			padding-top: 24px;
+			min-height: 0;
 		}
 
 		.sidebar {
+			flex: none;
+			min-width: 0;
+			max-width: none;
+			width: 100%;
 			flex-direction: column;
 			align-items: stretch;
 			padding: 16px;
+			overflow: visible;
 		}
 
 		.sidebar__header {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			gap: 16px;
+			display: block;
+		}
+
+		.sidebar__menu-btn {
+			display: none;
 		}
 
 		.sidebar__tagline {
 			font-size: 18px;
-			flex: 1;
-			min-width: 0;
+			max-width: 100%;
 		}
 
-		.sidebar__menu-btn {
-			display: flex;
-			flex-shrink: 0;
-			align-items: center;
-			justify-content: center;
-			width: 44px;
-			height: 44px;
-			background: transparent;
-			border: none;
-			cursor: pointer;
-			padding: 0;
-			appearance: none;
-		}
-
-		.sidebar__menu-btn-icon {
+		/* Show all sidebar content: about, dividers, nav, connect */
+		.sidebar__about {
 			display: block;
-			width: 24px;
-			height: 18px;
-			position: relative;
-			background: var(--sidebar-text);
-			background-clip: content-box;
-			background-origin: content-box;
-			padding: 8px 0;
-			box-sizing: border-box;
 		}
 
-		.sidebar__menu-btn-icon::before,
-		.sidebar__menu-btn-icon::after {
-			content: '';
-			position: absolute;
-			left: 0;
-			width: 100%;
-			height: 2px;
-			background: var(--sidebar-text);
-			border-radius: 1px;
-		}
-
-		.sidebar__menu-btn-icon::before {
-			top: 0;
-		}
-
-		.sidebar__menu-btn-icon::after {
-			bottom: 0;
-		}
-
-		.sidebar__about,
-		.sidebar__connect,
 		.sidebar__divider {
-			display: none;
+			display: block;
+			width: 100%;
 		}
 
 		.sidebar__nav {
-			display: none;
+			display: flex;
 			flex-direction: column;
 			gap: 16px;
-			padding-top: 16px;
-			border-top: 1px solid var(--sidebar-divider);
+			padding-top: 0;
+			border-top: none;
 		}
 
-		.sidebar__toggle:checked ~ .sidebar__nav {
+		.sidebar__connect {
 			display: flex;
+			flex-direction: column;
+			gap: 20px;
 		}
 
+		/* Content area: full width, min-height, normal page scroll (no internal scrollbox) */
 		.content {
 			width: 100%;
 			max-width: none;
+			min-height: 60vh;
+			flex: 1 1 auto;
+			overflow: visible;
 		}
 
 		.content__inner {
