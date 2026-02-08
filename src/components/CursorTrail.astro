@@ -31,6 +31,12 @@ interface Props {}
 		);
 		z-index: 9998;
 	}
+
+	@media (max-width: 640px) {
+		body::after {
+			display: none;
+		}
+	}
 </style>
 
 <style>
@@ -39,6 +45,13 @@ interface Props {}
 		inset: 0;
 		pointer-events: none;
 		z-index: 9999;
+	}
+
+	/* Disable on touch devices / mobile — no hover */
+	@media (max-width: 640px) {
+		.cursor-trail {
+			display: none;
+		}
 	}
 
 	.cursor-trail__dot {

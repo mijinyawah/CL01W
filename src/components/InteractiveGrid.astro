@@ -4,6 +4,7 @@ interface Props {}
 
 <div class="interactive-grid" aria-hidden="true">
 	<canvas id="grid-canvas" class="interactive-grid__canvas"></canvas>
+	<div class="interactive-grid__static" aria-hidden="true"></div>
 </div>
 
 <style>
@@ -20,6 +21,38 @@ interface Props {}
 		width: 100%;
 		height: 100%;
 	}
+
+	/* Mobile: static CSS grid only (no canvas/JS for performance) */
+	.interactive-grid__static {
+		display: none;
+	}
+
+	@media (max-width: 640px) {
+		.interactive-grid__canvas {
+			display: none;
+		}
+
+		.interactive-grid__static {
+			display: block;
+			position: absolute;
+			inset: 0;
+			/* Grid lines: same as canvas (44px, white 0.08) */
+			background-image:
+				linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+				linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+			background-size: 44px 44px;
+			/* Subtle radial texture overlay */
+			background-image:
+				radial-gradient(
+					circle at center,
+					rgba(45, 212, 160, 0.03) 0%,
+					transparent 70%
+				),
+				linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+				linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+			background-size: 100% 100%, 44px 44px, 44px 44px;
+		}
+	}
 </style>
 
 <script>
@@ -29,7 +62,11 @@ interface Props {}
 	const GRID_LINE_COLOR = 'rgba(255, 255, 255, 0.08)';
 	const HIGHLIGHT_COLOR = 'rgba(0, 26, 43, 0.06)';
 
+	const MOBILE_BREAKPOINT = 640;
+
 	function init() {
+		if (window.innerWidth <= MOBILE_BREAKPOINT) return;
+
 		const gridEl = document.querySelector('.interactive-grid');
 		if (!gridEl) return;
 
@@ -135,4 +172,11 @@ interface Props {}
 	}
 
 	document.addEventListener('DOMContentLoaded', init);
+	window.addEventListener('resize', () => {
+		if (window.innerWidth > MOBILE_BREAKPOINT) {
+			const gridEl = document.querySelector('.interactive-grid');
+			const canvas = gridEl?.querySelector<HTMLCanvasElement>('#grid-canvas');
+			if (canvas && !canvas.width) init();
+		}
+	});
 </script>

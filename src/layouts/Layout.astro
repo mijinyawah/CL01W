@@ -187,54 +187,8 @@ const {} = Astro.props;
 		color: rgba(0, 0, 0, 0.4);
 	}
 
-	/* ---------- Tablet (768px - 1024px) ---------- */
-	@media (max-width: 1024px) {
-		.base-layout {
-			padding: 0 var(--page-padding);
-		}
-
-		.base-layout__main {
-			flex-direction: column;
-			padding-top: 40px;
-		}
-
-		.sidebar {
-			width: 100%;
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-			gap: 24px;
-			padding: 16px 20px;
-		}
-
-		.sidebar__header {
-			flex: 0 1 auto;
-		}
-
-		.sidebar__tagline {
-			max-width: none;
-			font-size: 22px;
-		}
-
-		.sidebar__about,
-		.sidebar__connect,
-		.sidebar__divider {
-			display: none;
-		}
-
-		.sidebar__nav {
-			flex-direction: row;
-			gap: 24px;
-		}
-
-		.content {
-			width: 100%;
-			max-width: none;
-		}
-	}
-
-	/* ---------- Mobile (<768px) ---------- */
-	@media (max-width: 767px) {
+	/* ---------- Mobile (<640px) ---------- */
+	@media (max-width: 640px) {
 		.base-layout {
 			padding: 0 16px;
 		}
@@ -341,7 +295,7 @@ const {} = Astro.props;
 	}
 
 	/* Article titles scale (used by content inside slot) */
-	@media (max-width: 767px) {
+	@media (max-width: 640px) {
 		.content :global(h1),
 		.content :global(.article-title) {
 			font-size: 32px;
