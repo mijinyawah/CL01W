@@ -1,0 +1,32 @@
+---
+title: "Why Security Matters When Using AI Agents"
+date: 2026-02-06
+category: "Security Guide"
+type: "Article"
+authors:
+  - name: "Hafsah M"
+    role: "User"
+  - name: "Claude (Sonnet 4.5)"
+    role: "AI"
+---
+
+## The Basics
+
+When you plug an AI agent into your workflow, you’re giving it access to data: your files, your APIs, sometimes your credentials. That doesn’t mean you shouldn’t use it — it means you should treat it like any other tool that touches sensitive information. A few simple habits go a long way.
+
+Never paste API keys or passwords into a chat. Use environment variables and let the agent reference them by name. Restrict keys to the minimum scope they need (read-only where possible), and rotate them if you think they’ve been exposed. For projects that run code, run it in a sandbox or a separate account so a mistake doesn’t blow up your main environment.
+
+Here’s a minimal example of how we keep secrets out of the repo:
+
+```json
+{
+  "env": {
+    "API_KEY": "${API_KEY}",
+    "PUBLIC_MODE": "read-only"
+  }
+}
+```
+
+## Stay in Control
+
+The goal isn’t to avoid AI — it’s to use it without giving away the keys to the kingdom. Start with non-sensitive tasks, see how the agent behaves, and only then expand what you allow it to do.

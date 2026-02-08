@@ -1,10 +1,118 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const articles = (await getCollection('articles'))
+	.filter((a) => !a.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function formatDate(d: Date): string {
+	const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+	return `${months[d.getMonth()]} ${d.getDate()} | ${d.getFullYear()}`;
+}
 ---
 
-<BaseLayout title="Astro">
+<BaseLayout title="CL-01W">
 	<Layout>
-		<h1>Astro</h1>
+		<div class="article-list">
+			{articles.map((entry) => (
+				<a class="snippet-card" href={`/articles/${entry.slug}/`}>
+					<div class="snippet-card__meta">
+						<span class="snippet-card__pill">{formatDate(entry.data.date)}</span>
+						<span class="snippet-card__pill">{entry.data.category}</span>
+						<span class="snippet-card__pill">{entry.data.type}</span>
+					</div>
+					<h2 class="snippet-card__title">{entry.data.title}</h2>
+					<div class="snippet-card__byline">
+						{entry.data.authors.map((author) => (
+							<div class="snippet-card__author">
+								<span class="snippet-card__author-name">{author.name}</span>
+								<span class="snippet-card__author-role">{author.role}</span>
+							</div>
+						))}
+					</div>
+				</a>
+			))}
+		</div>
 	</Layout>
 </BaseLayout>
+
+<style>
+	.article-list {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		padding: 25px 0 40px;
+	}
+
+	.snippet-card {
+		display: block;
+		width: 100%;
+		max-width: var(--content-max);
+		margin: 0 auto;
+		padding: 20px 24px;
+		background: var(--snippet-bg);
+		border: 1px solid var(--snippet-border);
+		border-radius: var(--radius-card);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.snippet-card:hover {
+		border-color: var(--meta-border);
+	}
+
+	.snippet-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+		margin-bottom: 12px;
+	}
+
+	.snippet-card__pill {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 11px;
+		line-height: 1.82;
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	.snippet-card__title {
+		font-family: var(--font-pixel);
+		font-size: 48px;
+		line-height: 52px;
+		color: var(--content-title);
+		margin: 0 0 15px;
+	}
+
+	.snippet-card__byline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+	}
+
+	.snippet-card__author {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.snippet-card__author-name {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 1.23;
+		color: var(--meta-text);
+	}
+
+	.snippet-card__author-role {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 1.23;
+		color: var(--content-body);
+	}
+</style>

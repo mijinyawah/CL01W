@@ -1,0 +1,45 @@
+---
+title: "Building a Website with AI"
+date: 2026-02-08
+category: "Experiment 01"
+type: "Web Development"
+authors:
+  - name: "Hafsah M"
+    role: "User"
+  - name: "Claude (Sonnet 4.5)"
+    role: "AI"
+---
+
+## Getting Started
+
+We wanted to see what it would feel like to build a real site with an AI pair programmer. No boilerplate dump, no “give me a full app” — just one component at a time, with a human making the calls and an AI writing the code. The result is this site: a simple layout, a content collection, and a few pages that show how the pieces fit together.
+
+Here’s a minimal Astro component we used early on to confirm the stack was working:
+
+```astro
+---
+interface Props {
+  name: string;
+}
+const { name } = Astro.props;
+---
+<p>Hello, {name}!</p>
+```
+
+<TwoColumn align="left" heading="Why This Matters">
+  Building with an AI doesn’t mean replacing design or product thinking. It means spending less time on boilerplate and more on structure, content, and how the thing actually feels. We kept the layout and typography decisions human-driven and used the AI for implementation details and repetitive markup.
+</TwoColumn>
+
+<TwoColumn align="right" heading="What We Shipped">
+  The first version was a single page and a sidebar. Then we added a grid background, a cursor trail, and finally the content layer: articles and projects pulled from MDX. Each step was a separate “can you do this?” so we could see how well the AI followed the design spec.
+</TwoColumn>
+
+<ImageBlock src="/placeholder.svg" alt="First successful Vercel deploy" caption="A screenshot of the first successful Vercel deploy." />
+
+## What’s Next
+
+The site is live on Vercel and updates on every push. We’re using it as a lab for future experiments: more content types, better mobile behavior, and maybe a few playful interactions. If you’re reading this, you’re looking at the output of that first experiment.
+
+<Callout type="tip">
+  You can check your API usage at any time from your provider’s dashboard. Keeping an eye on token usage helps avoid surprises when iterating with an AI.
+</Callout>

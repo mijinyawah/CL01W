@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+import TwoColumn from '../../components/TwoColumn.astro';
+import ImageBlock from '../../components/ImageBlock.astro';
+import Callout from '../../components/Callout.astro';
+
+export async function getStaticPaths() {
+	const articles = await getCollection('articles', (e) => !e.data.draft);
+	return articles.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const slug = entry.slug;
+const allArticles = (await getCollection('articles', (e) => !e.data.draft)).sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const currentIndex = allArticles.findIndex((e) => e.slug === slug);
+const prev = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
+const next = currentIndex >= 0 && currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
+
+function formatDate(d: Date): string {
+	const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+	return `${months[d.getMonth()]} ${d.getDate()} | ${d.getFullYear()}`;
+}
+---
+
+<BaseLayout title={entry.data.title}>
+	<Layout>
+		<article class="article">
+			<header class="article__header">
+				<div class="article__meta">
+					<span class="article__pill">{formatDate(entry.data.date)}</span>
+					<span class="article__pill">{entry.data.category}</span>
+					<span class="article__pill">{entry.data.type}</span>
+				</div>
+				<h1 class="article__title">{entry.data.title}</h1>
+				<div class="article__byline">
+					{entry.data.authors.map((author) => (
+						<div class="article__author">
+							<span class="article__author-name">{author.name}</span>
+							<span class="article__author-role">{author.role}</span>
+						</div>
+					))}
+				</div>
+			</header>
+
+			<div class="article__body">
+				<Content
+					components={{
+						TwoColumn,
+						ImageBlock,
+						Callout,
+					}}
+				/>
+			</div>
+
+			<footer class="article__footer">
+				<div class="article__meta">
+					<span class="article__pill">{entry.data.category}</span>
+					<span class="article__pill">{entry.data.type}</span>
+				</div>
+				<nav class="article__nav">
+					{prev ? (
+						<a class="article__nav-link" href={`/articles/${prev.slug}/`}>
+							prev
+						</a>
+					) : (
+						<span class="article__nav-link article__nav-link--disabled">prev</span>
+					)}
+					{next ? (
+						<a class="article__nav-link" href={`/articles/${next.slug}/`}>
+							next
+						</a>
+					) : (
+						<span class="article__nav-link article__nav-link--disabled">next</span>
+					)}
+				</nav>
+			</footer>
+		</article>
+	</Layout>
+</BaseLayout>
+
+<style>
+	.article {
+		padding: 0 0 40px;
+	}
+
+	.article__header {
+		padding: 0 50px 32px;
+	}
+
+	.article__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+		margin-bottom: 12px;
+	}
+
+	.article__pill {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 11px;
+		line-height: 1.82;
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	.article__title {
+		font-family: var(--font-pixel);
+		font-size: 48px;
+		line-height: 52px;
+		color: var(--content-title);
+		margin: 0 0 24px;
+	}
+
+	.article__byline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+	}
+
+	.article__author {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.article__author-name {
+		font-family: var(--font-body);
+		font-size: 13px;
+		line-height: 1.23;
+		color: var(--meta-text);
+	}
+
+	.article__author-role {
+		font-family: var(--font-body);
+		font-size: 13px;
+		line-height: 1.23;
+		color: var(--content-body);
+	}
+
+	.article__body {
+		font-family: var(--font-body);
+	}
+
+	.article__body :global(h2) {
+		font-family: var(--font-body);
+		font-weight: 500;
+		font-size: 28px;
+		line-height: 32px;
+		color: var(--content-heading);
+		padding: 0 50px;
+		margin: 32px 0 16px;
+	}
+
+	.article__body :global(p) {
+		font-weight: 400;
+		font-size: 17px;
+		line-height: 28px;
+		color: var(--content-body);
+		padding: 0 50px;
+		max-width: var(--content-max);
+		margin: 0 0 16px;
+	}
+
+	.article__body :global(pre) {
+		background: var(--codeblock-bg);
+		border-radius: var(--radius-container);
+		padding: 30px;
+		margin: 24px 50px;
+		overflow-x: auto;
+	}
+
+	.article__body :global(code) {
+		font-family: var(--font-body);
+		font-size: 17px;
+	}
+
+	.article__body :global(img) {
+		border-radius: var(--radius-container);
+	}
+
+	.article__footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 24px;
+		padding: 40px 50px 0;
+		border-top: 1px solid var(--snippet-border);
+		margin-top: 40px;
+	}
+
+	.article__nav {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		max-width: var(--content-max);
+		margin: 0 auto;
+	}
+
+	.article__nav-link {
+		font-family: var(--font-pixel);
+		font-size: 48px;
+		line-height: 52px;
+		color: var(--content-title);
+		text-decoration: none;
+	}
+
+	.article__nav-link:hover {
+		text-decoration: underline;
+	}
+
+	.article__nav-link--disabled {
+		opacity: 0.4;
+		cursor: default;
+		pointer-events: none;
+	}
+</style>
