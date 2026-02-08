@@ -43,9 +43,6 @@ interface Props {}
 					cursorSize: Number(p.cursorSize) || 8,
 					cursorFill: p.cursorFill || '#2dd4a0',
 					cursorOpacity: Number(p.cursorOpacity) ?? 80,
-					cursorStroke: !!p.cursorStroke,
-					cursorStrokeColor: p.cursorStrokeColor || '#2dd4a0',
-					cursorStrokeWidth: Math.min(4, Math.max(1, Number(p.cursorStrokeWidth) || 1)),
 				};
 			}
 		} catch (_) {}
@@ -54,9 +51,6 @@ interface Props {}
 			cursorSize: 8,
 			cursorFill: '#2dd4a0',
 			cursorOpacity: 80,
-			cursorStroke: false,
-			cursorStrokeColor: '#2dd4a0',
-			cursorStrokeWidth: 1,
 		};
 	}
 
@@ -76,12 +70,7 @@ interface Props {}
 			el.style.height = `${settings.cursorSize}px`;
 			el.style.background = settings.cursorFill;
 			el.style.opacity = String(settings.cursorOpacity / 100);
-			if (settings.cursorStroke) {
-				el.style.border = `${settings.cursorStrokeWidth}px solid ${settings.cursorStrokeColor}`;
-				el.style.boxSizing = 'border-box';
-			} else {
-				el.style.border = 'none';
-			}
+			el.style.border = 'none';
 		}
 
 		function tick() {

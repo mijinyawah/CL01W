@@ -69,16 +69,12 @@ function formatDate(d: Date): string {
 				</div>
 				<nav class="article__nav" aria-label="Article navigation">
 					{prev ? (
-						<a class="article__nav-link" href={`/articles/${prev.slug}/`}>
-							{prev.data.title}
-						</a>
+						<a class="article__nav-link" href={`/articles/${prev.slug}/`}>prev</a>
 					) : (
 						<span class="article__nav-link article__nav-link--placeholder" aria-hidden="true" />
 					)}
 					{next ? (
-						<a class="article__nav-link" href={`/articles/${next.slug}/`}>
-							{next.data.title}
-						</a>
+						<a class="article__nav-link" href={`/articles/${next.slug}/`}>next</a>
 					) : (
 						<span class="article__nav-link article__nav-link--placeholder" aria-hidden="true" />
 					)}
@@ -245,7 +241,7 @@ function formatDate(d: Date): string {
 
 	@media (max-width: 800px) {
 		.article__header {
-			padding: 0 24px 32px;
+			padding: 0 18px 32px;
 		}
 
 		.article__title {
@@ -253,21 +249,21 @@ function formatDate(d: Date): string {
 		}
 
 		.article__body :global(h2) {
-			padding: 0 24px;
+			padding: 0 18px;
 		}
 
 		.article__body :global(p) {
-			padding: 0 24px;
+			padding: 0 18px;
 		}
 
 		.article__body :global(pre) {
-			margin: 24px 24px;
-			max-width: calc(100% - 48px);
+			margin: 24px 18px;
+			max-width: calc(100% - 36px);
 			overflow-x: auto;
 		}
 
 		.article__footer {
-			padding: 40px 24px 0;
+			padding: 40px 18px 0;
 		}
 	}
 </style>

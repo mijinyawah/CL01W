@@ -80,7 +80,7 @@ const {} = Astro.props;
 		max-width: 352px;
 		align-self: stretch;
 		min-height: 0;
-		background: var(--sidebar-bg);
+		background: rgba(255, 255, 255, 0.94);
 		border-radius: var(--radius-container);
 		padding: 20px;
 		display: flex;
@@ -260,7 +260,7 @@ const {} = Astro.props;
 		}
 	}
 
-	/* ---------- Stacked / mobile (<800px) — hamburger menu, page scroll ---------- */
+	/* ---------- Stacked / mobile (<800px) — hamburger menu, full-screen overlay ---------- */
 	@media (max-width: 800px) {
 		.base-layout {
 			height: auto;
@@ -288,10 +288,37 @@ const {} = Astro.props;
 			overflow: visible;
 			gap: 12px;
 			background-color: transparent;
+			transition: background-color 0.2s ease;
+		}
+
+		/* When menu open: full-screen dark overlay with fade-in */
+		.sidebar:has(.sidebar__toggle:checked) {
+			position: fixed;
+			inset: 0;
+			z-index: 1000;
+			background: #0d1316;
+			padding: 24px 24px 32px;
+			justify-content: flex-start;
+			gap: 0;
+			overflow-y: auto;
+			animation: mobile-nav-in 0.2s ease-out;
+		}
+
+		@keyframes mobile-nav-in {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
 		}
 
 		.sidebar__header {
 			background-color: transparent;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__header {
+			margin-bottom: 24px;
 		}
 
 		/* Header row: tagline left, hamburger right (top-aligned) */
@@ -310,6 +337,10 @@ const {} = Astro.props;
 			min-width: 0;
 		}
 
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__tagline {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
 		/* Hamburger button visible on stacked */
 		.sidebar__menu-btn {
 			display: flex;
@@ -323,6 +354,10 @@ const {} = Astro.props;
 			color: var(--sidebar-text);
 			background: transparent;
 			border: none;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__menu-btn {
+			color: rgba(255, 255, 255, 0.9);
 		}
 
 		.sidebar__menu-btn-icon {
@@ -349,29 +384,45 @@ const {} = Astro.props;
 			display: none !important;
 		}
 
-		/* Expanded when menu is open */
-		.sidebar:has(.sidebar__toggle:checked) .sidebar__about,
-		.sidebar:has(.sidebar__toggle:checked) .sidebar__divider,
-		.sidebar:has(.sidebar__toggle:checked) .sidebar__nav,
-		.sidebar:has(.sidebar__toggle:checked) .sidebar__connect {
-			display: flex;
-			flex-direction: row;
-			gap: 12px;
+		/* Expanded overlay: show content with large tappable links */
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__about {
+			display: block;
+			color: rgba(255, 255, 255, 0.7);
+			font-size: 15px;
+			line-height: 1.5;
+			margin-bottom: 20px;
 		}
 
 		.sidebar:has(.sidebar__toggle:checked) .sidebar__divider {
 			display: block;
 			width: 100%;
+			background: rgba(255, 255, 255, 0.15);
+			margin: 20px 0;
 		}
 
-		.sidebar__nav {
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__nav {
+			display: flex;
 			flex-direction: column;
-			gap: 8px;
+			gap: 4px;
 		}
 
-		.sidebar__connect {
-			flex-direction: column;
-			gap: 8px;
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__nav a {
+			display: block;
+			font-size: 22px;
+			line-height: 1.3;
+			color: rgba(255, 255, 255, 0.95);
+			padding: 16px 0;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__connect {
+			display: flex;
+			flex-direction: row;
+			gap: 16px;
+			margin-top: 8px;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__connect .sidebar__icon-link {
+			color: rgba(255, 255, 255, 0.8);
 		}
 
 		/* Content area: full width, visible below header without closing menu */

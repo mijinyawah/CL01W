@@ -83,8 +83,9 @@ const pageSubtitle = 'Experiments in motion, code, and AI';
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 21px;
-		max-width: var(--content-max);
-		margin: 0;
+		max-width: 100%;
+		width: 100%;
+		margin: 0 auto;
 	}
 
 	.project-card {
@@ -97,6 +98,7 @@ const pageSubtitle = 'Experiments in motion, code, and AI';
 		min-height: 300px;
 		text-decoration: none;
 		color: inherit;
+		overflow: hidden;
 	}
 
 	.project-card:hover {
@@ -116,6 +118,8 @@ const pageSubtitle = 'Experiments in motion, code, and AI';
 		font-size: 20px;
 		color: var(--content-heading);
 		margin: 0 0 12px;
+		overflow-wrap: break-word;
+		word-break: break-word;
 	}
 
 	.project-card__description {
@@ -165,6 +169,10 @@ const pageSubtitle = 'Experiments in motion, code, and AI';
 		.projects-grid {
 			grid-template-columns: 1fr;
 			margin: 0;
+		}
+
+		.project-card__title {
+			font-size: 17px;
 		}
 	}
 </style>

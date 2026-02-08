@@ -12,11 +12,11 @@
 
 :root {
 	/* Typography */
-	--font-pixel: 'Pixelify Sans', monospace; /* article titles, display */
+	--font-pixel: 'Micro 5', monospace; /* article titles, display */
 	--font-body: 'Roboto', sans-serif; /* body text, 17px/28px */
 	--font-sidebar: system-ui, sans-serif; /* sidebar text, placeholder for Neue Einstellung */
 
-	/* Colors — Sidebar (light) */
+	/* Colors — Sidebar (light; desktop uses rgba for subtle grid show-through) */
 	--sidebar-bg: #ffffff;
 	--sidebar-text: #001a2b;
 	--sidebar-nav: rgba(0, 0, 0, 0.44);
