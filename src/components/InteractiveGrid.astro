@@ -27,7 +27,7 @@ interface Props {}
 		display: none;
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 800px) {
 		.interactive-grid__canvas {
 			display: none;
 		}
@@ -62,7 +62,7 @@ interface Props {}
 	const GRID_LINE_COLOR = 'rgba(255, 255, 255, 0.08)';
 	const HIGHLIGHT_COLOR = 'rgba(0, 26, 43, 0.06)';
 
-	const MOBILE_BREAKPOINT = 640;
+	const MOBILE_BREAKPOINT = 800;
 
 	function init() {
 		if (window.innerWidth <= MOBILE_BREAKPOINT) return;

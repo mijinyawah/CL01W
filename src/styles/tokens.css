@@ -7,6 +7,7 @@
 *::before,
 *::after {
 	box-sizing: border-box;
+	border-radius: 0 !important;
 }
 
 :root {
@@ -47,6 +48,6 @@
 	--nav-width: 340px;
 	--content-width: 770px;
 	--content-max: 720px;
-	--radius-container: 20px;
-	--radius-card: 15px;
+	--radius-container: 0;
+	--radius-card: 0;
 }

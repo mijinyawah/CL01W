@@ -194,8 +194,8 @@ const {} = Astro.props;
 		color: rgba(0, 0, 0, 0.4);
 	}
 
-	/* ---------- Mobile (<640px) — page scroll, all sidebar content visible ---------- */
-	@media (max-width: 640px) {
+	/* ---------- Stacked / mobile (<800px) — hamburger menu, page scroll ---------- */
+	@media (max-width: 800px) {
 		.base-layout {
 			height: auto;
 			min-height: 100vh;
@@ -220,52 +220,91 @@ const {} = Astro.props;
 			align-items: stretch;
 			padding: 16px;
 			overflow: visible;
+			gap: 12px;
 		}
 
+		/* Header row: tagline left, hamburger right */
 		.sidebar__header {
-			display: block;
-		}
-
-		.sidebar__menu-btn {
-			display: none;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
 		}
 
 		.sidebar__tagline {
-			font-size: 18px;
+			font-size: clamp(22px, 5vw, 28px);
+			line-height: 1.2;
 			max-width: 100%;
+			flex: 1;
+			min-width: 0;
 		}
 
-		/* Show all sidebar content: about, dividers, nav, connect */
-		.sidebar__about {
+		/* Hamburger button visible on stacked */
+		.sidebar__menu-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			width: 44px;
+			height: 44px;
+			cursor: pointer;
+			color: var(--sidebar-text);
+			background: transparent;
+			border: none;
+		}
+
+		.sidebar__menu-btn-icon {
 			display: block;
+			width: 24px;
+			height: 2px;
+			background: currentColor;
+			box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
 		}
 
-		.sidebar__divider {
+		/* Collapsed by default: hide about, dividers, nav, connect */
+		.sidebar__about,
+		.sidebar__divider,
+		.sidebar__nav,
+		.sidebar__connect {
+			display: none;
+		}
+
+		/* Expanded when menu is open */
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__about,
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__divider,
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__nav,
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__connect {
+			display: flex;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__divider {
 			display: block;
 			width: 100%;
 		}
 
 		.sidebar__nav {
-			display: flex;
 			flex-direction: column;
-			gap: 16px;
-			padding-top: 0;
-			border-top: none;
+			gap: 8px;
 		}
 
 		.sidebar__connect {
-			display: flex;
 			flex-direction: column;
-			gap: 20px;
+			gap: 8px;
 		}
 
-		/* Content area: full width, min-height, normal page scroll (no internal scrollbox) */
+		/* Content area: full width, visible below header without closing menu */
 		.content {
 			width: 100%;
 			max-width: none;
 			min-height: 60vh;
 			flex: 1 1 auto;
 			overflow: visible;
+		}
+
+		/* Tighter line-height on stacked */
+		.content :global(p),
+		.content :global(li) {
+			line-height: 1.4;
 		}
 
 		.content__inner {
@@ -278,7 +317,7 @@ const {} = Astro.props;
 	}
 
 	/* Article titles scale (used by content inside slot) */
-	@media (max-width: 640px) {
+	@media (max-width: 800px) {
 		.content :global(h1),
 		.content :global(.article-title) {
 			font-size: 32px;
