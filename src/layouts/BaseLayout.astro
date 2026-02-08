@@ -1,5 +1,6 @@
 ---
 import '../styles/tokens.css';
+import InteractiveGrid from '../components/InteractiveGrid.astro';
 import CursorTrail from '../components/CursorTrail.astro';
 
 interface Props {
@@ -27,9 +28,22 @@ const { title = 'Astro' } = Astro.props;
 		/>
 
 		<title>{title}</title>
+		<style is:global>
+			body {
+				background: #f0f0ec;
+			}
+
+			.base-layout-wrapper {
+				position: relative;
+				z-index: 1;
+			}
+		</style>
 	</head>
 	<body>
-		<CursorTrail />
-		<slot />
+		<InteractiveGrid />
+		<div class="base-layout-wrapper">
+			<CursorTrail />
+			<slot />
+		</div>
 	</body>
 </html>
