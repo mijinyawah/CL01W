@@ -44,10 +44,12 @@ const {} = Astro.props;
 
 <style>
 	.base-layout {
-		min-height: 100vh;
+		height: 100vh;
+		min-height: 0;
 		padding: 0 var(--page-padding);
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.base-layout__main {
@@ -55,10 +57,14 @@ const {} = Astro.props;
 		gap: var(--nav-content-gap);
 		padding-top: 83px;
 		flex: 1;
+		min-height: 0;
 	}
 
-	/* Sidebar */
+	/* Sidebar — sticky so it stays in place when content scrolls */
 	.sidebar {
+		position: sticky;
+		top: 0;
+		align-self: flex-start;
 		width: var(--nav-width);
 		flex-shrink: 0;
 		background: var(--sidebar-bg);
@@ -134,14 +140,35 @@ const {} = Astro.props;
 		text-decoration: underline;
 	}
 
-	/* Content area */
+	/* Content area — independent scrollbox */
 	.content {
 		position: relative;
 		width: var(--content-width);
-		flex-shrink: 0;
+		flex: 1;
+		min-height: 0;
 		background: var(--content-bg);
 		border-radius: var(--radius-container);
 		padding: 0;
+		overflow-y: auto;
+	}
+
+	/* Minimal dark scrollbar for content area */
+	.content::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.content::-webkit-scrollbar-track {
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 3px;
+	}
+
+	.content::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.4);
+		border-radius: 3px;
+	}
+
+	.content::-webkit-scrollbar-thumb:hover {
+		background: rgba(0, 0, 0, 0.5);
 	}
 
 	.content__inner {
@@ -151,6 +178,7 @@ const {} = Astro.props;
 
 	/* Footer */
 	.footer {
+		flex-shrink: 0;
 		padding: 50px 50px 40px;
 		font-family: var(--font-body);
 		font-weight: 400;
