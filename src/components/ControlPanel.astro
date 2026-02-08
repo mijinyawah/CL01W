@@ -17,6 +17,10 @@ interface Props {}
 					<input type="range" id="grid-opacity" min="0" max="100" value="100" data-setting="gridOpacity" />
 				</label>
 				<label class="control-panel__row">
+					<span>Stroke tint</span>
+					<input type="range" id="grid-stroke-tint" min="0" max="100" value="100" data-setting="strokeTint" title="0 = dark gray, 100 = white" />
+				</label>
+				<label class="control-panel__row">
 					<span>Glow</span>
 					<input type="range" id="grid-glow" min="0" max="100" value="100" data-setting="gridGlow" />
 				</label>
@@ -24,6 +28,14 @@ interface Props {}
 					<span>Cell size (px)</span>
 					<input type="range" id="grid-cell-size" min="16" max="48" value="44" data-setting="cellSize" />
 					<output for="grid-cell-size" id="grid-cell-size-out">44</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Hover color</span>
+					<input type="color" id="grid-highlight-color" value="#001a2b" data-setting="highlightColor" title="RGB color of the cell highlight" />
+				</label>
+				<label class="control-panel__row">
+					<span>Hover strength</span>
+					<input type="range" id="grid-highlight-opacity" min="0" max="100" value="20" data-setting="highlightOpacity" title="Subtle (0) to dramatic (100)" />
 				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
@@ -49,16 +61,16 @@ interface Props {}
 				<legend>Trail</legend>
 				<label class="control-panel__row">
 					<span>Length</span>
-					<input type="range" id="trail-length" min="0" max="30" value="8" data-setting="trailLength" />
+					<input type="range" id="trail-length" min="0" max="50" value="8" data-setting="trailLength" title="0 = no trail, 50 = lots" />
 					<output for="trail-length" id="trail-length-out">8</output>
 				</label>
 				<label class="control-panel__row">
 					<span>Tightness</span>
-					<input type="range" id="trail-tightness" min="0" max="100" value="50" data-setting="trailTightness" />
+					<input type="range" id="trail-tightness" min="0" max="100" value="50" data-setting="trailTightness" title="0 = chunky, 100 = smooth" />
 				</label>
 				<label class="control-panel__row">
 					<span>Opacity</span>
-					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" />
+					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" title="0 = invisible, 100 = full" />
 				</label>
 			</fieldset>
 		</div>
@@ -202,7 +214,10 @@ interface Props {}
 	const DEFAULTS = {
 		gridOpacity: 100,
 		gridGlow: 100,
+		strokeTint: 100,
 		cellSize: 44,
+		highlightColor: '#001a2b',
+		highlightOpacity: 20,
 		customCursor: false,
 		cursorSize: 8,
 		cursorFill: '#2dd4a0',

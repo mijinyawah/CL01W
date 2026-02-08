@@ -5,8 +5,7 @@ interface Props {}
 <div id="custom-cursor" class="custom-cursor" aria-hidden="true" hidden></div>
 
 <style is:global>
-	body[data-custom-cursor] .sidebar,
-	body[data-custom-cursor] .content {
+	body[data-custom-cursor] {
 		cursor: none;
 	}
 </style>
@@ -88,11 +87,8 @@ interface Props {}
 		document.addEventListener('mousemove', (e: MouseEvent) => {
 			x = e.clientX;
 			y = e.clientY;
-			const target = e.target as Node;
-			overTarget = !!(
-				target &&
-				(document.querySelector('.sidebar')?.contains(target) || document.querySelector('.content')?.contains(target))
-			);
+			// When custom cursor is on, show it everywhere (sidebar, content, and background)
+			overTarget = settings.customCursor;
 		});
 
 		function applyEnabled() {

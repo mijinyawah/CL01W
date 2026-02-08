@@ -23,7 +23,7 @@ interface Props {}
 		pointer-events: none;
 		background: radial-gradient(
 			circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-			rgba(45, 212, 160, 0.15) 0%,
+			rgba(45, 212, 160, var(--grid-glow-opacity, 0.15)) 0%,
 			transparent 300px
 		);
 		opacity: var(--grid-glow, 1);
@@ -72,9 +72,14 @@ interface Props {}
 <script>
 	const DECAY = 0.95;
 	const GRID_LINE_WIDTH = 0.5;
-	const GRID_LINE_COLOR = 'rgba(255, 255, 255, 0.08)';
 	const MOBILE_BREAKPOINT = 800;
 	const STORAGE_KEY = 'cl01w-control';
+
+	function hexToRgb(hex: string): [number, number, number] {
+		const m = hex.replace(/^#/, '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+		if (!m) return [0, 26, 43];
+		return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
+	}
 
 	function getSettings() {
 		try {
@@ -85,10 +90,20 @@ interface Props {}
 					cellSize: Number(p.cellSize) || 44,
 					gridOpacity: Number(p.gridOpacity) ?? 100,
 					gridGlow: Number(p.gridGlow) ?? 100,
+					strokeTint: Math.min(100, Math.max(0, Number(p.strokeTint) ?? 100)),
+					highlightColor: p.highlightColor || '#001a2b',
+					highlightOpacity: Math.min(100, Math.max(0, Number(p.highlightOpacity) ?? 20)),
 				};
 			}
 		} catch (_) {}
-		return { cellSize: 44, gridOpacity: 100, gridGlow: 100 };
+		return {
+			cellSize: 44,
+			gridOpacity: 100,
+			gridGlow: 100,
+			strokeTint: 100,
+			highlightColor: '#001a2b',
+			highlightOpacity: 20,
+		};
 	}
 
 	function init() {
@@ -133,11 +148,13 @@ interface Props {}
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = settings.gridOpacity / 100;
 
+			// Stroke tint: 0 = dark gray, 100 = white (fixed alpha for visibility)
+			const tint = Math.round(80 + (175 * settings.strokeTint) / 100);
+			ctx.strokeStyle = `rgba(${tint}, ${tint}, ${tint}, 0.2)`;
+			ctx.lineWidth = GRID_LINE_WIDTH;
+
 			const cols = Math.ceil(width / cellSize) + 1;
 			const rows = Math.ceil(height / cellSize) + 1;
-
-			ctx.strokeStyle = GRID_LINE_COLOR;
-			ctx.lineWidth = GRID_LINE_WIDTH;
 			ctx.beginPath();
 			for (let i = 0; i <= cols; i++) {
 				const x = i * cellSize;
@@ -164,12 +181,15 @@ interface Props {}
 				cellBrightness.set(cellKey(mouseCell.x, mouseCell.y), 1.0);
 			}
 
+			// Hover fill: color from picker, opacity 0–100 maps to subtle (0.01)–dramatic (0.4)
+			const [hr, hg, hb] = hexToRgb(settings.highlightColor);
+			const fillAlphaMax = 0.01 + (0.39 * settings.highlightOpacity) / 100;
 			cellBrightness.forEach((brightness, key) => {
 				if (brightness <= 0) return;
 				const [x, y] = key.split(',').map(Number);
 				const px = x * cellSize;
 				const py = y * cellSize;
-				ctx.fillStyle = `rgba(0, 26, 43, ${0.06 * brightness})`;
+				ctx.fillStyle = `rgba(${hr}, ${hg}, ${hb}, ${fillAlphaMax * brightness})`;
 				ctx.fillRect(px + 0.5, py + 0.5, cellSize - 0.5, cellSize - 0.5);
 			});
 
@@ -198,6 +218,8 @@ interface Props {}
 
 		function applyGlowOpacity() {
 			gridEl.style.setProperty('--grid-glow', String(settings.gridGlow / 100));
+			// Glow center strength: 0 = subtle, 100 = strong (0.05–0.65)
+			gridEl.style.setProperty('--grid-glow-opacity', String(0.05 + (0.6 * settings.gridGlow) / 100));
 		}
 
 		window.addEventListener('cl01w-settings', ((e: CustomEvent) => {

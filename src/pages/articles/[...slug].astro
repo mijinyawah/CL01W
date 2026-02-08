@@ -114,7 +114,7 @@ function formatDate(d: Date): string {
 	.article__title {
 		font-family: var(--font-pixel);
 		font-size: 48px;
-		line-height: 52px;
+		line-height: 35px;
 		color: var(--content-title);
 		margin: 0 0 24px;
 	}
@@ -174,10 +174,11 @@ function formatDate(d: Date): string {
 		padding: 30px;
 		margin: 24px 50px;
 		overflow-x: auto;
+		font-family: 'Space Mono', monospace;
 	}
 
 	.article__body :global(code) {
-		font-family: var(--font-body);
+		font-family: 'Space Mono', monospace;
 		font-size: 17px;
 	}
 
@@ -245,7 +246,7 @@ function formatDate(d: Date): string {
 		}
 
 		.article__title {
-			line-height: 1.1;
+			line-height: 0.8;
 		}
 
 		.article__body :global(h2) {
