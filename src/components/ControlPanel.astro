@@ -2,76 +2,32 @@
 interface Props {}
 ---
 
-<div id="control-panel" class="control-panel" role="dialog" aria-label="Control panel" aria-modal="true" hidden>
+<div id="control-panel" class="control-panel" role="dialog" aria-label="Try the control panel" aria-modal="true" hidden>
 	<div class="control-panel__backdrop" data-close-panel></div>
 	<div class="control-panel__card">
 		<div class="control-panel__header">
-			<h2 class="control-panel__title">Control panel</h2>
+			<h2 class="control-panel__title">Try the control panel</h2>
 			<button type="button" class="control-panel__close" data-close-panel aria-label="Close">×</button>
 		</div>
 		<div class="control-panel__body">
 			<fieldset class="control-panel__section">
-				<legend>Grid</legend>
+				<legend>Colors</legend>
 				<label class="control-panel__row">
-					<span>Opacity</span>
-					<input type="range" id="grid-opacity" min="0" max="100" value="100" data-setting="gridOpacity" />
+					<span>Stroke</span>
+					<input type="color" id="stroke-color" value="#ffffff" data-setting="strokeColor" />
 				</label>
 				<label class="control-panel__row">
-					<span>Stroke tint</span>
-					<input type="range" id="grid-stroke-tint" min="0" max="100" value="100" data-setting="strokeTint" title="0 = dark gray, 100 = white" />
+					<span>Background</span>
+					<input type="color" id="page-bg" value="#ded5ea" data-setting="pageBg" />
 				</label>
 				<label class="control-panel__row">
-					<span>Glow</span>
-					<input type="range" id="grid-glow" min="0" max="100" value="100" data-setting="gridGlow" />
-				</label>
-				<label class="control-panel__row">
-					<span>Cell size (px)</span>
-					<input type="range" id="grid-cell-size" min="16" max="48" value="44" data-setting="cellSize" />
-					<output for="grid-cell-size" id="grid-cell-size-out">44</output>
-				</label>
-				<label class="control-panel__row">
-					<span>Hover color</span>
-					<input type="color" id="grid-highlight-color" value="#001a2b" data-setting="highlightColor" title="RGB color of the cell highlight" />
-				</label>
-				<label class="control-panel__row">
-					<span>Hover strength</span>
-					<input type="range" id="grid-highlight-opacity" min="0" max="100" value="20" data-setting="highlightOpacity" title="Subtle (0) to dramatic (100)" />
-				</label>
-			</fieldset>
-			<fieldset class="control-panel__section">
-				<legend>Cursor</legend>
-				<label class="control-panel__row control-panel__row--toggle">
-					<input type="checkbox" id="cursor-custom" data-setting="customCursor" />
-					<span>Custom cursor</span>
-				</label>
-				<label class="control-panel__row">
-					<span>Size (px)</span>
-					<input type="range" id="cursor-size" min="4" max="24" value="8" data-setting="cursorSize" />
-				</label>
-				<label class="control-panel__row">
-					<span>Fill color</span>
+					<span>Cursor & trail</span>
 					<input type="color" id="cursor-fill" value="#2dd4a0" data-setting="cursorFill" />
 				</label>
-				<label class="control-panel__row">
-					<span>Fill opacity</span>
-					<input type="range" id="cursor-opacity" min="0" max="100" value="80" data-setting="cursorOpacity" />
-				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
-				<legend>Trail</legend>
-				<label class="control-panel__row">
-					<span>Length</span>
-					<input type="range" id="trail-length" min="0" max="50" value="8" data-setting="trailLength" title="0 = no trail, 50 = lots" />
-					<output for="trail-length" id="trail-length-out">8</output>
-				</label>
-				<label class="control-panel__row">
-					<span>Tightness</span>
-					<input type="range" id="trail-tightness" min="0" max="100" value="50" data-setting="trailTightness" title="0 = chunky, 100 = smooth" />
-				</label>
-				<label class="control-panel__row">
-					<span>Opacity</span>
-					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" title="0 = invisible, 100 = full" />
-				</label>
+				<legend>Randomize</legend>
+				<button type="button" id="randomize-grid" class="control-panel__randomize">Randomize the grid</button>
 			</fieldset>
 		</div>
 	</div>
@@ -206,21 +162,39 @@ interface Props {}
 		flex: 0 0 28px;
 		text-align: right;
 	}
+
+	.control-panel__randomize {
+		width: 100%;
+		padding: 10px 14px;
+		font-family: var(--font-sidebar);
+		font-size: 13px;
+		font-weight: 600;
+		color: #0d1316;
+		background: #2dd4a0;
+		border: none;
+		cursor: pointer;
+	}
+
+	.control-panel__randomize:hover {
+		background: #3ee5b0;
+	}
 </style>
 
 <script>
 	const STORAGE_KEY = 'cl01w-control';
 
 	const DEFAULTS = {
+		strokeColor: '#ffffff',
+		pageBg: '#ded5ea',
+		cursorFill: '#2dd4a0',
 		gridOpacity: 100,
 		gridGlow: 100,
-		strokeTint: 100,
+		strokeOpacity: 100,
 		cellSize: 44,
 		highlightColor: '#001a2b',
 		highlightOpacity: 20,
 		customCursor: false,
 		cursorSize: 8,
-		cursorFill: '#2dd4a0',
 		cursorOpacity: 80,
 		trailLength: 8,
 		trailTightness: 50,
@@ -243,37 +217,60 @@ interface Props {}
 		window.dispatchEvent(new CustomEvent('cl01w-settings', { detail: settings }));
 	}
 
+	function applyPageBg(hex) {
+		document.body.style.setProperty('--page-bg', hex);
+	}
+
+	function randomHex() {
+		return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+	}
+
+	function randomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
 	function init() {
 		const panel = document.getElementById('control-panel');
 		const toggle = document.getElementById('control-panel-toggle');
 		if (!panel || !toggle) return;
 
 		const settings = load();
+		applyPageBg(settings.pageBg);
 
-		// Bind inputs
 		panel.querySelectorAll('[data-setting]').forEach((input) => {
 			const key = input.dataset.setting;
-			if (key in settings) {
-				if (input.type === 'checkbox') input.checked = settings[key];
-				else if (input.type === 'range') input.value = settings[key];
-				else if (input.type === 'color') input.value = settings[key];
+			if (key in settings && input.type === 'color') {
+				input.value = settings[key];
 			}
 			input.addEventListener('change', () => {
-				let val = input.type === 'checkbox' ? input.checked : input.value;
-				if (input.type === 'range') val = Number(val);
-				settings[key] = val;
+				settings[key] = input.value;
 				save(settings);
-				const out = document.getElementById('grid-cell-size-out');
-				if (out && input.id === 'grid-cell-size') out.textContent = val;
-				const trailOut = document.getElementById('trail-length-out');
-				if (trailOut && input.id === 'trail-length') trailOut.textContent = val;
+				if (key === 'pageBg') applyPageBg(settings.pageBg);
 			});
 		});
 
-		const out = document.getElementById('grid-cell-size-out');
-		if (out) out.textContent = settings.cellSize;
-		const trailOut = document.getElementById('trail-length-out');
-		if (trailOut) trailOut.textContent = settings.trailLength;
+		const randomizeBtn = document.getElementById('randomize-grid');
+		if (randomizeBtn) {
+			randomizeBtn.addEventListener('click', () => {
+				settings.gridOpacity = randomInt(0, 100);
+				settings.gridGlow = randomInt(0, 100);
+				settings.strokeOpacity = randomInt(0, 100);
+				settings.cellSize = randomInt(16, 48);
+				settings.highlightColor = randomHex();
+				settings.highlightOpacity = randomInt(0, 100);
+				settings.customCursor = Math.random() > 0.5;
+				settings.cursorSize = randomInt(4, 24);
+				settings.cursorOpacity = randomInt(0, 100);
+				settings.trailLength = randomInt(0, 50);
+				settings.trailTightness = randomInt(0, 100);
+				settings.trailOpacity = randomInt(0, 100);
+				save(settings);
+			});
+		}
+
+		window.addEventListener('cl01w-settings', (e) => {
+			if (e.detail && e.detail.pageBg) applyPageBg(e.detail.pageBg);
+		});
 
 		function open() {
 			panel.hidden = false;

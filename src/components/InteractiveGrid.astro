@@ -90,7 +90,8 @@ interface Props {}
 					cellSize: Number(p.cellSize) || 44,
 					gridOpacity: Number(p.gridOpacity) ?? 100,
 					gridGlow: Number(p.gridGlow) ?? 100,
-					strokeTint: Math.min(100, Math.max(0, Number(p.strokeTint) ?? 100)),
+					strokeColor: p.strokeColor || '#ffffff',
+					strokeOpacity: Math.min(100, Math.max(0, Number(p.strokeOpacity) ?? 100)),
 					highlightColor: p.highlightColor || '#001a2b',
 					highlightOpacity: Math.min(100, Math.max(0, Number(p.highlightOpacity) ?? 20)),
 				};
@@ -100,7 +101,8 @@ interface Props {}
 			cellSize: 44,
 			gridOpacity: 100,
 			gridGlow: 100,
-			strokeTint: 100,
+			strokeColor: '#ffffff',
+			strokeOpacity: 100,
 			highlightColor: '#001a2b',
 			highlightOpacity: 20,
 		};
@@ -148,9 +150,10 @@ interface Props {}
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = settings.gridOpacity / 100;
 
-			// Stroke tint: 0 = dark gray, 100 = white (fixed alpha for visibility)
-			const tint = Math.round(80 + (175 * settings.strokeTint) / 100);
-			ctx.strokeStyle = `rgba(${tint}, ${tint}, ${tint}, 0.2)`;
+			// Stroke color (manual) + opacity (randomizable)
+			const [sr, sg, sb] = hexToRgb(settings.strokeColor);
+			const strokeAlpha = 0.05 + (settings.strokeOpacity / 100) * 0.25;
+			ctx.strokeStyle = `rgba(${sr}, ${sg}, ${sb}, ${strokeAlpha})`;
 			ctx.lineWidth = GRID_LINE_WIDTH;
 
 			const cols = Math.ceil(width / cellSize) + 1;
