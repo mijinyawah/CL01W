@@ -81,7 +81,7 @@ const {} = Astro.props;
 		max-width: 352px;
 		align-self: stretch;
 		min-height: 0;
-		background: rgba(255, 255, 255, 0.50);
+		background: rgba(255, 255, 255, 0.70);
 		border-radius: var(--radius-container);
 		padding: 20px;
 		display: flex;
@@ -219,23 +219,30 @@ const {} = Astro.props;
 		scroll-behavior: smooth;
 	}
 
-	/* Minimal dark scrollbar for content area */
+	/* Dark navy scrollbar — no rounded corners, smooth ease */
 	.content::-webkit-scrollbar {
-		width: 6px;
+		width: 8px;
 	}
 
 	.content::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 3px;
+		background: #0d1316;
+		border-radius: 0;
 	}
 
 	.content::-webkit-scrollbar-thumb {
-		background: rgba(0, 0, 0, 0.4);
-		border-radius: 3px;
+		background: #1e272c;
+		border-radius: 0;
+		transition: background 0.2s ease;
 	}
 
 	.content::-webkit-scrollbar-thumb:hover {
-		background: rgba(0, 0, 0, 0.5);
+		background: #2a3338;
+	}
+
+	/* Firefox */
+	.content {
+		scrollbar-width: thin;
+		scrollbar-color: #1e272c #0d1316;
 	}
 
 	.content__inner {

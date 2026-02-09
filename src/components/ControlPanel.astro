@@ -26,6 +26,36 @@ interface Props {}
 				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
+				<legend>Tweak</legend>
+				<label class="control-panel__row">
+					<span>Stroke width</span>
+					<input type="range" id="stroke-width" min="0.5" max="2" step="0.1" value="0.5" data-setting="strokeWidth" />
+					<output for="stroke-width" id="stroke-width-out" aria-live="polite">0.5</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Stroke opacity</span>
+					<input type="range" id="stroke-opacity" min="0" max="100" value="100" data-setting="strokeOpacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Hover opacity</span>
+					<input type="range" id="highlight-opacity" min="0" max="100" value="20" data-setting="highlightOpacity" title="Rollover square opacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Trail length</span>
+					<input type="range" id="trail-length" min="0" max="50" value="8" data-setting="trailLength" />
+					<output for="trail-length" id="trail-length-out" aria-live="polite">8</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail opacity</span>
+					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Cursor size</span>
+					<input type="range" id="cursor-size" min="4" max="24" value="8" data-setting="cursorSize" />
+					<output for="cursor-size" id="cursor-size-out" aria-live="polite">8</output>
+				</label>
+			</fieldset>
+			<fieldset class="control-panel__section">
 				<legend>Randomize</legend>
 				<button type="button" id="randomize-grid" class="control-panel__randomize">Randomize the grid</button>
 			</fieldset>
@@ -373,30 +403,49 @@ interface Props {}
 		const settings = load();
 		applyPageBg(settings.pageBg);
 
+		function syncInputsFromSettings() {
+			panel.querySelectorAll('[data-setting]').forEach((input) => {
+				const key = input.dataset.setting;
+				if (key in settings) {
+					if (input.type === 'color') input.value = settings[key];
+					else if (input.type === 'range') input.value = settings[key];
+				}
+			});
+			const strokeWidthOut = document.getElementById('stroke-width-out');
+			const trailLengthOut = document.getElementById('trail-length-out');
+			const cursorSizeOut = document.getElementById('cursor-size-out');
+			if (strokeWidthOut) strokeWidthOut.textContent = Number(settings.strokeWidth).toFixed(1);
+			if (trailLengthOut) trailLengthOut.textContent = settings.trailLength;
+			if (cursorSizeOut) cursorSizeOut.textContent = settings.cursorSize;
+		}
+
 		panel.querySelectorAll('[data-setting]').forEach((input) => {
 			const key = input.dataset.setting;
-			if (key in settings && input.type === 'color') {
-				input.value = settings[key];
+			if (key in settings) {
+				if (input.type === 'color') input.value = settings[key];
+				else if (input.type === 'range') input.value = settings[key];
 			}
 			input.addEventListener('change', () => {
-				settings[key] = input.value;
+				const val = input.type === 'range' ? (key === 'strokeWidth' ? Number(input.value) : Math.round(Number(input.value))) : input.value;
+				settings[key] = val;
 				save(settings);
 				if (key === 'pageBg') applyPageBg(settings.pageBg);
+				const strokeWidthOut = document.getElementById('stroke-width-out');
+				const trailLengthOut = document.getElementById('trail-length-out');
+				const cursorSizeOut = document.getElementById('cursor-size-out');
+				if (strokeWidthOut && input.id === 'stroke-width') strokeWidthOut.textContent = Number(input.value).toFixed(1);
+				if (trailLengthOut && input.id === 'trail-length') trailLengthOut.textContent = input.value;
+				if (cursorSizeOut && input.id === 'cursor-size') cursorSizeOut.textContent = input.value;
 			});
 		});
+		syncInputsFromSettings();
 
 		const randomizeBtn = document.getElementById('randomize-grid');
 		if (randomizeBtn) {
 			randomizeBtn.addEventListener('click', () => {
 				runRandomize(settings);
-				// Sync color inputs so pickers show new values
-				const strokeInput = document.getElementById('stroke-color');
-				const pageBgInput = document.getElementById('page-bg');
-				const cursorInput = document.getElementById('cursor-fill');
-				if (strokeInput) strokeInput.value = settings.strokeColor;
-				if (pageBgInput) pageBgInput.value = settings.pageBg;
-				if (cursorInput) cursorInput.value = settings.cursorFill;
 				applyPageBg(settings.pageBg);
+				syncInputsFromSettings();
 				save(settings);
 			});
 		}
