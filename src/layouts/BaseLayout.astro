@@ -1,6 +1,6 @@
 ---
 import '../styles/tokens.css';
-import InteractiveGrid from '../components/InteractiveGrid.astro';
+import CursorTrailGrid from '../components/CursorTrailGrid.astro';
 import CursorTrail from '../components/CursorTrail.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 
@@ -41,7 +41,16 @@ const { title = 'Astro' } = Astro.props;
 			}
 
 			body {
-				background: var(--page-bg, #ded5ea);
+				background: var(--page-bg, #1a1a2e);
+			}
+
+			@media (max-width: 800px) {
+				body {
+					background: #0d1316; /* Match content area — no visible teal gap when URL bar collapses */
+				}
+				.custom-cursor {
+					display: none !important;
+				}
 			}
 
 			.base-layout-wrapper {
@@ -51,8 +60,8 @@ const { title = 'Astro' } = Astro.props;
 		</style>
 	</head>
 	<body>
-		<InteractiveGrid />
 		<div class="base-layout-wrapper">
+			<CursorTrailGrid />
 			<CursorTrail />
 			<slot />
 		</div>

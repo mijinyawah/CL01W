@@ -24,6 +24,10 @@ interface Props {}
 					<span>Cursor & trail</span>
 					<input type="color" id="cursor-fill" value="#2dd4a0" data-setting="cursorFill" />
 				</label>
+				<label class="control-panel__row">
+					<span>Trail color</span>
+					<input type="color" id="highlight-color" value="#001a2b" data-setting="highlightColor" title="Grid cell trail color" />
+				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
 				<legend>Tweak</legend>
@@ -37,8 +41,23 @@ interface Props {}
 					<input type="range" id="stroke-opacity" min="0" max="100" value="100" data-setting="strokeOpacity" />
 				</label>
 				<label class="control-panel__row">
-					<span>Hover opacity</span>
-					<input type="range" id="highlight-opacity" min="0" max="100" value="20" data-setting="highlightOpacity" title="Rollover square opacity" />
+					<span>Trail opacity</span>
+					<input type="range" id="highlight-opacity" min="0" max="100" value="20" data-setting="highlightOpacity" title="Grid trail cell opacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Trail fade (s)</span>
+					<input type="range" id="trail-fade-duration" min="0.5" max="5" step="0.1" value="2" data-setting="trailFadeDuration" title="How long the trail lingers" />
+					<output for="trail-fade-duration" id="trail-fade-duration-out" aria-live="polite">2</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail delay (s)</span>
+					<input type="range" id="trail-fade-delay" min="0" max="1" step="0.1" value="0.4" data-setting="trailFadeDelay" title="Delay before fade-out" />
+					<output for="trail-fade-delay" id="trail-fade-delay-out" aria-live="polite">0.4</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail scale</span>
+					<input type="range" id="trail-scale" min="1" max="1.5" step="0.05" value="1.2" data-setting="trailScale" title="Hover scale" />
+					<output for="trail-scale" id="trail-scale-out" aria-live="polite">1.2</output>
 				</label>
 				<label class="control-panel__row">
 					<span>Trail length</span>
@@ -218,12 +237,14 @@ interface Props {}
 		pageBg: '#ded5ea',
 		cursorFill: '#2dd4a0',
 		gridOpacity: 100,
-		gridGlow: 100,
 		strokeOpacity: 100,
 		strokeWidth: 0.5,
 		cellSize: 44,
 		highlightColor: '#001a2b',
 		highlightOpacity: 20,
+		trailFadeDuration: 2,
+		trailFadeDelay: 0.4,
+		trailScale: 1.2,
 		customCursor: true,
 		cursorSize: 8,
 		cursorOpacity: 80,
@@ -269,9 +290,11 @@ interface Props {}
 			cursorOpacity: [0.7, 1.0],
 			trailTightness: [40, 80],
 			gridOpacity: [80, 100],
-			gridGlow: [70, 100],
 			cellSize: [24, 40],
 			highlightOpacity: [40, 80],
+			trailFadeDuration: [1, 3],
+			trailFadeDelay: [0.2, 0.6],
+			trailScale: [1.1, 1.3],
 		},
 		midnight: {
 			stroke: { h: [200, 270], s: [60, 90], l: [40, 65], opacity: [0.5, 0.9] },
@@ -284,9 +307,11 @@ interface Props {}
 			cursorOpacity: [0.6, 0.9],
 			trailTightness: [30, 70],
 			gridOpacity: [70, 100],
-			gridGlow: [50, 90],
 			cellSize: [20, 38],
 			highlightOpacity: [30, 70],
+			trailFadeDuration: [1.5, 3],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.05, 1.25],
 		},
 		ember: {
 			stroke: { h: [0, 45], s: [80, 100], l: [45, 65], opacity: [0.6, 1.0] },
@@ -299,9 +324,11 @@ interface Props {}
 			cursorOpacity: [0.6, 1.0],
 			trailTightness: [35, 75],
 			gridOpacity: [75, 100],
-			gridGlow: [60, 100],
 			cellSize: [22, 42],
 			highlightOpacity: [35, 75],
+			trailFadeDuration: [1, 2.5],
+			trailFadeDelay: [0.3, 0.6],
+			trailScale: [1.1, 1.3],
 		},
 		matrix: {
 			stroke: { h: [110, 140], s: [80, 100], l: [40, 60], opacity: [0.7, 1.0] },
@@ -314,9 +341,11 @@ interface Props {}
 			cursorOpacity: [0.7, 1.0],
 			trailTightness: [50, 90],
 			gridOpacity: [80, 100],
-			gridGlow: [40, 80],
 			cellSize: [20, 36],
 			highlightOpacity: [40, 80],
+			trailFadeDuration: [2, 4],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.1, 1.35],
 		},
 		vapor: {
 			stroke: { h: [270, 340], s: [70, 100], l: [55, 75], opacity: [0.6, 0.9] },
@@ -329,9 +358,11 @@ interface Props {}
 			cursorOpacity: [0.6, 0.9],
 			trailTightness: [20, 60],
 			gridOpacity: [70, 100],
-			gridGlow: [50, 90],
 			cellSize: [24, 44],
 			highlightOpacity: [35, 70],
+			trailFadeDuration: [1.5, 3.5],
+			trailFadeDelay: [0.3, 0.6],
+			trailScale: [1.05, 1.3],
 		},
 		mono: {
 			stroke: { h: [0, 0], s: [0, 5], l: [70, 100], opacity: [0.6, 1.0] },
@@ -344,9 +375,11 @@ interface Props {}
 			cursorOpacity: [0.7, 1.0],
 			trailTightness: [40, 80],
 			gridOpacity: [85, 100],
-			gridGlow: [30, 70],
 			cellSize: [28, 44],
 			highlightOpacity: [40, 80],
+			trailFadeDuration: [1, 2.5],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.1, 1.25],
 		},
 	};
 
@@ -390,9 +423,11 @@ interface Props {}
 		settings.customCursor = true;
 
 		settings.gridOpacity = randInt(m.gridOpacity[0], m.gridOpacity[1]);
-		settings.gridGlow = randInt(m.gridGlow[0], m.gridGlow[1]);
 		settings.cellSize = randInt(m.cellSize[0], m.cellSize[1]);
 		settings.highlightOpacity = randInt(m.highlightOpacity[0], m.highlightOpacity[1]);
+		if (m.trailFadeDuration) settings.trailFadeDuration = Math.round(rand(m.trailFadeDuration[0], m.trailFadeDuration[1]) * 10) / 10;
+		if (m.trailFadeDelay) settings.trailFadeDelay = Math.round(rand(m.trailFadeDelay[0], m.trailFadeDelay[1]) * 10) / 10;
+		if (m.trailScale) settings.trailScale = Math.round(rand(m.trailScale[0], m.trailScale[1]) * 100) / 100;
 	}
 
 	function init() {
@@ -414,9 +449,15 @@ interface Props {}
 			const strokeWidthOut = document.getElementById('stroke-width-out');
 			const trailLengthOut = document.getElementById('trail-length-out');
 			const cursorSizeOut = document.getElementById('cursor-size-out');
+			const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
+			const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
+			const trailScaleOut = document.getElementById('trail-scale-out');
 			if (strokeWidthOut) strokeWidthOut.textContent = Number(settings.strokeWidth).toFixed(1);
 			if (trailLengthOut) trailLengthOut.textContent = settings.trailLength;
 			if (cursorSizeOut) cursorSizeOut.textContent = settings.cursorSize;
+			if (trailFadeDurationOut) trailFadeDurationOut.textContent = Number(settings.trailFadeDuration).toFixed(1);
+			if (trailFadeDelayOut) trailFadeDelayOut.textContent = Number(settings.trailFadeDelay).toFixed(1);
+			if (trailScaleOut) trailScaleOut.textContent = Number(settings.trailScale).toFixed(2);
 		}
 
 		panel.querySelectorAll('[data-setting]').forEach((input) => {
@@ -426,16 +467,27 @@ interface Props {}
 				else if (input.type === 'range') input.value = settings[key];
 			}
 			input.addEventListener('change', () => {
-				const val = input.type === 'range' ? (key === 'strokeWidth' ? Number(input.value) : Math.round(Number(input.value))) : input.value;
+				let val;
+				if (input.type === 'range') {
+					const n = Number(input.value);
+					if (key === 'strokeWidth' || key === 'trailFadeDuration' || key === 'trailFadeDelay' || key === 'trailScale') val = n;
+					else val = Math.round(n);
+				} else val = input.value;
 				settings[key] = val;
 				save(settings);
 				if (key === 'pageBg') applyPageBg(settings.pageBg);
 				const strokeWidthOut = document.getElementById('stroke-width-out');
 				const trailLengthOut = document.getElementById('trail-length-out');
 				const cursorSizeOut = document.getElementById('cursor-size-out');
+				const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
+				const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
+				const trailScaleOut = document.getElementById('trail-scale-out');
 				if (strokeWidthOut && input.id === 'stroke-width') strokeWidthOut.textContent = Number(input.value).toFixed(1);
 				if (trailLengthOut && input.id === 'trail-length') trailLengthOut.textContent = input.value;
 				if (cursorSizeOut && input.id === 'cursor-size') cursorSizeOut.textContent = input.value;
+				if (trailFadeDurationOut && input.id === 'trail-fade-duration') trailFadeDurationOut.textContent = Number(input.value).toFixed(1);
+				if (trailFadeDelayOut && input.id === 'trail-fade-delay') trailFadeDelayOut.textContent = Number(input.value).toFixed(1);
+				if (trailScaleOut && input.id === 'trail-scale') trailScaleOut.textContent = Number(input.value).toFixed(2);
 			});
 		});
 		syncInputsFromSettings();
