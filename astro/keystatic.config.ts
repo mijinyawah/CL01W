@@ -4,21 +4,30 @@ import { injectGlobal } from '@keystar/ui/style';
 import { createElement } from 'react';
 
 injectGlobal`
-  [data-keystatic-editor="content"] {
+  :where([data-keystatic-editor="content"], [data-keystatic-editor="content"] .ProseMirror) {
     color: #f8f8f8;
   }
-  [data-keystatic-editor="content"] h1,
-  [data-keystatic-editor="content"] h2,
-  [data-keystatic-editor="content"] h3,
-  [data-keystatic-editor="content"] h4,
-  [data-keystatic-editor="content"] h5,
-  [data-keystatic-editor="content"] h6,
-  [data-keystatic-editor="content"] p,
-  [data-keystatic-editor="content"] li,
-  [data-keystatic-editor="content"] blockquote {
+  :where([data-keystatic-editor="content"]) :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    li,
+    blockquote,
+    pre,
+    code,
+    strong,
+    em
+  ) {
     color: #f8f8f8;
   }
-  [data-keystatic-editor="content"] a {
+  :where([data-keystatic-editor="content"]) :is(h1, h2, h3, h4, h5, h6) {
+    color: #f8f8f8 !important;
+  }
+  :where([data-keystatic-editor="content"]) a {
     color: #ec8cff;
   }
 `;
