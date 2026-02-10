@@ -1,7 +1,49 @@
 import { config, collection, fields } from '@keystatic/core';
-import { block, wrapper } from '@keystatic/core/content-components';
+import { block, mark, wrapper } from '@keystatic/core/content-components';
+import { injectGlobal } from '@keystar/ui/style';
+import { createElement } from 'react';
+
+injectGlobal`
+  [data-keystatic-editor="content"] {
+    color: #f8f8f8;
+  }
+  [data-keystatic-editor="content"] h1,
+  [data-keystatic-editor="content"] h2,
+  [data-keystatic-editor="content"] h3,
+  [data-keystatic-editor="content"] h4,
+  [data-keystatic-editor="content"] h5,
+  [data-keystatic-editor="content"] h6,
+  [data-keystatic-editor="content"] p,
+  [data-keystatic-editor="content"] li,
+  [data-keystatic-editor="content"] blockquote {
+    color: #f8f8f8;
+  }
+  [data-keystatic-editor="content"] a {
+    color: #ec8cff;
+  }
+`;
+
+const textColorOptions = {
+	accent: { label: 'Accent', value: 'accent', color: '#ec8cff' },
+	muted: { label: 'Muted', value: 'muted', color: '#cfd6dc' },
+	warning: { label: 'Warning', value: 'warning', color: '#f5a623' },
+};
 
 const mdxComponents = {
+	TextColor: mark({
+		label: 'Text Color',
+		icon: createElement('span', { style: { fontWeight: 700 } }, 'A'),
+		schema: {
+			color: fields.select({
+				label: 'Color',
+				defaultValue: textColorOptions.accent.value,
+				options: Object.values(textColorOptions),
+			}),
+		},
+		style: ({ value }) => ({
+			color: textColorOptions[value.color]?.color ?? textColorOptions.accent.color,
+		}),
+	}),
 	ImageBlock: block({
 		label: 'Image Block',
 		schema: {

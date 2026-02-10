@@ -5,6 +5,7 @@ import { getCollection, getEntry } from 'astro:content';
 import ImageBlock from '../../components/ImageBlock.astro';
 import Callout from '../../components/Callout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import TextColor from '../../components/TextColor.astro';
 import Lightbox from '../../components/Lightbox.astro';
 
 export const prerender = true;
@@ -64,6 +65,7 @@ function formatDate(d: Date): string {
 						ImageBlock,
 						Callout,
 						VideoEmbed,
+						TextColor,
 					}}
 				/>
 			</div>

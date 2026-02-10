@@ -1,0 +1,25 @@
+---
+interface Props {
+	color?: 'accent' | 'muted' | 'warning';
+}
+
+const { color = 'accent' } = Astro.props;
+---
+
+<span class={`text-color text-color--${color}`}>
+	<slot />
+</span>
+
+<style>
+	.text-color--accent {
+		color: var(--accent-primary);
+	}
+
+	.text-color--muted {
+		color: var(--text-on-dark-muted);
+	}
+
+	.text-color--warning {
+		color: #f5a623;
+	}
+</style>
