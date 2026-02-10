@@ -36,12 +36,31 @@ const textColorOptions = {
 	accent: { label: 'Accent', value: 'accent', color: '#ec8cff' },
 	muted: { label: 'Muted', value: 'muted', color: '#cfd6dc' },
 	warning: { label: 'Warning', value: 'warning', color: '#f5a623' },
+	blue: { label: 'Blue', value: 'blue', color: '#8f62ff' },
+	teal: { label: 'Teal', value: 'teal', color: '#4af6ff' },
 };
 
 const mdxComponents = {
 	TextColor: mark({
 		label: 'Text Color',
-		icon: createElement('span', { style: { fontWeight: 700 } }, 'A'),
+		icon: createElement(
+			'span',
+			{
+				style: {
+					display: 'inline-flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					width: '18px',
+					height: '18px',
+					border: '1px solid #cfd6dc',
+					borderRadius: '4px',
+					fontWeight: 700,
+					fontSize: '11px',
+					lineHeight: 1,
+				},
+			},
+			'A'
+		),
 		schema: {
 			color: fields.select({
 				label: 'Color',

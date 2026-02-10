@@ -171,6 +171,32 @@ function formatDate(d: Date): string {
 		margin: 32px 0 16px;
 	}
 
+	.article__body :global(h3) {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: var(--text-h3-size);
+		line-height: var(--text-h3-line);
+		letter-spacing: var(--text-h2-letter);
+		color: var(--content-heading);
+		padding: 0 50px;
+		margin: 28px 0 14px;
+		max-width: var(--content-max);
+	}
+
+	.article__body :global(h4),
+	.article__body :global(h5),
+	.article__body :global(h6) {
+		font-family: var(--font-body);
+		font-weight: 600;
+		font-size: var(--text-body-size);
+		line-height: var(--text-body-line);
+		letter-spacing: var(--text-body-letter);
+		color: var(--content-heading);
+		padding: 0 50px;
+		margin: 24px 0 12px;
+		max-width: var(--content-max);
+	}
+
 	.article__body :global(p) {
 		font-weight: 400;
 		font-size: var(--text-body-size);
@@ -288,6 +314,14 @@ function formatDate(d: Date): string {
 
 		.article__body :global(h2) {
 			padding: 0 clamp(16px, 6vw, 24px);
+		}
+
+		.article__body :global(h3),
+		.article__body :global(h4),
+		.article__body :global(h5),
+		.article__body :global(h6) {
+			padding: 0 clamp(16px, 6vw, 24px);
+			max-width: none;
 		}
 
 		.article__body :global(p) {
