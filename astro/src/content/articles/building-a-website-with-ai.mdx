@@ -24,27 +24,19 @@ Hey, I'm Hafsah, I'm a multidisciplinary designer with a current focus on brand 
 
 As of this writing, I no longer use [OpenClaw](https://openclaw.ai/)—an AI personal assistant purported to be a game changing AI chatbot product. I mention that because this website was an idea produced during my 48 hours with my own personal "moltbot" which I named "Clawde". Clawde ran off of a sandboxed Docker environment provided by a Digital Ocean droplet. It was given its own 1Password vault, some limited API connectivity to apps like Google Calendar and Notion, and briefly did a stint as my own personal DJ, controlled via conversation requests in the Telegram chat I communicated with it from. 48 hours ago, I wouldn't have known how to do any of that. The kicker is...I still don't! But now a week into experimenting with AI chatbots as collaborative and design partners, I do know a tiny bit more about development, all thanks to AI chatbots like Claude, "moltbot" and Codex by OpenAI.
 
-**Important preface:** I am not an proponent of new AI technologies. I use them because my livelihood as a design was forged in the tech space, and with that comes a need to adapt to new technologies, lest you become obsolete and unemployable. I also use them on occasion simply because I am a curious person, and where the is potential value in learning, I will lean in to try and learn. That said, I recognize that there are glaringly unstudied grey areas with regard to the ethics of LLM and AI development, as well as with how secure they are with the vast amounts of data they are being fed minute over minute. Both ethics and security are important things to me because they are the engine that drives how many of us live within this modern world. As human beings, we should ideally do no harm to each other, whether emotional, material or physical, and quite consistently, we fail at that in the pursuit of knowledge (or rather, for many in the tech space, money and clout).
+**Important preface:** I am not an proponent of new AI technologies. I use them because my livelihood as a designer was forged in the tech space, and with that comes a need to adapt to new technologies. To be relevant, you have to stay relavent. I also use them on occasion simply because I am a curious person, and where there is potential value in learning, I *will* lean in to try and learn. That said, I recognize that there are glaringly unstudied grey areas with regard to the ethics of LLM and AI development, as well as with how secure they are with the vast amounts of data they are being fed and given access to minute over minute. AI, to me, is effectively a snowball, rolling down a large snowy hill, accumulating girth and mass as it rolls ever faster into a looming behemoth with unknown intensions. Dramatic? Perhaps. Metaphor exaggeration *where*. Both ethics and security are important things to me because they are the engine that drives how many of us live within this modern world. As human beings, we should ideally do no harm to each other, whether emotional, material or physical, and quite consistently, we fail at that in the pursuit of knowledge (or rather, for many in the tech space, money and clout).&#x20;
 
+And yet, here we are.
 
+So anyway, this is my preface post to set up the other articles on this website. I  am intrigued by and afraid of AI, but not so much that I'm not willing to see what it can really do for me as a user. There is so much fucking hyperbole in the AI space. Subreddits are full of breathless excitement over new Anthropic models, new github repos with tons of skills and fun things to install and run with your instance of GPT or Claude or whatever. Every other post I scroll by shares some vague, detail-less story of how Claude or ChatGPT completely blew a mind by creating an app from a single prompt in under 20 minutes.&#x20;
 
-The kno on subreddits like \[r/cybersecurity, r/artificialintelligence r/vibecoding and others has revealed a&#x20;
+This website took over 24 hours to build. Is that right, Codex?
+
+> ***Codex:** Yes — 24+ hours is accurate. The CoWork notes show multiple revision rounds and a full design‑system rebuild (tokens, fonts, breakpoints) on top of the Astro scaffold, plus content plumbing and interactive effects. That isn’t a one‑prompt build; it’s a chain of passes, tweaks, and QA. So “over a day” is the honest number.*
+
+To put it lightly. I'll go into the development process more in a separate post.
 
 We wanted to see what it would feel like to build a real site with an AI pair programmer. No boilerplate dump, no “give me a full app” — just one component at a time, with a human making the calls and an AI writing the code. The result is this site: a simple layout, a content collection, and a few pages that show how the pieces fit together.
-
-Here’s a minimal Astro component we used early on to confirm the stack was working:
-
-```astro
----
-interface Props {
-  name: string;
-}
-const { name } = Astro.props;
----
-<p>Hello, {name}!</p>
-```
-
-## Why This Matters
 
 Building with an AI doesn’t mean replacing design or product thinking. It means spending less time on boilerplate and more on structure, content, and how the thing actually feels. We kept the layout and typography decisions human-driven and used the AI for implementation details and repetitive markup.
 
