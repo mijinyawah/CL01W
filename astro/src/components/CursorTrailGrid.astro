@@ -1,0 +1,137 @@
+---
+interface Props {}
+---
+
+<div class="cursor-trail-grid" id="cursor-trail-grid" aria-hidden="true">
+	<!-- JS generates grid items here -->
+</div>
+
+<style>
+	.cursor-trail-grid {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		overflow: hidden;
+		display: grid;
+		pointer-events: auto;
+	}
+
+	/* Grid lines via CSS gradient on the container (replaces canvas-drawn lines) */
+	.cursor-trail-grid::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background-image:
+			linear-gradient(to right, var(--stroke-rgba) var(--stroke-width, 0.5px), transparent var(--stroke-width, 0.5px)),
+			linear-gradient(to bottom, var(--stroke-rgba) var(--stroke-width, 0.5px), transparent var(--stroke-width, 0.5px));
+		background-size: var(--grid-cell-size, 44px) var(--grid-cell-size, 44px);
+		opacity: var(--grid-opacity, 1);
+		z-index: 1;
+	}
+
+	.cursor-trail-grid__item {
+		opacity: 0;
+		background: var(--trail-color, #2dd4a0);
+		transition:
+			opacity var(--trail-fade-duration, 2s) ease var(--trail-fade-delay, 0.4s),
+			transform 0.8s ease;
+		transform: scale(1);
+		pointer-events: auto;
+		will-change: opacity, transform;
+	}
+
+	.cursor-trail-grid__item:hover {
+		opacity: var(--trail-opacity, 0.6);
+		transition:
+			opacity 0s ease 0s,
+			transform 0.3s ease;
+		transform: scale(var(--trail-scale, 1.2));
+	}
+
+	@media (max-width: 767px) {
+		.cursor-trail-grid {
+			pointer-events: none;
+			display: block;
+		}
+
+		.cursor-trail-grid__item {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'cl01w-control';
+	const MOBILE_BREAKPOINT = 767;
+
+	function hexToRgba(hex, alpha) {
+		const m = hex.replace(/^#/, '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+		if (!m) return `rgba(255, 255, 255, ${alpha})`;
+		return `rgba(${parseInt(m[1], 16)}, ${parseInt(m[2], 16)}, ${parseInt(m[3], 16)}, ${alpha})`;
+	}
+
+	function getSettings() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) return JSON.parse(raw);
+		} catch (_) {}
+		return {};
+	}
+
+	function createGrid() {
+		if (window.innerWidth <= MOBILE_BREAKPOINT) return;
+		const grid = document.getElementById('cursor-trail-grid');
+		if (!grid) return;
+
+		const settings = getSettings();
+		const cellSize = settings.cellSize || 44;
+		const rect = grid.getBoundingClientRect();
+		if (!rect.width || !rect.height) return;
+		const cols = Math.ceil(rect.width / cellSize) + 1;
+		const rows = Math.ceil(rect.height / cellSize) + 1;
+
+		grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+		grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+
+		grid.innerHTML = '';
+		for (let i = 0; i < cols * rows; i++) {
+			const item = document.createElement('div');
+			item.className = 'cursor-trail-grid__item';
+			grid.appendChild(item);
+		}
+	}
+
+	function applySettings() {
+		const s = getSettings();
+		const root = document.documentElement;
+		root.style.setProperty('--trail-color', s.highlightColor || '#001a2b');
+		root.style.setProperty('--trail-opacity', String((s.highlightOpacity ?? 20) / 100));
+		root.style.setProperty('--trail-fade-duration', `${s.trailFadeDuration ?? 2}s`);
+		root.style.setProperty('--trail-fade-delay', `${s.trailFadeDelay ?? 0.4}s`);
+		root.style.setProperty('--trail-scale', String(s.trailScale ?? 1.2));
+		root.style.setProperty('--grid-cell-size', `${s.cellSize ?? 44}px`);
+		root.style.setProperty('--grid-opacity', String((s.gridOpacity ?? 100) / 100));
+
+		const strokeAlpha = Math.max(0, Math.min(100, s.strokeOpacity ?? 35)) / 100;
+		root.style.setProperty('--stroke-rgba', hexToRgba(s.strokeColor || '#8f62ff', strokeAlpha));
+		root.style.setProperty('--stroke-width', `${s.strokeWidth ?? 0.5}px`);
+	}
+
+	createGrid();
+	applySettings();
+
+	let resizeTimeout;
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(() => {
+			createGrid();
+			applySettings();
+		}, 150);
+	});
+
+	window.addEventListener('cl01w-settings', (e) => {
+		applySettings();
+		if (e.detail?.cellSize != null) createGrid();
+	});
+</script>

@@ -1,0 +1,533 @@
+---
+interface Props {}
+---
+
+<div id="control-panel" class="control-panel" role="dialog" aria-label="Try the control panel" aria-modal="true" hidden>
+	<div class="control-panel__backdrop" data-close-panel></div>
+	<div class="control-panel__card">
+		<div class="control-panel__header">
+			<h2 class="control-panel__title">Try the control panel</h2>
+			<button type="button" class="control-panel__close" data-close-panel aria-label="Close">×</button>
+		</div>
+		<div class="control-panel__body">
+			<fieldset class="control-panel__section">
+				<legend>Colors</legend>
+				<label class="control-panel__row">
+					<span>Stroke</span>
+					<input type="color" id="stroke-color" value="#8f62ff" data-setting="strokeColor" />
+				</label>
+				<label class="control-panel__row">
+					<span>Background</span>
+					<input type="color" id="page-bg" value="#ffeded" data-setting="pageBg" />
+				</label>
+				<label class="control-panel__row">
+					<span>Cursor & trail</span>
+					<input type="color" id="cursor-fill" value="#ec8cff" data-setting="cursorFill" />
+				</label>
+				<label class="control-panel__row">
+					<span>Trail color</span>
+					<input type="color" id="highlight-color" value="#8f62ff" data-setting="highlightColor" title="Grid cell trail color" />
+				</label>
+			</fieldset>
+			<fieldset class="control-panel__section">
+				<legend>Tweak</legend>
+				<label class="control-panel__row">
+					<span>Stroke width</span>
+					<input type="range" id="stroke-width" min="0.5" max="2" step="0.1" value="0.5" data-setting="strokeWidth" />
+					<output for="stroke-width" id="stroke-width-out" aria-live="polite">0.5</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Stroke opacity</span>
+					<input type="range" id="stroke-opacity" min="0" max="100" value="35" data-setting="strokeOpacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Trail opacity</span>
+					<input type="range" id="highlight-opacity" min="0" max="100" value="35" data-setting="highlightOpacity" title="Grid trail cell opacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Trail fade (s)</span>
+					<input type="range" id="trail-fade-duration" min="0.5" max="5" step="0.1" value="2" data-setting="trailFadeDuration" title="How long the trail lingers" />
+					<output for="trail-fade-duration" id="trail-fade-duration-out" aria-live="polite">2</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail delay (s)</span>
+					<input type="range" id="trail-fade-delay" min="0" max="1" step="0.1" value="0.4" data-setting="trailFadeDelay" title="Delay before fade-out" />
+					<output for="trail-fade-delay" id="trail-fade-delay-out" aria-live="polite">0.4</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail scale</span>
+					<input type="range" id="trail-scale" min="1" max="1.5" step="0.05" value="1.2" data-setting="trailScale" title="Hover scale" />
+					<output for="trail-scale" id="trail-scale-out" aria-live="polite">1.2</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail length</span>
+					<input type="range" id="trail-length" min="0" max="120" value="26" data-setting="trailLength" />
+					<output for="trail-length" id="trail-length-out" aria-live="polite">8</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Trail opacity</span>
+					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" />
+				</label>
+				<label class="control-panel__row">
+					<span>Cursor size</span>
+					<input type="range" id="cursor-size" min="4" max="24" value="24" data-setting="cursorSize" />
+					<output for="cursor-size" id="cursor-size-out" aria-live="polite">8</output>
+				</label>
+			</fieldset>
+			<fieldset class="control-panel__section">
+				<legend>Randomize</legend>
+				<button type="button" id="randomize-grid" class="control-panel__randomize">Randomize the grid</button>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+<style>
+	.control-panel {
+		position: fixed;
+		inset: 0;
+		z-index: 10001;
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-end;
+		padding: 20px;
+		pointer-events: none;
+	}
+
+	.control-panel[hidden] {
+		display: none !important;
+	}
+
+	.control-panel.is-open {
+		pointer-events: auto;
+	}
+
+	.control-panel__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.3);
+		cursor: pointer;
+	}
+
+	.control-panel__card {
+		position: relative;
+		width: 360px;
+		max-height: 80vh;
+		overflow-y: auto;
+		background: #0d1316;
+		border: 2px solid #2dd4a0;
+		padding: 14px 18px;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+	}
+
+	.control-panel__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 10px;
+		padding-bottom: 8px;
+		border-bottom: 1px solid rgba(45, 212, 160, 0.3);
+	}
+
+	.control-panel__title {
+		font-family: var(--font-sidebar);
+		font-size: 14px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.9);
+		margin: 0;
+	}
+
+	.control-panel__close {
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+		line-height: 1;
+		color: rgba(255, 255, 255, 0.8);
+		background: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.control-panel__close:hover {
+		color: #2dd4a0;
+	}
+
+	.control-panel__section {
+		margin: 0 0 12px;
+		padding: 0;
+		border: none;
+	}
+
+	.control-panel__section legend {
+		font-family: var(--font-sidebar);
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: #2dd4a0;
+		margin-bottom: 6px;
+		padding: 0;
+	}
+
+	.control-panel__row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 6px;
+		font-family: var(--font-sidebar);
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.control-panel__row span:first-child {
+		flex: 0 0 72px;
+	}
+
+	.control-panel__row input[type='range'] {
+		flex: 1;
+		min-width: 0;
+		accent-color: #2dd4a0;
+	}
+
+	.control-panel__row input[type='color'] {
+		width: 32px;
+		height: 28px;
+		padding: 0;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		cursor: pointer;
+	}
+
+	.control-panel__row--toggle {
+		cursor: pointer;
+	}
+
+	.control-panel__row--toggle input {
+		accent-color: #2dd4a0;
+	}
+
+	.control-panel__row output {
+		flex: 0 0 28px;
+		text-align: right;
+	}
+
+	.control-panel__randomize {
+		width: 100%;
+		padding: 10px 14px;
+		font-family: var(--font-sidebar);
+		font-size: 13px;
+		font-weight: 600;
+		color: #0d1316;
+		background: #2dd4a0;
+		border: none;
+		cursor: pointer;
+	}
+
+	.control-panel__randomize:hover {
+		background: #3ee5b0;
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'cl01w-control';
+
+	const DEFAULTS = {
+		strokeColor: '#8f62ff',
+		pageBg: '#ffeded',
+		cursorFill: '#ec8cff',
+		gridOpacity: 100,
+		strokeOpacity: 35,
+		strokeWidth: 0.5,
+		cellSize: 44,
+		highlightColor: '#8f62ff',
+		highlightOpacity: 35,
+		trailFadeDuration: 2,
+		trailFadeDelay: 0.4,
+		trailScale: 1.2,
+		customCursor: true,
+		cursorSize: 24,
+		cursorOpacity: 80,
+		trailLength: 26,
+		trailTightness: 50,
+		trailOpacity: 100,
+	};
+
+	/** HSL (h 0–360, s/l 0–100) to hex */
+	function hslToHex(h, s, l) {
+		s /= 100;
+		l /= 100;
+		const a = s * Math.min(l, 1 - l);
+		const f = (n) => {
+			const k = (n + h / 30) % 12;
+			return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+		};
+		return '#' + [f(0), f(8), f(4)].map((x) => Math.round(x * 255).toString(16).padStart(2, '0')).join('');
+	}
+
+	const rand = (min, max) => Math.random() * (max - min) + min;
+	const randInt = (min, max) => Math.floor(rand(min, max + 0.999));
+
+	/** Pick HSL from range arrays [min, max] */
+	function hslFromRange(hRange, sRange, lRange) {
+		return hslToHex(randInt(hRange[0], hRange[1]), randInt(sRange[0], sRange[1]), randInt(lRange[0], lRange[1]));
+	}
+
+	/** Map opacity 0.4–1.0 to stored 0–100 */
+	function opacityToStored(o) {
+		return Math.round(Math.max(0, Math.min(100, ((o - 0.4) / 0.6) * 100)));
+	}
+
+	const MOODS = {
+		neon: {
+			stroke: { h: [170, 320], s: [90, 100], l: [50, 70], opacity: [0.7, 1.0] },
+			bg: { h: [220, 280], s: [30, 60], l: [5, 15] },
+			trail: { h: [150, 330], s: [90, 100], l: [55, 75], opacity: [0.7, 1.0] },
+			highlight: { h: [160, 300], s: [80, 100], l: [45, 65] },
+			trailLength: [15, 30],
+			strokeWidth: [1, 2],
+			cursorSize: [8, 16],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [40, 80],
+			gridOpacity: [80, 100],
+			cellSize: [24, 40],
+			highlightOpacity: [40, 80],
+			trailFadeDuration: [1, 3],
+			trailFadeDelay: [0.2, 0.6],
+			trailScale: [1.1, 1.3],
+		},
+		midnight: {
+			stroke: { h: [200, 270], s: [60, 90], l: [40, 65], opacity: [0.5, 0.9] },
+			bg: { h: [220, 250], s: [40, 70], l: [8, 20] },
+			trail: { h: [200, 280], s: [70, 100], l: [50, 70], opacity: [0.6, 0.9] },
+			highlight: { h: [210, 260], s: [60, 90], l: [35, 55] },
+			trailLength: [10, 25],
+			strokeWidth: [0.5, 1.5],
+			cursorSize: [6, 14],
+			cursorOpacity: [0.6, 0.9],
+			trailTightness: [30, 70],
+			gridOpacity: [70, 100],
+			cellSize: [20, 38],
+			highlightOpacity: [30, 70],
+			trailFadeDuration: [1.5, 3],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.05, 1.25],
+		},
+		ember: {
+			stroke: { h: [0, 45], s: [80, 100], l: [45, 65], opacity: [0.6, 1.0] },
+			bg: { h: [10, 30], s: [40, 70], l: [8, 18] },
+			trail: { h: [20, 50], s: [85, 100], l: [50, 70], opacity: [0.7, 1.0] },
+			highlight: { h: [15, 40], s: [75, 100], l: [40, 60] },
+			trailLength: [12, 25],
+			strokeWidth: [1, 2],
+			cursorSize: [8, 18],
+			cursorOpacity: [0.6, 1.0],
+			trailTightness: [35, 75],
+			gridOpacity: [75, 100],
+			cellSize: [22, 42],
+			highlightOpacity: [35, 75],
+			trailFadeDuration: [1, 2.5],
+			trailFadeDelay: [0.3, 0.6],
+			trailScale: [1.1, 1.3],
+		},
+		matrix: {
+			stroke: { h: [110, 140], s: [80, 100], l: [40, 60], opacity: [0.7, 1.0] },
+			bg: { h: [120, 140], s: [20, 40], l: [3, 10] },
+			trail: { h: [115, 145], s: [85, 100], l: [45, 65], opacity: [0.8, 1.0] },
+			highlight: { h: [115, 135], s: [70, 100], l: [35, 55] },
+			trailLength: [20, 30],
+			strokeWidth: [0.5, 1],
+			cursorSize: [6, 12],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [50, 90],
+			gridOpacity: [80, 100],
+			cellSize: [20, 36],
+			highlightOpacity: [40, 80],
+			trailFadeDuration: [2, 4],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.1, 1.35],
+		},
+		vapor: {
+			stroke: { h: [270, 340], s: [70, 100], l: [55, 75], opacity: [0.6, 0.9] },
+			bg: { h: [260, 300], s: [30, 60], l: [10, 22] },
+			trail: { h: [160, 200], s: [70, 100], l: [55, 70], opacity: [0.6, 0.9] },
+			highlight: { h: [280, 320], s: [60, 95], l: [50, 70] },
+			trailLength: [15, 28],
+			strokeWidth: [1, 2],
+			cursorSize: [10, 20],
+			cursorOpacity: [0.6, 0.9],
+			trailTightness: [20, 60],
+			gridOpacity: [70, 100],
+			cellSize: [24, 44],
+			highlightOpacity: [35, 70],
+			trailFadeDuration: [1.5, 3.5],
+			trailFadeDelay: [0.3, 0.6],
+			trailScale: [1.05, 1.3],
+		},
+		mono: {
+			stroke: { h: [0, 0], s: [0, 5], l: [70, 100], opacity: [0.6, 1.0] },
+			bg: { h: [0, 0], s: [0, 5], l: [2, 8] },
+			trail: { h: [0, 0], s: [0, 5], l: [80, 100], opacity: [0.7, 1.0] },
+			highlight: { h: [0, 0], s: [0, 10], l: [60, 90] },
+			trailLength: [10, 20],
+			strokeWidth: [1, 2],
+			cursorSize: [6, 12],
+			cursorOpacity: [0.7, 1.0],
+			trailTightness: [40, 80],
+			gridOpacity: [85, 100],
+			cellSize: [28, 44],
+			highlightOpacity: [40, 80],
+			trailFadeDuration: [1, 2.5],
+			trailFadeDelay: [0.2, 0.5],
+			trailScale: [1.1, 1.25],
+		},
+	};
+
+	function load() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const parsed = JSON.parse(raw);
+				return { ...DEFAULTS, ...parsed };
+			}
+		} catch (_) {}
+		return { ...DEFAULTS };
+	}
+
+	function save(settings) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+		window.dispatchEvent(new CustomEvent('cl01w-settings', { detail: settings }));
+	}
+
+	function applyPageBg(hex) {
+		document.body.style.setProperty('--page-bg', hex);
+	}
+
+	function runRandomize(settings) {
+		const moodNames = Object.keys(MOODS);
+		const mood = MOODS[moodNames[randInt(0, moodNames.length - 1)]];
+		const m = mood;
+
+		settings.strokeColor = hslFromRange(m.stroke.h, m.stroke.s, m.stroke.l);
+		settings.strokeOpacity = opacityToStored(rand(m.stroke.opacity[0], m.stroke.opacity[1]));
+		settings.strokeWidth = Math.round(rand(m.strokeWidth[0], m.strokeWidth[1]) * 10) / 10;
+		settings.pageBg = hslFromRange(m.bg.h, m.bg.s, m.bg.l);
+		settings.cursorFill = hslFromRange(m.trail.h, m.trail.s, m.trail.l);
+		settings.highlightColor = hslFromRange(m.highlight.h, m.highlight.s, m.highlight.l);
+
+		settings.trailLength = randInt(m.trailLength[0], m.trailLength[1]);
+		settings.trailOpacity = randInt(Math.round(m.trail.opacity[0] * 100), Math.round(m.trail.opacity[1] * 100));
+		settings.trailTightness = randInt(m.trailTightness[0], m.trailTightness[1]);
+		settings.cursorSize = randInt(m.cursorSize[0], m.cursorSize[1]);
+		settings.cursorOpacity = randInt(Math.round(m.cursorOpacity[0] * 100), Math.round(m.cursorOpacity[1] * 100));
+		settings.customCursor = true;
+
+		settings.gridOpacity = randInt(m.gridOpacity[0], m.gridOpacity[1]);
+		settings.cellSize = randInt(m.cellSize[0], m.cellSize[1]);
+		settings.highlightOpacity = randInt(m.highlightOpacity[0], m.highlightOpacity[1]);
+		if (m.trailFadeDuration) settings.trailFadeDuration = Math.round(rand(m.trailFadeDuration[0], m.trailFadeDuration[1]) * 10) / 10;
+		if (m.trailFadeDelay) settings.trailFadeDelay = Math.round(rand(m.trailFadeDelay[0], m.trailFadeDelay[1]) * 10) / 10;
+		if (m.trailScale) settings.trailScale = Math.round(rand(m.trailScale[0], m.trailScale[1]) * 100) / 100;
+	}
+
+	function init() {
+		const panel = document.getElementById('control-panel');
+		const toggle = document.getElementById('control-panel-toggle');
+		if (!panel || !toggle) return;
+
+		const settings = load();
+		applyPageBg(settings.pageBg);
+
+		function syncInputsFromSettings() {
+			panel.querySelectorAll('[data-setting]').forEach((input) => {
+				const key = input.dataset.setting;
+				if (key in settings) {
+					if (input.type === 'color') input.value = settings[key];
+					else if (input.type === 'range') input.value = settings[key];
+				}
+			});
+			const strokeWidthOut = document.getElementById('stroke-width-out');
+			const trailLengthOut = document.getElementById('trail-length-out');
+			const cursorSizeOut = document.getElementById('cursor-size-out');
+			const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
+			const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
+			const trailScaleOut = document.getElementById('trail-scale-out');
+			if (strokeWidthOut) strokeWidthOut.textContent = Number(settings.strokeWidth).toFixed(1);
+			if (trailLengthOut) trailLengthOut.textContent = settings.trailLength;
+			if (cursorSizeOut) cursorSizeOut.textContent = settings.cursorSize;
+			if (trailFadeDurationOut) trailFadeDurationOut.textContent = Number(settings.trailFadeDuration).toFixed(1);
+			if (trailFadeDelayOut) trailFadeDelayOut.textContent = Number(settings.trailFadeDelay).toFixed(1);
+			if (trailScaleOut) trailScaleOut.textContent = Number(settings.trailScale).toFixed(2);
+		}
+
+		panel.querySelectorAll('[data-setting]').forEach((input) => {
+			const key = input.dataset.setting;
+			if (key in settings) {
+				if (input.type === 'color') input.value = settings[key];
+				else if (input.type === 'range') input.value = settings[key];
+			}
+			input.addEventListener('change', () => {
+				let val;
+				if (input.type === 'range') {
+					const n = Number(input.value);
+					if (key === 'strokeWidth' || key === 'trailFadeDuration' || key === 'trailFadeDelay' || key === 'trailScale') val = n;
+					else val = Math.round(n);
+				} else val = input.value;
+				settings[key] = val;
+				save(settings);
+				if (key === 'pageBg') applyPageBg(settings.pageBg);
+				const strokeWidthOut = document.getElementById('stroke-width-out');
+				const trailLengthOut = document.getElementById('trail-length-out');
+				const cursorSizeOut = document.getElementById('cursor-size-out');
+				const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
+				const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
+				const trailScaleOut = document.getElementById('trail-scale-out');
+				if (strokeWidthOut && input.id === 'stroke-width') strokeWidthOut.textContent = Number(input.value).toFixed(1);
+				if (trailLengthOut && input.id === 'trail-length') trailLengthOut.textContent = input.value;
+				if (cursorSizeOut && input.id === 'cursor-size') cursorSizeOut.textContent = input.value;
+				if (trailFadeDurationOut && input.id === 'trail-fade-duration') trailFadeDurationOut.textContent = Number(input.value).toFixed(1);
+				if (trailFadeDelayOut && input.id === 'trail-fade-delay') trailFadeDelayOut.textContent = Number(input.value).toFixed(1);
+				if (trailScaleOut && input.id === 'trail-scale') trailScaleOut.textContent = Number(input.value).toFixed(2);
+			});
+		});
+		syncInputsFromSettings();
+
+		const randomizeBtn = document.getElementById('randomize-grid');
+		if (randomizeBtn) {
+			randomizeBtn.addEventListener('click', () => {
+				runRandomize(settings);
+				applyPageBg(settings.pageBg);
+				syncInputsFromSettings();
+				save(settings);
+			});
+		}
+
+		window.addEventListener('cl01w-settings', (e) => {
+			if (e.detail && e.detail.pageBg) applyPageBg(e.detail.pageBg);
+		});
+
+		function open() {
+			panel.hidden = false;
+			panel.classList.add('is-open');
+		}
+
+		function close() {
+			panel.hidden = true;
+			panel.classList.remove('is-open');
+		}
+
+		toggle?.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (panel.hidden) open();
+			else close();
+		});
+
+		panel.querySelectorAll('[data-close-panel]').forEach((el) => el.addEventListener('click', close));
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && panel.classList.contains('is-open')) close();
+		});
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>

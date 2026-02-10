@@ -1,0 +1,46 @@
+---
+interface Props {
+	type: 'tip' | 'note' | 'warning';
+}
+
+const { type } = Astro.props;
+---
+
+<div class="callout" data-type={type}>
+	<slot />
+</div>
+
+<style>
+	.callout {
+		margin: 0 50px;
+		padding: 20px 24px;
+		background: rgba(45, 212, 160, 0.05);
+		border-left: 4px solid var(--cursor-trail);
+		border-radius: 0 var(--radius-card) var(--radius-card) 0;
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--content-body);
+	}
+
+	.callout :global(p) {
+		margin: 0;
+	}
+
+	.callout[data-type='note'] {
+		background: rgba(7, 81, 135, 0.15);
+		border-left-color: #075187;
+	}
+
+	.callout[data-type='warning'] {
+		background: rgba(200, 100, 0, 0.08);
+		border-left-color: #c86400;
+	}
+
+	@media (max-width: 767px) {
+		.callout {
+			margin: 0 18px;
+		}
+	}
+</style>

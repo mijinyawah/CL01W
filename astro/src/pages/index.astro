@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const articles = (await getCollection('articles'))
+	.filter((a) => !a.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function formatDate(d: Date): string {
+	const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+	return `${months[d.getMonth()]} ${d.getDate()} | ${d.getFullYear()}`;
+}
+---
+
+<BaseLayout title="CL-01W">
+	<Layout>
+		<div class="article-list">
+			{articles.map((entry) => (
+				<a class="snippet-card" href={`/articles/${entry.slug}/`}>
+					<div class="snippet-card__meta">
+						<span class="snippet-card__pill">{formatDate(entry.data.date)}</span>
+						<span class="snippet-card__pill">{entry.data.category}</span>
+						<span class="snippet-card__pill">{entry.data.type}</span>
+					</div>
+					<h2 class="snippet-card__title">{entry.data.title}</h2>
+					<div class="snippet-card__byline">
+						{entry.data.authors.map((author) => (
+							<div class="snippet-card__author">
+								<span class="snippet-card__author-name">{author.name}</span>
+								<span class="snippet-card__author-role">{author.role}</span>
+							</div>
+						))}
+					</div>
+				</a>
+			))}
+		</div>
+	</Layout>
+</BaseLayout>
+
+<style>
+	.article-list {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		padding: 0;
+	}
+
+	.snippet-card {
+		display: block;
+		width: 100%;
+		max-width: var(--content-max);
+		margin: 0 auto;
+		padding: 20px 24px;
+		background: var(--snippet-bg);
+		border: 1px solid var(--snippet-border);
+		border-radius: var(--radius-card);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.snippet-card:hover {
+		border-color: var(--meta-border);
+	}
+
+	.snippet-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0;
+		margin-bottom: 12px;
+	}
+
+	.snippet-card__pill {
+		font-family: var(--font-eyebrow);
+		font-weight: 700;
+		font-size: var(--text-eyebrow-size);
+		line-height: var(--text-eyebrow-line);
+		letter-spacing: var(--text-eyebrow-letter);
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	.snippet-card__title {
+		font-family: var(--font-pixel);
+		font-size: var(--text-pixel-mini-size);
+		line-height: var(--text-pixel-mini-line);
+		color: var(--content-title);
+		margin: 0 0 15px;
+	}
+
+	.snippet-card__byline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+	}
+
+	.snippet-card__author {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.snippet-card__author-name {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: var(--text-special-02-bold-size);
+		line-height: var(--text-special-02-bold-line);
+		color: var(--meta-text);
+	}
+
+	.snippet-card__author-role {
+		font-family: var(--font-body);
+		font-weight: 900;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		text-transform: uppercase;
+		color: var(--content-body);
+	}
+
+	@media (max-width: 767px) {
+		.article-list {
+			gap: 20px;
+			align-items: center;
+		}
+
+		.snippet-card {
+			width: clamp(300px, 90vw, 317px);
+			max-width: none;
+			padding: 20px 24px;
+		}
+	}
+</style>

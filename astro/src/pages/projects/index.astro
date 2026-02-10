@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
+
+---
+
+<BaseLayout title="Projects">
+	<Layout>
+		<div class="projects-page">
+			<header class="projects-header">
+				<h1 class="projects-title">Projects</h1>
+			</header>
+
+			<div class="projects-grid">
+				{projects.map((entry) => {
+					const href = entry.data.linkedArticle
+						? `/articles/${entry.data.linkedArticle}/`
+						: undefined;
+					return (
+						href ? (
+							<a class="project-card" href={href}>
+								<span class="project-card__tag">{entry.slug}</span>
+								<h2 class="project-card__title">{entry.data.title}</h2>
+								<p class="project-card__description">{entry.data.description}</p>
+								<div class="project-card__tags">
+									{entry.data.tags.map((tag) => (
+										<span class="project-card__pill">{tag}</span>
+									))}
+								</div>
+							</a>
+						) : (
+							<div class="project-card">
+								<span class="project-card__tag">{entry.slug}</span>
+								<h2 class="project-card__title">{entry.data.title}</h2>
+								<p class="project-card__description">{entry.data.description}</p>
+								<div class="project-card__tags">
+									{entry.data.tags.map((tag) => (
+										<span class="project-card__pill">{tag}</span>
+									))}
+								</div>
+							</div>
+						)
+					);
+				})}
+			</div>
+		</div>
+	</Layout>
+</BaseLayout>
+
+<style>
+	.projects-page {
+		padding: 0 0 40px;
+		max-width: var(--content-max);
+		margin: 0 auto;
+	}
+
+	.projects-header {
+		margin-bottom: 32px;
+		padding: 0;
+	}
+
+	.projects-title {
+		font-family: var(--font-pixel);
+		font-size: var(--text-pixel-mini-size);
+		line-height: var(--text-pixel-mini-line);
+		color: var(--content-title);
+		margin: 0 0 16px;
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 21px;
+		max-width: 100%;
+		width: 100%;
+		margin: 0 auto;
+	}
+
+	.project-card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		background: var(--codeblock-bg);
+		border-radius: var(--radius-container);
+		padding: 22px;
+		min-height: 300px;
+		text-decoration: none;
+		color: inherit;
+		overflow: hidden;
+	}
+
+	.project-card:hover {
+		outline: 1px solid var(--meta-border);
+	}
+
+	.project-card__tag {
+		font-family: var(--font-pixel);
+		font-size: var(--text-pixel-eyebrow-size);
+		line-height: var(--text-pixel-eyebrow-line);
+		color: var(--accent-primary);
+		margin-bottom: 8px;
+	}
+
+	.project-card__title {
+		font-family: var(--font-pixel);
+		font-weight: 400;
+		font-size: var(--text-pixel-mini-size);
+		line-height: var(--text-pixel-mini-line);
+		color: var(--text-on-dark-muted);
+		margin: 0 0 12px;
+		overflow-wrap: break-word;
+		word-break: break-word;
+	}
+
+	.project-card__description {
+		font-family: var(--font-body);
+		font-size: 12.5px;
+		line-height: 20.5px;
+		color: rgba(209, 224, 235, 0.7);
+		letter-spacing: 0.6px;
+		margin: 0 0 16px;
+		flex-grow: 1;
+	}
+
+	.project-card__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.project-card__pill {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 11px;
+		line-height: 1.82;
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	/* Single column when content area is narrow (~900px viewport with sidebar) */
+	@media (max-width: 900px) {
+		.projects-grid {
+			grid-template-columns: 1fr;
+			margin: 0;
+		}
+	}
+
+	@media (max-width: 1199px) and (min-width: 768px) {
+		:global(.content__inner) {
+			--content-pad-x: 16px;
+		}
+
+		.projects-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.projects-title {
+			font-size: 40px;
+			line-height: 1.2;
+		}
+
+		.projects-header {
+			padding: 0 24px;
+		}
+
+		.projects-grid {
+			grid-template-columns: 1fr;
+			margin: 0;
+			gap: 20px;
+			justify-items: center;
+		}
+
+		.project-card {
+			width: clamp(300px, 90vw, 317px);
+			max-width: none;
+			min-height: 0;
+			padding: 20px;
+		}
+
+		.project-card__title {
+			font-size: var(--text-pixel-mini-size);
+			line-height: var(--text-pixel-mini-line);
+		}
+
+		.project-card__tag,
+		.project-card__pill {
+			font-family: var(--font-pixel);
+			font-size: var(--text-pixel-eyebrow-size);
+			line-height: var(--text-pixel-eyebrow-line);
+			letter-spacing: 0;
+		}
+	}
+</style>

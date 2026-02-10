@@ -1,0 +1,59 @@
+---
+interface Props {
+	src: string;
+	title?: string;
+}
+
+const { src, title = 'Video' } = Astro.props;
+---
+
+<div class="video-embed">
+	<button type="button" class="video-embed__trigger" data-lightbox data-lightbox-src={src} data-lightbox-type="video" data-lightbox-title={title}>
+		<span class="video-embed__play" aria-hidden="true">▶</span>
+		<span class="video-embed__label">Play video</span>
+	</button>
+</div>
+
+<style>
+	.video-embed {
+		margin: 24px 50px;
+	}
+
+	.video-embed__trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		width: 100%;
+		min-height: 200px;
+		padding: 32px;
+		background: var(--codeblock-bg);
+		border: 1px solid var(--snippet-border);
+		cursor: pointer;
+		font-family: var(--font-body);
+		font-size: 16px;
+		color: var(--content-caption);
+		transition: border-color 0.15s ease, background 0.15s ease;
+	}
+
+	.video-embed__trigger:hover {
+		border-color: var(--meta-border);
+		background: #0f2635;
+	}
+
+	.video-embed__play {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 56px;
+		height: 56px;
+		font-size: 24px;
+		color: var(--content-title);
+	}
+
+	@media (max-width: 767px) {
+		.video-embed {
+			margin: 24px 0;
+		}
+	}
+</style>

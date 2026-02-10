@@ -1,0 +1,71 @@
+---
+import '../styles/tokens.css';
+import CursorTrail from '../components/CursorTrail.astro';
+import CustomCursor from '../components/CustomCursor.astro';
+
+interface Props {
+	title?: string;
+}
+
+const { title = 'Astro' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- Google Fonts: Tiny5 (pixel), Urbanist (body), Fira Code (code) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=Tiny5&family=Urbanist:wght@400;500;700;900&display=swap"
+			rel="stylesheet"
+		/>
+
+		<title>{title}</title>
+		<style is:global>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
+			html {
+				scroll-behavior: smooth;
+			}
+
+			body {
+				background: var(--page-bg);
+				font-family: var(--font-body);
+			}
+
+			@media (max-width: 767px) {
+				html,
+				body {
+					overflow-x: hidden;
+				}
+
+				.custom-cursor {
+					display: none !important;
+				}
+			}
+
+			.base-layout-wrapper {
+				position: relative;
+				z-index: 1;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="base-layout-wrapper">
+			<CursorTrail />
+			<slot />
+		</div>
+		<CustomCursor />
+	</body>
+</html>

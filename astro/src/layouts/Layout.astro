@@ -1,0 +1,557 @@
+---
+import ControlPanel from '../components/ControlPanel.astro';
+import CursorTrailGrid from '../components/CursorTrailGrid.astro';
+
+interface Props {}
+
+const {} = Astro.props;
+const mobileUserIcon = 'https://www.figma.com/api/mcp/asset/4f40dbea-798a-4f58-8bf2-a847d9263267';
+const mobileRobotIcon = 'https://www.figma.com/api/mcp/asset/c260dd90-00bb-4c13-9355-cdb64205e96f';
+const mobileArrowIcon = 'https://www.figma.com/api/mcp/asset/77960c8b-bbc5-4b06-8bb4-158749ad8fed';
+const currentPath = Astro.url?.pathname ?? '';
+const isProjects = currentPath.startsWith('/projects');
+const isArticles = currentPath.startsWith('/articles');
+---
+
+<div class="base-layout">
+	<main class="base-layout__main">
+		<aside class="sidebar">
+			<input type="checkbox" id="nav-toggle" class="sidebar__toggle" aria-hidden="true" />
+			<div class="sidebar__overlay" aria-label="Mobile menu">
+				<label for="nav-toggle" class="sidebar__menu-btn sidebar__menu-btn--overlay" aria-label="Close menu">
+					<span class="sidebar__menu-btn-icon"></span>
+				</label>
+				<p class="sidebar__overlay-title">Back to the experiments?</p>
+				<nav class="sidebar__overlay-nav" aria-label="Mobile">
+					<a
+						class={`sidebar__overlay-link${isProjects ? ' sidebar__overlay-link--active' : ''}`}
+						href="/projects/"
+					>
+						{isProjects && (
+							<span class="sidebar__overlay-arrow" aria-hidden="true">
+								<img src={mobileArrowIcon} alt="" />
+							</span>
+						)}
+						Projects
+					</a>
+					<a
+						class={`sidebar__overlay-link${isArticles ? ' sidebar__overlay-link--active' : ''}`}
+						href="/articles/"
+					>
+						{isArticles && (
+							<span class="sidebar__overlay-arrow" aria-hidden="true">
+								<img src={mobileArrowIcon} alt="" />
+							</span>
+						)}
+						Articles
+					</a>
+				</nav>
+				<div class="sidebar__overlay-spacer" aria-hidden="true"></div>
+				<div class="sidebar__overlay-icons" aria-hidden="true">
+					<img class="sidebar__overlay-icon" src={mobileUserIcon} alt="" />
+					<img class="sidebar__overlay-icon" src={mobileRobotIcon} alt="" />
+				</div>
+				<p class="sidebar__overlay-copyright">©2026 HAFSAH MIJINYAWA</p>
+			</div>
+			<div class="sidebar__card">
+				<div class="sidebar__header">
+					<p class="sidebar__tagline">
+						A human and an AI named Claude built this website as an experiment.
+					</p>
+					<label for="nav-toggle" class="sidebar__menu-btn" aria-label="Toggle menu">
+						<span class="sidebar__menu-btn-icon"></span>
+					</label>
+				</div>
+				<p class="sidebar__about">
+					I'm a brand and mograph designer who likes to experiment with new mediums.
+				</p>
+				<nav class="sidebar__nav" aria-label="Main">
+					<a href="/projects/">Projects</a>
+					<a href="/articles/">Articles</a>
+				</nav>
+				<button type="button" class="sidebar__control-link" id="control-panel-toggle" data-control-panel>
+					CTRL PANEL
+				</button>
+				<p class="sidebar__copyright">©2026 Hafsah Mijinyawa</p>
+			</div>
+		</aside>
+		<div class="content">
+			<div class="content__inner">
+				<slot />
+			</div>
+		</div>
+	</main>
+	<ControlPanel />
+	<footer class="footer">
+		©2026 Hafsah Mijinyawa
+	</footer>
+</div>
+
+<style>
+	.base-layout {
+		height: 100vh;
+		min-height: 0;
+		width: 100%;
+		padding: 0 var(--page-padding);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.base-layout__main {
+		display: flex;
+		width: 100%;
+		max-width: var(--layout-max);
+		min-width: 0;
+		gap: 0;
+		padding: 0 var(--layout-pad);
+		padding-top: var(--layout-top);
+		margin: 0 auto;
+		flex: 1;
+		min-height: 0;
+		height: calc(100vh - var(--layout-top));
+	}
+
+	/* Sidebar — fluid width, content scales to fit (no scroll, no clip) */
+	.sidebar {
+		flex: 0 0 var(--nav-width);
+		min-width: var(--nav-width);
+		max-width: var(--nav-width);
+		align-self: stretch;
+		height: 100%;
+		min-height: 0;
+		background: var(--sidebar-bg);
+		border-radius: var(--radius-container);
+		padding: var(--sidebar-pad-top) var(--sidebar-pad-right) var(--sidebar-pad-bottom) var(--sidebar-pad-left);
+		display: flex;
+		flex-direction: column;
+		gap: var(--sidebar-gap);
+		overflow: visible;
+	}
+
+	.sidebar__card {
+		display: contents;
+	}
+
+	.sidebar__overlay {
+		display: none;
+	}
+
+	.sidebar__toggle {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.sidebar__header {
+		display: block;
+	}
+
+	.sidebar__menu-btn {
+		display: none;
+	}
+
+	.sidebar__tagline {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: var(--sidebar-title-size);
+		line-height: var(--sidebar-title-line);
+		color: var(--text-primary);
+		margin: 0;
+		width: var(--sidebar-text-width);
+	}
+
+	.sidebar__about {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: var(--text-body-size);
+		line-height: var(--text-body-line);
+		letter-spacing: var(--text-body-letter);
+		color: var(--text-primary);
+		margin: 0;
+		width: var(--sidebar-text-width);
+	}
+
+	.sidebar__nav {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.sidebar__nav a {
+		font-family: var(--font-body);
+		font-weight: 500;
+		font-size: var(--sidebar-nav-size);
+		line-height: var(--sidebar-nav-line);
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+
+	.sidebar__nav a:hover,
+	.sidebar__nav a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.sidebar__control-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 147px;
+		height: 40px;
+		font-family: var(--font-body);
+		font-weight: 900;
+		font-size: var(--sidebar-ctrl-size);
+		line-height: 32px;
+		color: var(--accent-purple);
+		background: var(--page-bg);
+		border: none;
+		text-decoration: none;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+	.sidebar__control-link:hover,
+	.sidebar__control-link:focus-visible {
+		outline: 1px solid var(--accent-purple);
+		outline-offset: 2px;
+		text-decoration: none;
+	}
+
+	.sidebar__copyright {
+		margin: 0;
+		margin-top: auto;
+		padding-top: 0;
+		font-family: var(--font-body);
+		font-weight: 900;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		color: var(--text-tertiary);
+	}
+
+	.footer--desktop-hidden {
+		display: none;
+	}
+
+	/* Content area — takes remaining space, independent scrollbox */
+	.content {
+		position: relative;
+		flex: 0 0 var(--content-width);
+		min-width: var(--content-width);
+		max-width: var(--content-width);
+		height: 100%;
+		min-height: 0;
+		background: var(--content-bg);
+		border-radius: var(--radius-container);
+		padding: 0;
+		overflow: hidden;
+	}
+
+	/* Dark navy scrollbar — no rounded corners, smooth ease */
+	.content__inner::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.content__inner::-webkit-scrollbar-track {
+		background: var(--content-bg);
+		border-radius: 0;
+	}
+
+	.content__inner::-webkit-scrollbar-thumb {
+		background: #001a2b;
+		border-radius: 0;
+		transition: background 0.2s ease;
+	}
+
+	.content__inner::-webkit-scrollbar-thumb:hover {
+		background: #0a2a40;
+	}
+
+	/* Firefox */
+	.content__inner {
+		scrollbar-width: thin;
+		scrollbar-color: #001a2b var(--content-bg);
+	}
+
+	.content__inner {
+		position: relative;
+		z-index: 1;
+		height: 100%;
+		overflow-y: auto;
+		scroll-behavior: smooth;
+		padding: var(--content-pad-y) var(--content-pad-x);
+	}
+
+	/* Footer — visible on mobile only */
+	.footer {
+		flex-shrink: 0;
+		padding: 50px 50px 40px;
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--text-tertiary);
+	}
+
+	@media (min-width: 768px) {
+		.footer {
+			display: none;
+		}
+	}
+
+	/* ---------- Stacked / mobile (<767px) — hamburger menu, full-screen overlay ---------- */
+	@media (max-width: 767px) {
+		.base-layout {
+			height: auto;
+			min-height: 100vh;
+			overflow: visible;
+			padding: 0;
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.base-layout__main {
+			flex: 1 1 auto;
+			height: auto;
+			flex-direction: column;
+			padding-top: 0;
+			min-height: 0;
+			max-width: none;
+			padding-left: 0;
+			padding-right: 0;
+			margin: 0;
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.sidebar {
+			flex: none;
+			min-width: 0;
+			max-width: 100%;
+			width: 100%;
+			flex-direction: column;
+			align-items: stretch;
+			padding: 0;
+			overflow: visible;
+			gap: 24px;
+			background-color: transparent;
+			box-sizing: border-box;
+		}
+
+		.sidebar__card {
+			display: flex;
+			flex-direction: column;
+			gap: 44px;
+			background: var(--sidebar-bg);
+			padding: 70px 50px 24px;
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			box-sizing: border-box;
+		}
+
+		.sidebar__overlay {
+			display: none;
+			flex-direction: column;
+			gap: 20px;
+			background: var(--content-bg);
+			padding: 30px 50px 24px;
+			color: #ffffff;
+			width: 100%;
+			box-sizing: border-box;
+			position: fixed;
+			inset: 0;
+			z-index: 1000;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__overlay {
+			display: flex;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__menu-btn:not(.sidebar__menu-btn--overlay) {
+			display: none;
+		}
+
+		.sidebar__header {
+			display: block;
+			padding-top: 10px;
+		}
+
+		.sidebar__tagline {
+			font-size: 25px;
+			line-height: 1.3;
+			letter-spacing: 0.5px;
+			width: min(300px, 100%);
+		}
+
+		/* Hamburger button visible on stacked */
+		.sidebar__menu-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			width: 24px;
+			height: 24px;
+			cursor: pointer;
+			color: var(--text-primary);
+			background: transparent;
+			border: none;
+			position: absolute;
+			left: 50px;
+			top: 32px;
+		}
+
+		.sidebar:has(.sidebar__toggle:checked) .sidebar__menu-btn {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		.sidebar__menu-btn-icon {
+			display: block;
+			width: 24px;
+			height: 2px;
+			background: currentColor;
+			box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+		}
+
+		.sidebar__menu-btn--overlay {
+			align-self: flex-start;
+			color: rgba(255, 255, 255, 0.9);
+			position: static;
+			width: 24px;
+			height: 24px;
+		}
+
+		.sidebar__copyright {
+			display: none;
+		}
+
+		/* Collapsed by default: hide about, dividers, nav, connect */
+		.sidebar__nav,
+		.sidebar__control-link,
+		.sidebar__copyright {
+			display: none !important;
+		}
+
+		.sidebar__about {
+			display: block;
+			font-size: 17px;
+			line-height: 25px;
+			letter-spacing: 0.85px;
+			width: min(300px, 100%);
+		}
+
+		.sidebar__overlay-title {
+			font-family: var(--font-body);
+			font-size: 25px;
+			line-height: 1.3;
+			letter-spacing: 0.5px;
+			font-weight: 700;
+			margin: 0;
+		}
+
+		.sidebar__overlay-nav {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		.sidebar__overlay-link {
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding-left: 0;
+			font-family: var(--font-body);
+			font-size: 20px;
+			line-height: 32px;
+			text-decoration: none;
+			color: rgba(255, 255, 255, 0.44);
+		}
+
+		.sidebar__overlay-link--active {
+			color: var(--accent-primary);
+			padding-left: 40px;
+		}
+
+		.sidebar__overlay-arrow {
+			position: absolute;
+			left: 0;
+			width: 24px;
+			height: 24px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.sidebar__overlay-arrow img {
+			width: 24px;
+			height: 24px;
+			display: block;
+		}
+
+		.sidebar__overlay-spacer {
+			height: 55px;
+			width: 100%;
+		}
+
+		.sidebar__overlay-icons {
+			display: flex;
+			gap: 20px;
+		}
+
+		.sidebar__overlay-icon {
+			width: 60px;
+			height: 60px;
+			display: block;
+		}
+
+		.sidebar__overlay-copyright {
+			font-family: var(--font-body);
+			font-size: 9px;
+			line-height: 24px;
+			letter-spacing: 1.35px;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.82);
+			margin: 0;
+		}
+
+		/* Content area: edge-to-edge dark navy, no side gaps */
+		.content {
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			min-height: 60vh;
+			flex: 1 1 auto;
+			overflow: visible;
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		/* Internal text padding so content doesn’t touch screen edges */
+		.content__inner {
+			height: auto;
+			overflow: visible;
+			padding: 30px 0 40px;
+		}
+
+		/* Tighter line-height on stacked */
+		.content :global(p),
+		.content :global(li) {
+			line-height: 1.4;
+		}
+
+		.footer {
+			padding: 24px 16px 32px;
+		}
+	}
+
+	/* Article titles scale (used by content inside slot) */
+	@media (max-width: 767px) {
+		.content :global(h1),
+		.content :global(.article-title) {
+			font-size: var(--text-pixel-h1-mobile-size);
+			line-height: var(--text-pixel-h1-mobile-line);
+		}
+	}
+</style>

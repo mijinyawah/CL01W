@@ -1,0 +1,111 @@
+---
+interface Props {}
+---
+
+<div id="custom-cursor" class="custom-cursor" aria-hidden="true" hidden></div>
+
+<style is:global>
+	body[data-custom-cursor] {
+		cursor: none;
+	}
+</style>
+
+<style>
+	.custom-cursor {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 8px;
+		height: 8px;
+		pointer-events: none;
+		z-index: 9997;
+		transform: translate(-50%, -50%);
+		background: #2dd4a0;
+		opacity: 0.8;
+	}
+
+	.custom-cursor[hidden] {
+		display: none !important;
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'cl01w-control';
+
+	function getSettings() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const p = JSON.parse(raw);
+				return {
+					customCursor: !!p.customCursor,
+					cursorSize: Number(p.cursorSize) || 24,
+					cursorFill: p.cursorFill || '#3b82f6',
+					cursorOpacity: Number(p.cursorOpacity) ?? 80,
+				};
+			}
+		} catch (_) {}
+		return {
+			customCursor: true,
+			cursorSize: 24,
+			cursorFill: '#3b82f6',
+			cursorOpacity: 80,
+		};
+	}
+
+	function init() {
+		if (window.innerWidth <= 767) return;
+
+		const el = document.getElementById('custom-cursor');
+		if (!el) return;
+
+		let settings = getSettings();
+		let x = 0;
+		let y = 0;
+		let overTarget = false;
+
+		function updateCursorStyle() {
+			el.style.width = `${settings.cursorSize}px`;
+			el.style.height = `${settings.cursorSize}px`;
+			el.style.background = settings.cursorFill;
+			el.style.opacity = String(settings.cursorOpacity / 100);
+			el.style.border = 'none';
+		}
+
+		function tick() {
+			if (settings.customCursor && overTarget) {
+				el.hidden = false;
+				el.style.left = `${x}px`;
+				el.style.top = `${y}px`;
+				updateCursorStyle();
+			} else {
+				el.hidden = true;
+			}
+			requestAnimationFrame(tick);
+		}
+
+		document.addEventListener('mousemove', (e: MouseEvent) => {
+			x = e.clientX;
+			y = e.clientY;
+			// When custom cursor is on, show it everywhere (sidebar, content, and background)
+			overTarget = settings.customCursor;
+		});
+
+		function applyEnabled() {
+			if (settings.customCursor) document.body.setAttribute('data-custom-cursor', '');
+			else document.body.removeAttribute('data-custom-cursor');
+		}
+
+		window.addEventListener('cl01w-settings', ((e: CustomEvent) => {
+			settings = { ...settings, ...e.detail };
+			applyEnabled();
+			updateCursorStyle();
+		}) as EventListener);
+
+		applyEnabled();
+		updateCursorStyle();
+		requestAnimationFrame(tick);
+	}
+
+	document.addEventListener('DOMContentLoaded', init);
+</script>

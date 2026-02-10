@@ -1,0 +1,16 @@
+---
+description: When user asks for git commit/push code, give full add + commit + push
+alwaysApply: true
+---
+
+# Git commit / push requests
+
+When the user asks for "git commit code", "push to git", "full push command", or similar, **always** provide the full sequence:
+
+1. `git add .`
+2. `git commit -m "Your commit message here"`
+3. `git push origin <branch>`
+
+Include all three (and optionally a one-liner). Only deviate if you know of a specific issue (e.g. no remote, merge conflict, they asked for something different).
+
+Default branch in the push command can be `main` unless the repo uses another default.
