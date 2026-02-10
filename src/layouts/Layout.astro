@@ -262,14 +262,14 @@ const {} = Astro.props;
 		color: rgba(0, 0, 0, 0.4);
 	}
 
-	@media (min-width: 801px) {
+	@media (min-width: 768px) {
 		.footer {
 			display: none;
 		}
 	}
 
-	/* ---------- Stacked / mobile (<800px) — hamburger menu, full-screen overlay ---------- */
-	@media (max-width: 800px) {
+	/* ---------- Stacked / mobile (<767px) — hamburger menu, full-screen overlay ---------- */
+	@media (max-width: 767px) {
 		.base-layout {
 			height: auto;
 			min-height: 100vh;
@@ -462,7 +462,7 @@ const {} = Astro.props;
 	}
 
 	/* Article titles scale (used by content inside slot) */
-	@media (max-width: 800px) {
+	@media (max-width: 767px) {
 		.content :global(h1),
 		.content :global(.article-title) {
 			font-size: 80px;

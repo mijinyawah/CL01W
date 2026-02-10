@@ -11,43 +11,79 @@
 }
 
 :root {
-	/* Typography */
-	--font-pixel: 'Micro 5', monospace; /* article titles, display */
-	--font-body: 'Roboto', sans-serif; /* body text, 17px/28px */
-	--font-sidebar: system-ui, sans-serif; /* sidebar text, placeholder for Neue Einstellung */
+	/* Fonts */
+	--font-body: 'Urbanist', sans-serif;
+	--font-pixel: 'Tiny5', monospace;
+	--font-eyebrow: 'Roboto', sans-serif;
+	--font-code: 'Fira Code', monospace;
 
-	/* Colors — Sidebar (light; desktop uses rgba for subtle grid show-through) */
-	--sidebar-bg: #ffffff;
-	--sidebar-text: #001a2b;
-	--sidebar-nav: rgba(0, 0, 0, 0.6);
-	--sidebar-divider: #d9d9d9;
+	/* Type scale */
+	--text-body-size: 17px;
+	--text-body-line: 25px;
+	--text-h2-size: 25px;
+	--text-h2-line: 32.5px;
+	--text-h3-size: 20px;
+	--text-h3-line: 32px;
+	--text-eyebrow-size: 11px;
+	--text-eyebrow-line: 20px;
+	--text-pixel-jumbo-size: 70px;
+	--text-pixel-jumbo-line: 75px;
+	--text-pixel-mini-size: 35px;
+	--text-pixel-mini-line: 35px;
+	--text-special-02-size: 9px;
+	--text-special-02-line: 24px;
+	--text-special-02-letter: 1.35px;
+	--text-code-size: 15px;
+	--text-code-line: 22px;
+	--text-quote-size: 20px;
+	--text-quote-line: 35px;
 
-	/* Colors — Content (dark) */
-	--content-bg: #0d1316;
-	--content-title: rgba(255, 255, 255, 0.8);
-	--content-heading: rgba(215, 223, 228, 0.8);
-	--content-body: rgba(209, 224, 235, 0.4);
-	--content-caption: #97d2ff;
+	/* Backgrounds */
+	--page-bg: #ffeded;
+	--content-bg: #08131b;
+	--sidebar-bg: rgba(255, 255, 255, 0.80);
+	--card-bg: rgba(7, 81, 135, 0.49);
+	--codeblock-bg: #001a2b;
+	--quote-bg: rgba(147, 49, 166, 0.44);
 
-	/* Colors — Components */
-	--snippet-bg: rgba(7, 81, 135, 0.19);
-	--snippet-border: #aaaaaa;
-	--codeblock-bg: #0c1e2b;
-	--meta-border: #acb8bf;
-	--meta-text: rgba(215, 223, 228, 0.8);
+	/* Text */
+	--text-primary: #001a2b;
+	--text-secondary: rgba(0, 0, 0, 0.44);
+	--text-tertiary: rgba(0, 0, 0, 0.50);
+	--text-on-dark: #ffffff;
+	--text-on-dark-muted: rgba(255, 255, 255, 0.80);
+	--text-code: rgba(74, 246, 255, 0.40);
 
-	/* Colors — Interactive effects */
-	--grid-line: rgba(255, 255, 255, 0.06);
-	--grid-highlight: rgba(45, 212, 160, 0.3);
-	--cursor-trail: #2dd4a0;
-	--glow-color: rgba(45, 212, 160, 0.15);
+	/* Accents */
+	--accent-primary: #ec8cff;
+	--accent-purple: rgba(147, 49, 166, 0.44);
+	--accent-grid: rgba(143, 98, 255, 0.35);
 
-	/* Spacing — snap to grid (cell = 44px in InteractiveGrid) */
-	--page-padding: 44px;
+	/* Borders */
+	--border-light: rgba(255, 255, 255, 0.80);
+	--border-quote: #ec8cff;
+
+	/* Spacing */
+	--page-padding: 56px;
 	--nav-content-gap: 44px;
 	--nav-width: 340px;
 	--content-width: 770px;
 	--content-max: 720px;
 	--radius-container: 0;
 	--radius-card: 0;
+
+	/* Legacy mappings (to be removed as styles are updated) */
+	--font-sidebar: var(--font-body);
+	--sidebar-text: var(--text-primary);
+	--sidebar-nav: var(--text-secondary);
+	--sidebar-divider: var(--border-light);
+	--content-title: var(--accent-primary);
+	--content-heading: var(--text-on-dark);
+	--content-body: var(--text-on-dark-muted);
+	--content-caption: var(--text-code);
+	--snippet-bg: var(--card-bg);
+	--snippet-border: var(--border-light);
+	--meta-border: var(--border-light);
+	--meta-text: var(--text-on-dark-muted);
+	--cursor-trail: var(--accent-primary);
 }

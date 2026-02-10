@@ -49,7 +49,7 @@ interface Props {}
 		transform: scale(var(--trail-scale, 1.2));
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 767px) {
 		.cursor-trail-grid {
 			pointer-events: none;
 			display: block;
@@ -63,7 +63,7 @@ interface Props {}
 
 <script>
 	const STORAGE_KEY = 'cl01w-control';
-	const MOBILE_BREAKPOINT = 800;
+	const MOBILE_BREAKPOINT = 767;
 
 	function hexToRgba(hex, alpha) {
 		const m = hex.replace(/^#/, '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);

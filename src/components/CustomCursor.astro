@@ -39,22 +39,22 @@ interface Props {}
 				const p = JSON.parse(raw);
 				return {
 					customCursor: !!p.customCursor,
-					cursorSize: Number(p.cursorSize) || 8,
-					cursorFill: p.cursorFill || '#2dd4a0',
+					cursorSize: Number(p.cursorSize) || 24,
+					cursorFill: p.cursorFill || '#3b82f6',
 					cursorOpacity: Number(p.cursorOpacity) ?? 80,
 				};
 			}
 		} catch (_) {}
 		return {
-			customCursor: false,
-			cursorSize: 8,
-			cursorFill: '#2dd4a0',
+			customCursor: true,
+			cursorSize: 24,
+			cursorFill: '#3b82f6',
 			cursorOpacity: 80,
 		};
 	}
 
 	function init() {
-		if (window.innerWidth <= 800) return;
+		if (window.innerWidth <= 767) return;
 
 		const el = document.getElementById('custom-cursor');
 		if (!el) return;

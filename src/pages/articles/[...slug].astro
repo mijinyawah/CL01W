@@ -240,9 +240,14 @@ function formatDate(d: Date): string {
 		pointer-events: none;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 767px) {
+		/* Same padding logic as main layout: more space from top to content, more between header and body */
+		.article {
+			padding-top: 40px;
+		}
+
 		.article__header {
-			padding: 0 18px 32px;
+			padding: 0 18px 48px;
 		}
 
 		.article__title {

@@ -19,7 +19,7 @@ interface Props {}
 	}
 
 	/* Disable on touch devices / mobile — no hover */
-	@media (max-width: 800px) {
+	@media (max-width: 767px) {
 		.cursor-trail {
 			display: none;
 		}
@@ -36,10 +36,10 @@ interface Props {}
 
 <script>
 	const STORAGE_KEY = 'cl01w-control';
-	const MAX_DOTS = 50;
+	const MAX_DOTS = 120;
 	const SIZE_START = 6;
 	const SIZE_END = 2;
-	const OPACITY_START = 0.9;
+	const OPACITY_START = 1;
 	const OPACITY_END = 0.2;
 
 	function getSettings() {
@@ -48,16 +48,16 @@ interface Props {}
 			if (raw) {
 				const p = JSON.parse(raw);
 				return {
-					cursorFill: p.cursorFill || '#2dd4a0',
-					trailLength: Math.min(50, Math.max(0, Number(p.trailLength) ?? 8)),
+					cursorFill: p.cursorFill || '#3b82f6',
+					trailLength: Math.min(MAX_DOTS, Math.max(0, Number(p.trailLength) ?? 26)),
 					trailTightness: Math.min(100, Math.max(0, Number(p.trailTightness) ?? 50)),
 					trailOpacity: Math.min(100, Math.max(0, Number(p.trailOpacity) ?? 100)),
 				};
 			}
 		} catch (_) {}
 		return {
-			cursorFill: '#2dd4a0',
-			trailLength: 8,
+			cursorFill: '#3b82f6',
+			trailLength: 26,
 			trailTightness: 50,
 			trailOpacity: 100,
 		};
@@ -67,7 +67,7 @@ interface Props {}
 		const container = document.getElementById('cursor-trail');
 		if (!container) return;
 
-		// Create dot elements (max 50; length 0 = no trail)
+		// Create dot elements (length 0 = no trail, max = very long/laggy)
 		const dots: HTMLElement[] = [];
 		for (let i = 0; i < MAX_DOTS; i++) {
 			const el = document.createElement('div');
@@ -103,18 +103,25 @@ interface Props {}
 		}
 
 		function applySettings() {
-			const n = settings.trailLength;
-			const trailMult = settings.trailOpacity / 100; // 0 = invisible, 100 = full
+			const n = Math.max(0, Math.min(MAX_DOTS, Number(settings.trailLength) ?? 8));
+			// Trail opacity: 0 = invisible, 1–100 = linear scale from barely visible to full
+			const opacityPct = Math.max(0, Math.min(100, Number(settings.trailOpacity) ?? 100));
+			const showTrail = n > 0 && opacityPct > 0;
 			dots.forEach((el, i) => {
-				el.style.display = i < n ? 'block' : 'none';
-				if (i < n) {
-					el.style.background = settings.cursorFill;
-					const baseOp = n <= 1 ? OPACITY_START : getBaseOpacity(i, n);
-					el.style.opacity = String(baseOp * trailMult);
-					const size = getSize(i, n);
-					el.style.width = `${size}px`;
-					el.style.height = `${size}px`;
+				if (!showTrail || i >= n) {
+					el.style.display = 'none';
+					return;
 				}
+				el.style.display = 'block';
+				el.style.visibility = 'visible';
+				el.style.background = settings.cursorFill;
+				const baseOp = n <= 1 ? OPACITY_START : getBaseOpacity(i, n);
+				// 1% = 0.01, 100% = 1.0 so slider has clear effect across full range
+				const mult = opacityPct / 100;
+				el.style.opacity = String(baseOp * mult);
+				const size = getSize(i, n);
+				el.style.width = `${size}px`;
+				el.style.height = `${size}px`;
 			});
 		}
 
@@ -152,8 +159,11 @@ interface Props {}
 		}
 
 		window.addEventListener('cl01w-settings', ((e: CustomEvent) => {
-			settings = { ...settings, ...e.detail };
-			settings.trailLength = Math.min(50, Math.max(0, settings.trailLength ?? 8));
+			const d = e.detail || {};
+			settings = { ...settings, ...d };
+			// Explicitly apply trail controls so slider always drives visibility
+			settings.trailLength = Math.min(MAX_DOTS, Math.max(0, Number(d.trailLength) ?? settings.trailLength ?? 8));
+			settings.trailOpacity = Math.max(0, Math.min(100, Number(d.trailOpacity) ?? settings.trailOpacity ?? 100));
 			applySettings();
 		}) as EventListener);
 
