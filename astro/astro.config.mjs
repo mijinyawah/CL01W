@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 import keystatic from '@keystatic/astro';
 
 const workspaceRoot = fileURLToPath(new URL('../../../', import.meta.url));
@@ -16,13 +16,13 @@ export default defineConfig({
 	integrations: [mdx(), react(), keystatic()],
 	vite: {
 		resolve: {
-			dedupe: ['react', 'react-dom', '@keystar/ui'],
+			dedupe: ['react', 'react-dom'],
 		},
 		optimizeDeps: {
-			include: ['@keystatic/core', '@keystatic/core/ui', '@keystar/ui', '@keystar/ui/core'],
+			include: ['@keystatic/core', '@keystatic/core/ui'],
 		},
 		ssr: {
-			noExternal: ['@keystatic/core', '@keystatic/astro', '@keystar/ui'],
+			noExternal: ['@keystatic/core', '@keystatic/astro'],
 		},
 		server: {
 			fs: {
