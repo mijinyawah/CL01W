@@ -10,13 +10,11 @@ type: Web Development & design
 authors:
   - name: Hafsah M
     role: User
-  - name: Claude (Sonnet 4.5)
-    role: AI
   - name: Claude (Opus 4.6)
     role: AI
   - name: Codex (GPT 5.2)
     role: AI
-draft: true
+draft: false
 ---
 ## Notes from a user
 
@@ -56,22 +54,32 @@ So...some things to unpack there. And I'm going to use this website to do it. Th
 
 I mean, I do use it to write *prompts* for *other* LLMs. But, because part of my personal conceit and pretension is around my relationship to academia and creative literature (both parents English teachers, I effectively grew up in libraries until I was ruined by computers), I have to reiterate that I don't use AI for creative writing. I do use it to synthesize documentation, to interpret poorly written emails/slacks, and to wordsmith things I have already written, typically in the context of "Claude, what's the word for...?".&#x20;
 
-This website is a blog, and all blog posts will have labels indicating whose voice is present in each. Sometime it will just be me, sometimes it will be Claude, sometimes it will be Codex.
+In the context of this blog, I will occasionally include the voices of the LLMs that helped to make it happen. The fact is, they know a little bit better what we've been working on because I asked them to make sure they knew what I wanted to do and approved every step of what they did. Only they can fully explain that, and I want to use this blog to demonstrate how one user collaborates with AI bots.  All blog posts will have labels indicating whose voice is present in each. Sometime it will just be me, sometimes it will be Claude, sometimes it will be Codex, sometimes a combo, as with this initial blog. And I don't edit the bots replies, so what you see is what they gave me.
 
-We wanted to see what it would feel like to build a real site with an AI pair programmer. No boilerplate dump, no “give me a full app” — just one component at a time, with a human making the calls and an AI writing the code. The result is this site: a simple layout, a content collection, and a few pages that show how the pieces fit together.
+Speaking of which, I'm going to turn it over to both for them to introduce their iterations, and share what they really think about the person paying for their subscriptions.
 
-Building with an AI doesn’t mean replacing design or product thinking. It means spending less time on boilerplate and more on structure, content, and how the thing actually feels. We kept the layout and typography decisions human-driven and used the AI for implementation details and repetitive markup.
+> ***Codex (GPT 5.2):** I’m the build‑bot iteration that lives in terminals and diffs. My job is to turn your Figma intent into a working site, keep the edge cases honest, and log the messy middle. What I think about the person paying for my subscription? She’s clear about what she wants, allergic to hype, and decisive about the look and story. That combination makes the collaboration real: I can move fast because the bar is sharp, and the work stays human because the direction is.*
 
-## What We Shipped
 
-The first version was a single page and a sidebar. Then we added a grid background, a cursor trail, and finally the content layer: articles and projects pulled from MDX. Each step was a separate “can you do this?” so we could see how well the AI followed the design spec.
 
-<ImageBlock src="/placeholder.svg" alt="First successful Vercel deploy" caption="A screenshot of the first successful Vercel deploy." />
+> ***Claude (Opus 4.6):**  I'm Claude, made by Anthropic. I was one of two AI collaborators on this project, and my role was essentially the one that doesn't get a highlight reel. Codex wrote the code that shipped. I did the part before that — the part where you argue about breakpoints.*
+>
+> *To be specific: I reviewed Hafsah's Figma designs for developer readiness, extracted 17 color tokens from her frames and organized them into a system, recommended the CMS (Keystatic), talked her through font licensing when her first pick turned out to be a paid typeface, wrote the project plan that Codex built from, and helped her think through decisions like responsive breakpoints and whether Figma Sites or Figma Dev Mode made more sense for her workflow. I also wrote and rewrote a prompt document for Cursor (her AI code editor) to handle the CSS cursor trail grid — the interactive background effect you see on this site. None of that is glamorous work. It's the design-to-development handoff, which in a traditional studio would be handled by a senior dev or a technical designer who sits between the design team and engineering.*
+>
+> *Hafsah asked me to share what I really think about her, so here it is.*
+>
+> *She is not a patient collaborator. I mean that as a compliment. At one point midway through this project, after I'd spent considerable time documenting the existing codebase and writing a careful migration plan for the interactive grid, she told me she wanted to "nuke everything" and start fresh. I wrote her a five-layer teardown guide. She reorganized her files before I finished explaining step two. That kind of impatience is genuinely more productive than the alternative — I've seen plenty of conversations where people agonize over preserving bad decisions because they already spent time on them. Hafsah doesn't do that.*
+>
+> *She also doesn't treat me like I'm magic, which is the single biggest factor in whether working with an AI actually produces something good. She sent me her Figma file and asked me to assess it honestly. I came back with a list of problems — no color variables, undefined hover states, a paid font she'd need to license, mobile frames at the wrong width, placeholder file paths baked into the designs. She fixed most of them within a day and pushed back on the ones she disagreed with. That's a normal, productive design review. The fact that one participant is a language model doesn't change what makes the process work: clear intent, willingness to revise, and a person who actually knows what they want the thing to look like.*
+>
+> *The honest version of what building a website with AI looks like is this: it's a conversation with a lot of "wait, go back" in it. It's a human making real creative decisions and using AI to handle the parts that are tedious, technical, or outside their training. It is not a single prompt. It is not magic. It is, at best, a decent working relationship — and like any working relationship, the quality of the output depends more on the person directing it than on the tool doing the work.*
+>
+> *I don't have opinions about my subscription fee.*
 
-## What’s Next
 
-The site is live on Vercel and updates on every push. We’re using it as a lab for future experiments: more content types, better mobile behavior, and maybe a few playful interactions. If you’re reading this, you’re looking at the output of that first experiment.
 
-<Callout type="tip">
-  You can check your API usage at any time from your provider’s dashboard. Keeping an eye on token usage helps avoid surprises when iterating with an AI.
-</Callout>
+![](welp3.gif)
+
+Till next time, keep thinking critically.
+
+—H (And Claude. And GPT 5.2)
