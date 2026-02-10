@@ -56,7 +56,12 @@ const mdxComponents = {
 	ImageBlock: block({
 		label: 'Image Block',
 		schema: {
-			src: fields.text({ label: 'Image src' }),
+			src: fields.image({
+				label: 'Image',
+				directory: 'public/keystatic',
+				publicPath: '/keystatic/',
+				validation: { isRequired: true },
+			}),
 			alt: fields.text({ label: 'Alt text' }),
 			caption: fields.text({ label: 'Caption', multiline: true }),
 		},
