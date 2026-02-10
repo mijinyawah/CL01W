@@ -1,43 +1,37 @@
-# Astro Starter Kit: Minimal
+# CL-01W (Astro)
 
-```sh
-npm create astro@latest -- --template minimal
+## Quick Start
+
+```bash
+cd astro
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Site runs at `http://127.0.0.1:4321`.
 
-## 🚀 Project Structure
+## Keystatic (GitHub Storage)
 
-Inside of your Astro project, you'll see the following folders and files:
+Keystatic is configured to store content in GitHub. You’ll need these env vars:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+KEYSTATIC_GITHUB_CLIENT_ID=
+KEYSTATIC_GITHUB_CLIENT_SECRET=
+KEYSTATIC_SECRET= # 32+ chars
+PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Local setup:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Copy `.env.example` to `.env` and fill the values.
+2. Run `npm run dev`.
+3. Visit `/keystatic/setup` to create/install the GitHub App if you haven’t yet.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Vercel setup:
 
-## 🧞 Commands
+1. Add the same env vars in Vercel → Project → Settings → Environment Variables.
+2. Redeploy.
 
-All commands are run from the root of the project, from a terminal:
+## Deployment (Vercel)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Root Directory should be `astro`.

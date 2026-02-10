@@ -10,6 +10,7 @@ const workspaceRoot = fileURLToPath(new URL('../../../', import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://cl01w.vercel.app',
 	output: 'server',
 	adapter: vercel(),
 	integrations: [mdx(), react(), keystatic()],

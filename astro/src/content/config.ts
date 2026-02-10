@@ -12,6 +12,7 @@ const articles = defineCollection({
 	schema: z.object({
 		slug: keystaticSlug,
 		title: z.string(),
+		summary: z.string(),
 		date: z.date(),
 		category: z.string(),
 		type: z.string(),

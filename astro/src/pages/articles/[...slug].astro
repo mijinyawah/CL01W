@@ -33,7 +33,12 @@ function formatDate(d: Date): string {
 }
 ---
 
-<BaseLayout title={entry.data.title}>
+<BaseLayout
+	title={entry.data.title}
+	description={entry.data.summary}
+	ogType="article"
+	publishedTime={entry.data.date}
+>
 	<Layout>
 		<article class="article">
 			<header class="article__header">

@@ -34,7 +34,11 @@ const mdxComponents = {
 };
 
 export default config({
-	storage: { kind: 'local' },
+	storage: {
+		kind: 'github',
+		repo: 'mijinyawah/CL01W',
+		pathPrefix: 'astro',
+	},
 	ui: {
 		brand: { name: 'CL-01W' },
 		navigation: {
@@ -47,12 +51,19 @@ export default config({
 			slugField: 'slug',
 			path: 'src/content/articles/*',
 			format: { contentField: 'content' },
+			template: `## TL;DR\n\nSummarize the key idea in 2-3 sentences.\n\n## Context\n\nWhy this matters and what prompted the experiment.\n\n## What We Did\n\nStep-by-step explanation of the approach.\n\n## Results\n\nWhat worked, what didn’t, and what we learned.\n\n## What’s Next\n\nWhere this experiment goes from here.\n`,
 			schema: {
 				slug: fields.slug({
 					name: { label: 'Title' },
 					slug: { label: 'Slug', description: 'Used in the URL (e.g. building-a-website-with-ai)' },
 				}),
 				title: fields.text({ label: 'Title', validation: { isRequired: true } }),
+				summary: fields.text({
+					label: 'Summary',
+					description: 'Shown in SEO and previews. Aim for 1–2 sentences.',
+					multiline: true,
+					validation: { isRequired: true },
+				}),
 				date: fields.date({ label: 'Date' }),
 				category: fields.text({ label: 'Category' }),
 				type: fields.text({ label: 'Type' }),
@@ -75,6 +86,7 @@ export default config({
 			slugField: 'slug',
 			path: 'src/content/projects/*',
 			format: { contentField: 'content' },
+			template: `## Overview\n\nOne paragraph overview of the project.\n\n## Highlights\n\n- What it does\n- Why it matters\n- What’s next\n`,
 			schema: {
 				slug: fields.slug({
 					name: { label: 'Title' },
