@@ -18,6 +18,12 @@ export default defineConfig({
 		resolve: {
 			dedupe: ['react', 'react-dom', '@keystar/ui'],
 		},
+		optimizeDeps: {
+			include: ['@keystatic/core', '@keystatic/core/ui', '@keystar/ui', '@keystar/ui/core'],
+		},
+		ssr: {
+			noExternal: ['@keystatic/core', '@keystatic/astro', '@keystar/ui'],
+		},
 		server: {
 			fs: {
 				allow: [workspaceRoot],
