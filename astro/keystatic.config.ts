@@ -126,7 +126,6 @@ export default config({
 			slugField: 'slug',
 			path: 'src/content/articles/*',
 			format: { contentField: 'content' },
-			template: `## TL;DR\n\nSummarize the key idea in 2-3 sentences.\n\n## Context\n\nWhy this matters and what prompted the experiment.\n\n## What We Did\n\nStep-by-step explanation of the approach.\n\n## Results\n\nWhat worked, what didn’t, and what we learned.\n\n## What’s Next\n\nWhere this experiment goes from here.\n`,
 			schema: {
 				slug: fields.slug({
 					name: { label: 'Title' },
@@ -161,7 +160,6 @@ export default config({
 			slugField: 'slug',
 			path: 'src/content/projects/*',
 			format: { contentField: 'content' },
-			template: `## Overview\n\nOne paragraph overview of the project.\n\n## Highlights\n\n- What it does\n- Why it matters\n- What’s next\n`,
 			schema: {
 				slug: fields.slug({
 					name: { label: 'Title' },
