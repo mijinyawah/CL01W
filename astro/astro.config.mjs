@@ -14,6 +14,9 @@ export default defineConfig({
 	adapter: vercel(),
 	integrations: [mdx(), react(), keystatic()],
 	vite: {
+		resolve: {
+			dedupe: ['react', 'react-dom', '@keystar/ui'],
+		},
 		server: {
 			fs: {
 				allow: [workspaceRoot],
