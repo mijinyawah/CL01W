@@ -8,19 +8,16 @@ import VideoEmbed from '../../components/VideoEmbed.astro';
 import TextColor from '../../components/TextColor.astro';
 import Lightbox from '../../components/Lightbox.astro';
 
-export const prerender = true;
+export const prerender = false;
 
-export async function getStaticPaths() {
-	const articles = await getCollection('articles', (e) => !e.data.draft);
-	return articles.map((entry) => ({
-		params: { slug: entry.slug },
-		props: { entry },
-	}));
+const slug = Astro.params.slug as string;
+const entry = await getEntry('articles', slug);
+
+if (!entry || entry.data.draft) {
+	throw new Response('Not found', { status: 404 });
 }
 
-const { entry } = Astro.props;
 const { Content } = await entry.render();
-const slug = entry.slug;
 const allArticles = (await getCollection('articles', (e) => !e.data.draft)).sort(
 	(a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
