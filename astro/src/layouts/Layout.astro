@@ -1,6 +1,5 @@
 ---
 import ControlPanel from '../components/ControlPanel.astro';
-import CursorTrailGrid from '../components/CursorTrailGrid.astro';
 
 interface Props {}
 
@@ -76,7 +75,6 @@ const isArticles = currentPath.startsWith('/articles');
 			</div>
 		</aside>
 		<div class="content">
-			<CursorTrailGrid />
 			<div class="content__inner">
 				<slot />
 			</div>

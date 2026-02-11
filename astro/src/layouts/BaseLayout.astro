@@ -1,5 +1,6 @@
 ---
 import '../styles/tokens.css';
+import CursorTrailGrid from '../components/CursorTrailGrid.astro';
 import CursorTrail from '../components/CursorTrail.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 
@@ -89,17 +90,25 @@ const isoPublished =
 				}
 			}
 
-			.base-layout-wrapper {
-				position: relative;
-				z-index: 1;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="base-layout-wrapper">
-			<CursorTrail />
-			<slot />
-		</div>
-		<CustomCursor />
-	</body>
+				.base-layout-wrapper {
+					position: relative;
+					z-index: 1;
+				}
+
+				.base-layout-content {
+					position: relative;
+					z-index: 1;
+				}
+			</style>
+		</head>
+		<body>
+			<div class="base-layout-wrapper">
+				<CursorTrailGrid />
+				<CursorTrail />
+				<div class="base-layout-content">
+					<slot />
+				</div>
+			</div>
+			<CustomCursor />
+		</body>
 </html>

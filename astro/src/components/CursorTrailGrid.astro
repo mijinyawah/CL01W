@@ -8,7 +8,7 @@ interface Props {}
 
 <style>
 	.cursor-trail-grid {
-		position: absolute;
+		position: fixed;
 		inset: 0;
 		z-index: 0;
 		overflow: hidden;
@@ -65,6 +65,7 @@ interface Props {}
 	const STORAGE_KEY = 'cl01w-control';
 	const MOBILE_BREAKPOINT = 767;
 	const ACTIVE_CLASS = 'is-active';
+	const ACTIVE_CLASS_MS = 90;
 
 	function hexToRgba(hex, alpha) {
 		const m = hex.replace(/^#/, '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
@@ -87,14 +88,14 @@ interface Props {}
 
 	function initCursorTrailGrid() {
 		const grid = document.getElementById('cursor-trail-grid');
-		if (!grid || !grid.parentElement) return;
-		const host = grid.parentElement;
+		if (!grid) return;
 
 		let cols = 0;
 		let rows = 0;
 		let cellSize = 44;
 		let items = [];
-		let lastCellIndex = -1;
+		let prevCol = -1;
+		let prevRow = -1;
 		let resizeTimeout;
 		const clearTimers = new Map();
 
@@ -105,18 +106,16 @@ interface Props {}
 			items = [];
 			cols = 0;
 			rows = 0;
-			lastCellIndex = -1;
+			prevCol = -1;
+			prevRow = -1;
 		}
 
 		function createGrid() {
 			clearGrid();
 			if (window.innerWidth <= MOBILE_BREAKPOINT) return;
 
-			const rect = grid.getBoundingClientRect();
-			if (!rect.width || !rect.height) return;
-
-			cols = Math.ceil(rect.width / cellSize) + 1;
-			rows = Math.ceil(rect.height / cellSize) + 1;
+			cols = Math.ceil(window.innerWidth / cellSize) + 1;
+			rows = Math.ceil(window.innerHeight / cellSize) + 1;
 			grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
 			grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
 
@@ -163,32 +162,49 @@ interface Props {}
 			const timeoutId = window.setTimeout(() => {
 				item.classList.remove(ACTIVE_CLASS);
 				clearTimers.delete(cellIndex);
-			}, 34);
+			}, ACTIVE_CLASS_MS);
 			clearTimers.set(cellIndex, timeoutId);
+		}
+
+		function activateAlongPath(fromCol, fromRow, toCol, toRow) {
+			if (fromCol < 0 || fromRow < 0) {
+				activateCell(toRow * cols + toCol);
+				return;
+			}
+
+			const dCol = toCol - fromCol;
+			const dRow = toRow - fromRow;
+			const steps = Math.max(Math.abs(dCol), Math.abs(dRow), 1);
+			for (let i = 1; i <= steps; i++) {
+				const col = Math.round(fromCol + (dCol * i) / steps);
+				const row = Math.round(fromRow + (dRow * i) / steps);
+				activateCell(row * cols + col);
+			}
 		}
 
 		function onPointerMove(event) {
 			if (window.innerWidth <= MOBILE_BREAKPOINT || !cols || !rows) return;
 
-			const rect = grid.getBoundingClientRect();
-			const x = event.clientX - rect.left;
-			const y = event.clientY - rect.top;
-			if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) {
-				lastCellIndex = -1;
+			const x = event.clientX;
+			const y = event.clientY;
+			if (x < 0 || y < 0 || x >= window.innerWidth || y >= window.innerHeight) {
+				prevCol = -1;
+				prevRow = -1;
 				return;
 			}
 
-			const col = Math.floor(x / cellSize);
-			const row = Math.floor(y / cellSize);
-			const cellIndex = row * cols + col;
-			if (cellIndex === lastCellIndex) return;
+			const col = Math.max(0, Math.min(cols - 1, Math.floor(x / cellSize)));
+			const row = Math.max(0, Math.min(rows - 1, Math.floor(y / cellSize)));
+			if (col === prevCol && row === prevRow) return;
 
-			lastCellIndex = cellIndex;
-			activateCell(cellIndex);
+			activateAlongPath(prevCol, prevRow, col, row);
+			prevCol = col;
+			prevRow = row;
 		}
 
 		function onPointerLeave() {
-			lastCellIndex = -1;
+			prevCol = -1;
+			prevRow = -1;
 		}
 
 		function onResize() {
@@ -206,8 +222,9 @@ interface Props {}
 
 		applySettings();
 		createGrid();
-		host.addEventListener('pointermove', onPointerMove, { passive: true });
-		host.addEventListener('pointerleave', onPointerLeave);
+		window.addEventListener('pointermove', onPointerMove, { passive: true });
+		document.addEventListener('mouseleave', onPointerLeave);
+		window.addEventListener('blur', onPointerLeave);
 		window.addEventListener('resize', onResize);
 		window.addEventListener('cl01w-settings', onSettings);
 	}

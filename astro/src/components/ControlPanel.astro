@@ -466,7 +466,7 @@ interface Props {}
 				if (input.type === 'color') input.value = settings[key];
 				else if (input.type === 'range') input.value = settings[key];
 			}
-			input.addEventListener('change', () => {
+			const onSettingInput = () => {
 				let val;
 				if (input.type === 'range') {
 					const n = Number(input.value);
@@ -488,7 +488,10 @@ interface Props {}
 				if (trailFadeDurationOut && input.id === 'trail-fade-duration') trailFadeDurationOut.textContent = Number(input.value).toFixed(1);
 				if (trailFadeDelayOut && input.id === 'trail-fade-delay') trailFadeDelayOut.textContent = Number(input.value).toFixed(1);
 				if (trailScaleOut && input.id === 'trail-scale') trailScaleOut.textContent = Number(input.value).toFixed(2);
-			});
+			};
+
+			input.addEventListener('input', onSettingInput);
+			input.addEventListener('change', onSettingInput);
 		});
 		syncInputsFromSettings();
 
