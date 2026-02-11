@@ -13,15 +13,17 @@ const articles = defineCollection({
 		slug: keystaticSlug,
 		title: z.string(),
 		summary: z.string(),
-		date: z.date(),
-		category: z.string(),
-		type: z.string(),
-		authors: z.array(
-			z.object({
-				name: z.string(),
-				role: z.string(),
-			})
-		),
+		date: z.date().optional(),
+		category: z.string().optional(),
+		type: z.string().optional(),
+		authors: z
+			.array(
+				z.object({
+					name: z.string(),
+					role: z.string(),
+				})
+			)
+			.default([]),
 		draft: z.boolean().default(false),
 	}),
 });
@@ -31,8 +33,8 @@ const projects = defineCollection({
 	schema: z.object({
 		slug: keystaticSlug,
 		title: z.string(),
-		description: z.string(),
-		tags: z.array(z.string()),
+		description: z.string().optional(),
+		tags: z.array(z.string()).default([]),
 		linkedArticle: z.string().optional(),
 		draft: z.boolean().default(false),
 	}),

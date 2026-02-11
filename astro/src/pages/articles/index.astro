@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 
 const articles = (await getCollection('articles'))
 	.filter((a) => !a.data.draft)
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+	.sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 
 function formatDate(d: Date): string {
 	const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -22,19 +22,27 @@ function formatDate(d: Date): string {
 			{articles.map((entry) => (
 				<a class="snippet-card" href={`/articles/${entry.slug}/`}>
 					<div class="snippet-card__meta">
-						<span class="snippet-card__pill">{formatDate(entry.data.date)}</span>
-						<span class="snippet-card__pill">{entry.data.category}</span>
-						<span class="snippet-card__pill">{entry.data.type}</span>
+						{entry.data.date ? (
+							<span class="snippet-card__pill">{formatDate(entry.data.date)}</span>
+						) : null}
+						{entry.data.category ? (
+							<span class="snippet-card__pill">{entry.data.category}</span>
+						) : null}
+						{entry.data.type ? (
+							<span class="snippet-card__pill">{entry.data.type}</span>
+						) : null}
 					</div>
 					<h2 class="snippet-card__title">{entry.data.title}</h2>
-					<div class="snippet-card__byline">
-						{entry.data.authors.map((author) => (
-							<div class="snippet-card__author">
-								<span class="snippet-card__author-name">{author.name}</span>
-								<span class="snippet-card__author-role">{author.role}</span>
-							</div>
-						))}
-					</div>
+					{entry.data.authors.length ? (
+						<div class="snippet-card__byline">
+							{entry.data.authors.map((author) => (
+								<div class="snippet-card__author">
+									<span class="snippet-card__author-name">{author.name}</span>
+									<span class="snippet-card__author-role">{author.role}</span>
+								</div>
+							))}
+						</div>
+					) : null}
 				</a>
 			))}
 		</div>

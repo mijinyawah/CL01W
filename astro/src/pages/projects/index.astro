@@ -24,23 +24,31 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 							<a class="project-card" href={href}>
 								<span class="project-card__tag">{entry.slug}</span>
 								<h2 class="project-card__title">{entry.data.title}</h2>
-								<p class="project-card__description">{entry.data.description}</p>
-								<div class="project-card__tags">
-									{entry.data.tags.map((tag) => (
-										<span class="project-card__pill">{tag}</span>
-									))}
-								</div>
+								{entry.data.description ? (
+									<p class="project-card__description">{entry.data.description}</p>
+								) : null}
+								{entry.data.tags.length ? (
+									<div class="project-card__tags">
+										{entry.data.tags.map((tag) => (
+											<span class="project-card__pill">{tag}</span>
+										))}
+									</div>
+								) : null}
 							</a>
 						) : (
 							<div class="project-card">
 								<span class="project-card__tag">{entry.slug}</span>
 								<h2 class="project-card__title">{entry.data.title}</h2>
-								<p class="project-card__description">{entry.data.description}</p>
-								<div class="project-card__tags">
-									{entry.data.tags.map((tag) => (
-										<span class="project-card__pill">{tag}</span>
-									))}
-								</div>
+								{entry.data.description ? (
+									<p class="project-card__description">{entry.data.description}</p>
+								) : null}
+								{entry.data.tags.length ? (
+									<div class="project-card__tags">
+										{entry.data.tags.map((tag) => (
+											<span class="project-card__pill">{tag}</span>
+										))}
+									</div>
+								) : null}
 							</div>
 						)
 					);
