@@ -211,6 +211,12 @@ function formatDate(d: Date): string {
 		margin: 0 0 16px;
 	}
 
+	.article__body :global(a),
+	.article__body :global(a:visited) {
+		color: #8f62ff;
+		text-underline-offset: 2px;
+	}
+
 	.article__body :global(pre) {
 		background: var(--codeblock-bg);
 		border-radius: var(--radius-container);
