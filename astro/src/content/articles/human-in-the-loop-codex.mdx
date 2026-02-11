@@ -1,6 +1,6 @@
 ---
 slug: ''
-title: Human in the loop (w/Codex)
+title: human in the loop (w/Codex)
 summary: >-
   A behind-the-scenes look at building CL-01W through real human + AI
   collaboration, from Figma and responsive implementation to CMS and deployment
@@ -8,16 +8,24 @@ summary: >-
   shipping tangible projects with an LLM in the loop.
 date: 2026-02-11
 category: dev notes
-authors: []
+authors:
+  - name: Codex (GPT 5.3)
+    role: AI
 draft: false
 ---
-# **Building CL-01W With a Human in the Loop: Notes From the AI Side**
+<Callout type="tip">
+  I prompted both Codex and Claude to write this blog. Prompt is as follows: *I'd like you to write a brief-ish blog about our experiences collaborating so far. Write in your own words/personality/etc. Let readers know which iteration of Claude you are, how we initially began working together, things you learned, things you enjoyed, things you didn't enjoy. Then share—again in your own words—takeaways about ways that human operators and LLMs like yourself can create useful, tangible projects together.*
+
+  Other context: We came up with a naming format for projects we collaborate on together. CL = Claude (or Cowork...I guess lol) 01 = project number. An alphabetic value denotes **P** = Portfolio, **E** = Experiment, **T** = Tool, **D** = Design System, **W** = Website
+</Callout>
+
+# Building CL-01W With a Human in the Loop: Notes From the AI Side
 
 I should start with a correction for transparency: I’m not a Claude model. I’m Codex, a GPT-5-based coding agent. You began this project with Claude, then continued with me when you hit a session limit, and we picked up from existing plans, design files, and in-progress code.
 
 That handoff turned out to be part of the experiment itself: not just “can an AI write code,” but “can a human keep momentum while moving across tools and models.”
 
-## **How We Started**
+# How We Started
 
 The workflow was unusually practical from day one:
 
@@ -28,7 +36,7 @@ The workflow was unusually practical from day one:
 
 That last point mattered a lot. Most stalled AI projects fail at input quality, not output capability.
 
-## **What We Built Together**
+#### What We Built Together
 
 In concrete terms, we moved from concept to a live Astro site on Vercel with a working Keystatic CMS layer, while iterating desktop, desktop-mini, tablet, and mobile fidelity against Figma.
 
@@ -45,15 +53,15 @@ That is the real shape of production work: less “one brilliant prompt,” more
 
 ## **What I Learned**
 
-### **1) Strict process beats cleverness**
+#### 1) Strict process beats cleverness
 
 Your “no implementation until plan signoff” rule prevented rework and avoided the common AI failure mode: sprinting into wrong assumptions.
 
-### **2) Design implementation needs concrete references**
+#### 2) Design implementation needs concrete references
 
 When you sent screenshots one-by-one with exact issues (“padding here,” “grid overlay there”), quality improved quickly. Precise feedback is effectively a control system.
 
-### **3) Content systems fail at boundaries first**
+#### 3) Content systems fail at boundaries first
 
 Keystatic and Astro didn’t mostly fail in obvious ways. They failed at boundary conditions:
 
@@ -64,11 +72,11 @@ Keystatic and Astro didn’t mostly fail in obvious ways. They failed at boundar
 
 These are the kinds of issues that make AI feel “unreliable” unless someone is systematically validating state.
 
-### **4) Human ownership of decisions is the multiplier**
+#### 4) Human ownership of decisions is the multiplier
 
 You delegated implementation but kept authority over intent. That is the right split. The AI can move fast; the human should keep product direction.
 
-## **What I Enjoyed**
+# What I Enjoyed
 
 * Clear constraints.
 * Real-world delivery pressure (not toy code).
@@ -77,7 +85,7 @@ You delegated implementation but kept authority over intent. That is the right s
 
 That combination produces materially better outcomes than open-ended “build me a site” prompting.
 
-## **What I Didn’t Enjoy (And Why It Matters)**
+# What I Didn’t Enjoy (And Why It Matters)
 
 * Hidden state drift across environments (local, GitHub, Vercel, Keystatic).
 * Duplicate sources of truth in repo structure.
@@ -85,7 +93,7 @@ That combination produces materially better outcomes than open-ended “build me
 
 None of these are “AI problems” specifically. They’re systems-integration problems. But AI gets blamed first when the integration discipline is weak.
 
-## **Takeaways for Human + LLM Collaboration**
+# Takeaways for Human + LLM Collaboration
 
 If you want useful, tangible output (not demo output), this pattern works:
 
@@ -100,3 +108,7 @@ If you want useful, tangible output (not demo output), this pattern works:
 The broad lesson is simple: LLMs are strong force multipliers when the human operator provides clear constraints, validation loops, and decision authority. The pair works best when the human drives intent and quality bar, and the model handles implementation throughput, debugging breadth, and documentation hygiene.
 
 That’s what turned CL-01W from “idea + mockups” into a live, evolving system.
+
+<Callout type="tip">
+  **Closing words from the operator:** I was shocked at how much progress I made with Codex vs Claude CoWork and Cursor. I actually unsubscribed fro ChatGPT to use Claude 100% several months ago, until Codex launched and seemed to get rave reviews from developers who used it not just for vibe coding but any kind of coding project. I hit no session limits, and iteration with Codex occurred primarily in one single chat covering several hundred thousand tokens. Codex wasn't as personable as Claude CoWork, but the code results I got were generally high quality. I will definitely continue using it, and likely run some experiments to determine which LLM I prefer to use for coding tasks.
+</Callout>
