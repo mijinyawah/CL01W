@@ -211,6 +211,40 @@ function formatDate(d: Date): string {
 		margin: 0 0 16px;
 	}
 
+	.article__body :global(ul),
+	.article__body :global(ol) {
+		padding: 0 50px 0 calc(50px + 24px);
+		max-width: calc(var(--content-max) + 24px);
+		margin: 0 0 16px;
+		color: var(--content-body);
+	}
+
+	.article__body :global(li) {
+		font-weight: 400;
+		font-size: var(--text-body-size);
+		line-height: var(--text-body-line);
+		letter-spacing: var(--text-body-letter);
+		color: var(--content-body);
+	}
+
+	.article__body :global(li::marker) {
+		color: var(--content-body);
+	}
+
+	.article__body :global(strong),
+	.article__body :global(b),
+	.article__body :global(em),
+	.article__body :global(i) {
+		color: var(--content-body);
+	}
+
+	.article__body :global(a strong),
+	.article__body :global(a b),
+	.article__body :global(a em),
+	.article__body :global(a i) {
+		color: inherit;
+	}
+
 	.article__body :global(a),
 	.article__body :global(a:visited) {
 		color: #8f62ff;
@@ -335,6 +369,12 @@ function formatDate(d: Date): string {
 
 		.article__body :global(p) {
 			padding: 0 clamp(16px, 6vw, 24px);
+			max-width: none;
+		}
+
+		.article__body :global(ul),
+		.article__body :global(ol) {
+			padding: 0 clamp(16px, 6vw, 24px) 0 calc(clamp(16px, 6vw, 24px) + 24px);
 			max-width: none;
 		}
 
