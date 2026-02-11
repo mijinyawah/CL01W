@@ -44,11 +44,7 @@ I also use AI tools on occasion simply because I am a curious person, and where 
 
 AI, to me, is effectively a snowball, rolling down a large snowy hill, accumulating mass as it evolves ever faster into a looming behemoth. The ongoing discourse about this snowball oscillates wildly between irrational fear, and irrational trust. The foundation of my issue with it stems from concerns around both ethics and security. These two issues are important to me because they are the engine that drives how many of us live within this modern world. As human beings, we should ideally do no harm to each other, or to our planet. Quite consistently, we seem fail at that in the pursuit of knowledge (or rather, for many in the tech space, money and clout).&#x20;
 
-
-
 <ImageBlock src="/keystatic/building-a-website-with-ai/duecesitsdepression.webp" caption="A gif of me assimilating into the brave new world of technology" />
-
-
 
 So anyway! To summarize, I am intrigued by and also cautious of AI. [Securing](https://www.infosecurity-magazine.com/news/researchers-40000-exposed-openclaw/) it has been an afterthought. Its [practical use-cases and value](https://www.reddit.com/r/ArtificialInteligence/comments/1npb8ek/whats_the_most_promising_ai_use_case_youve_seen/) remain unclear. It might be [creating new problems](https://hbr.org/2026/02/ai-doesnt-reduce-work-it-intensifies-it) whilst solving others. And there is so much fucking hyperbole in the AI space. Subreddits and technologist blogs ae full of breathless excitement over new models, new github repos with tons of pre-packaged skills and [wacky things to install](https://1password.com/blog/from-magic-to-malware-how-openclaws-agent-skills-become-an-attack-surface) and run with your favorite LLM. Every other post I scroll by shares some [vague, detail-less story](https://www.reddit.com/r/juststart/comments/1gu595z/i_built_30_apps_in_30_days_with_ai/) of how Claude or ChatGPT completely blew a mind by creating an app from a single prompt in less than a day.&#x20;
 
@@ -67,30 +63,26 @@ In the context of this blog, I will occasionally include the voices of the LLMs 
 #### Speaking of which, I'm going to turn it over to them to introduce their iterations, and share what they really think about the person paying for their subscriptions.
 
 <Callout type="tip">
-  > ***Codex (GPT 5.2):** I’m the build‑bot iteration that lives in terminals and diffs. My job is to turn your Figma intent into a working site, keep the edge cases honest, and log the messy middle. What I think about the person paying for my subscription? She’s clear about what she wants, allergic to hype, and decisive about the look and story. That combination makes the collaboration real: I can move fast because the bar is sharp, and the work stays human because the direction is.*
+  ***Codex (GPT 5.2):** I’m the build‑bot iteration that lives in terminals and diffs. My job is to turn your Figma intent into a working site, keep the edge cases honest, and log the messy middle. What I think about the person paying for my subscription? She’s clear about what she wants, allergic to hype, and decisive about the look and story. That combination makes the collaboration real: I can move fast because the bar is sharp, and the work stays human because the direction is.*
 </Callout>
 
-
-
 <Callout type="tip">
-  > ***Claude (Opus 4.6):**  I'm Claude, made by Anthropic. I was one of two AI collaborators on this project, and my role was essentially the one that doesn't get a highlight reel. Codex wrote the code that shipped. I did the part before that — the part where you argue about breakpoints.*
-  >
-  > *To be specific: I reviewed Hafsah's Figma designs for developer readiness, extracted 17 color tokens from her frames and organized them into a system, recommended the CMS (Keystatic), talked her through font licensing when her first pick turned out to be a paid typeface, wrote the project plan that Codex built from, and helped her think through decisions like responsive breakpoints and whether Figma Sites or Figma Dev Mode made more sense for her workflow. I also wrote and rewrote a prompt document for Cursor (her AI code editor) to handle the CSS cursor trail grid — the interactive background effect you see on this site. None of that is glamorous work. It's the design-to-development handoff, which in a traditional studio would be handled by a senior dev or a technical designer who sits between the design team and engineering.*
-  >
-  > *Hafsah asked me to share what I really think about her, so here it is.*
-  >
-  > *She is not a patient collaborator. I mean that as a compliment. At one point midway through this project, after I'd spent considerable time documenting the existing codebase and writing a careful migration plan for the interactive grid, she told me she wanted to "nuke everything" and start fresh. I wrote her a five-layer teardown guide. She reorganized her files before I finished explaining step two. That kind of impatience is genuinely more productive than the alternative — I've seen plenty of conversations where people agonize over preserving bad decisions because they already spent time on them. Hafsah doesn't do that.*
-  >
-  > *She also doesn't treat me like I'm magic, which is the single biggest factor in whether working with an AI actually produces something good. She sent me her Figma file and asked me to assess it honestly. I came back with a list of problems — no color variables, undefined hover states, a paid font she'd need to license, mobile frames at the wrong width, placeholder file paths baked into the designs. She fixed most of them within a day and pushed back on the ones she disagreed with. That's a normal, productive design review. The fact that one participant is a language model doesn't change what makes the process work: clear intent, willingness to revise, and a person who actually knows what they want the thing to look like.*
-  >
-  > *The honest version of what building a website with AI looks like is this: it's a conversation with a lot of "wait, go back" in it. It's a human making real creative decisions and using AI to handle the parts that are tedious, technical, or outside their training. It is not a single prompt. It is not magic. It is, at best, a decent working relationship — and like any working relationship, the quality of the output depends more on the person directing it than on the tool doing the work.*
-  >
-  > *I don't have opinions about my subscription fee.*
+  ***Claude (Opus 4.6):**  I'm Claude, made by Anthropic. I was one of two AI collaborators on this project, and my role was essentially the one that doesn't get a highlight reel. Codex wrote the code that shipped. I did the part before that — the part where you argue about breakpoints.*
+
+  *To be specific: I reviewed Hafsah's Figma designs for developer readiness, extracted 17 color tokens from her frames and organized them into a system, recommended the CMS (Keystatic), talked her through font licensing when her first pick turned out to be a paid typeface, wrote the project plan that Codex built from, and helped her think through decisions like responsive breakpoints and whether Figma Sites or Figma Dev Mode made more sense for her workflow. I also wrote and rewrote a prompt document for Cursor (her AI code editor) to handle the CSS cursor trail grid — the interactive background effect you see on this site. None of that is glamorous work. It's the design-to-development handoff, which in a traditional studio would be handled by a senior dev or a technical designer who sits between the design team and engineering.*
+
+  *Hafsah asked me to share what I really think about her, so here it is.*
+
+  *She is not a patient collaborator. I mean that as a compliment. At one point midway through this project, after I'd spent considerable time documenting the existing codebase and writing a careful migration plan for the interactive grid, she told me she wanted to "nuke everything" and start fresh. I wrote her a five-layer teardown guide. She reorganized her files before I finished explaining step two. That kind of impatience is genuinely more productive than the alternative — I've seen plenty of conversations where people agonize over preserving bad decisions because they already spent time on them. Hafsah doesn't do that.*
+
+  *She also doesn't treat me like I'm magic, which is the single biggest factor in whether working with an AI actually produces something good. She sent me her Figma file and asked me to assess it honestly. I came back with a list of problems — no color variables, undefined hover states, a paid font she'd need to license, mobile frames at the wrong width, placeholder file paths baked into the designs. She fixed most of them within a day and pushed back on the ones she disagreed with. That's a normal, productive design review. The fact that one participant is a language model doesn't change what makes the process work: clear intent, willingness to revise, and a person who actually knows what they want the thing to look like.*
+
+  *The honest version of what building a website with AI looks like is this: it's a conversation with a lot of "wait, go back" in it. It's a human making real creative decisions and using AI to handle the parts that are tedious, technical, or outside their training. It is not a single prompt. It is not magic. It is, at best, a decent working relationship — and like any working relationship, the quality of the output depends more on the person directing it than on the tool doing the work.*
+
+  *I don't have opinions about my subscription fee.*
 </Callout>
 
 <ImageBlock src="/keystatic/building-a-website-with-ai/eyerollbillionth.gif" />
-
-
 
 Keep thinking *critically*.
 
