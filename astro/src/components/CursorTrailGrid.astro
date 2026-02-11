@@ -13,7 +13,7 @@ interface Props {}
 		z-index: 0;
 		overflow: hidden;
 		display: grid;
-		pointer-events: auto;
+		pointer-events: none;
 	}
 
 	/* Grid lines via CSS gradient on the container (replaces canvas-drawn lines) */
@@ -37,11 +37,11 @@ interface Props {}
 			opacity var(--trail-fade-duration, 2s) ease var(--trail-fade-delay, 0.4s),
 			transform 0.8s ease;
 		transform: scale(1);
-		pointer-events: auto;
+		pointer-events: none;
 		will-change: opacity, transform;
 	}
 
-	.cursor-trail-grid__item:hover {
+	.cursor-trail-grid__item.is-active {
 		opacity: var(--trail-opacity, 0.6);
 		transition:
 			opacity 0s ease 0s,
@@ -64,6 +64,7 @@ interface Props {}
 <script>
 	const STORAGE_KEY = 'cl01w-control';
 	const MOBILE_BREAKPOINT = 767;
+	const ACTIVE_CLASS = 'is-active';
 
 	function hexToRgba(hex, alpha) {
 		const m = hex.replace(/^#/, '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
@@ -79,59 +80,141 @@ interface Props {}
 		return {};
 	}
 
-	function createGrid() {
-		if (window.innerWidth <= MOBILE_BREAKPOINT) return;
+	function getCellSize(settings) {
+		const raw = Number(settings.cellSize);
+		return Number.isFinite(raw) && raw > 0 ? raw : 44;
+	}
+
+	function initCursorTrailGrid() {
 		const grid = document.getElementById('cursor-trail-grid');
-		if (!grid) return;
+		if (!grid || !grid.parentElement) return;
+		const host = grid.parentElement;
 
-		const settings = getSettings();
-		const cellSize = settings.cellSize || 44;
-		const rect = grid.getBoundingClientRect();
-		if (!rect.width || !rect.height) return;
-		const cols = Math.ceil(rect.width / cellSize) + 1;
-		const rows = Math.ceil(rect.height / cellSize) + 1;
+		let cols = 0;
+		let rows = 0;
+		let cellSize = 44;
+		let items = [];
+		let lastCellIndex = -1;
+		let resizeTimeout;
+		const clearTimers = new Map();
 
-		grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
-		grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
-
-		grid.innerHTML = '';
-		for (let i = 0; i < cols * rows; i++) {
-			const item = document.createElement('div');
-			item.className = 'cursor-trail-grid__item';
-			grid.appendChild(item);
+		function clearGrid() {
+			clearTimers.forEach((timerId) => window.clearTimeout(timerId));
+			clearTimers.clear();
+			grid.innerHTML = '';
+			items = [];
+			cols = 0;
+			rows = 0;
+			lastCellIndex = -1;
 		}
-	}
 
-	function applySettings() {
-		const s = getSettings();
-		const root = document.documentElement;
-		root.style.setProperty('--trail-color', s.highlightColor || '#001a2b');
-		root.style.setProperty('--trail-opacity', String((s.highlightOpacity ?? 20) / 100));
-		root.style.setProperty('--trail-fade-duration', `${s.trailFadeDuration ?? 2}s`);
-		root.style.setProperty('--trail-fade-delay', `${s.trailFadeDelay ?? 0.4}s`);
-		root.style.setProperty('--trail-scale', String(s.trailScale ?? 1.2));
-		root.style.setProperty('--grid-cell-size', `${s.cellSize ?? 44}px`);
-		root.style.setProperty('--grid-opacity', String((s.gridOpacity ?? 100) / 100));
+		function createGrid() {
+			clearGrid();
+			if (window.innerWidth <= MOBILE_BREAKPOINT) return;
 
-		const strokeAlpha = Math.max(0, Math.min(100, s.strokeOpacity ?? 35)) / 100;
-		root.style.setProperty('--stroke-rgba', hexToRgba(s.strokeColor || '#8f62ff', strokeAlpha));
-		root.style.setProperty('--stroke-width', `${s.strokeWidth ?? 0.5}px`);
-	}
+			const rect = grid.getBoundingClientRect();
+			if (!rect.width || !rect.height) return;
 
-	createGrid();
-	applySettings();
+			cols = Math.ceil(rect.width / cellSize) + 1;
+			rows = Math.ceil(rect.height / cellSize) + 1;
+			grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+			grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
 
-	let resizeTimeout;
-	window.addEventListener('resize', () => {
-		clearTimeout(resizeTimeout);
-		resizeTimeout = setTimeout(() => {
-			createGrid();
-			applySettings();
-		}, 150);
-	});
+			const total = cols * rows;
+			const fragment = document.createDocumentFragment();
+			items = new Array(total);
+			for (let i = 0; i < total; i++) {
+				const item = document.createElement('div');
+				item.className = 'cursor-trail-grid__item';
+				items[i] = item;
+				fragment.appendChild(item);
+			}
+			grid.appendChild(fragment);
+		}
 
-	window.addEventListener('cl01w-settings', (e) => {
+		function applySettings(settings) {
+			const s = settings || getSettings();
+			const root = document.documentElement;
+			cellSize = getCellSize(s);
+
+			root.style.setProperty('--trail-color', s.highlightColor || '#001a2b');
+			root.style.setProperty('--trail-opacity', String((s.highlightOpacity ?? 20) / 100));
+			root.style.setProperty('--trail-fade-duration', `${s.trailFadeDuration ?? 2}s`);
+			root.style.setProperty('--trail-fade-delay', `${s.trailFadeDelay ?? 0.4}s`);
+			root.style.setProperty('--trail-scale', String(s.trailScale ?? 1.2));
+			root.style.setProperty('--grid-cell-size', `${cellSize}px`);
+			root.style.setProperty('--grid-opacity', String((s.gridOpacity ?? 100) / 100));
+
+			const strokeAlpha = Math.max(0, Math.min(100, s.strokeOpacity ?? 35)) / 100;
+			root.style.setProperty('--stroke-rgba', hexToRgba(s.strokeColor || '#8f62ff', strokeAlpha));
+			root.style.setProperty('--stroke-width', `${s.strokeWidth ?? 0.5}px`);
+		}
+
+		function activateCell(cellIndex) {
+			if (cellIndex < 0 || cellIndex >= items.length) return;
+			const item = items[cellIndex];
+			if (!item) return;
+
+			item.classList.add(ACTIVE_CLASS);
+			if (clearTimers.has(cellIndex)) {
+				window.clearTimeout(clearTimers.get(cellIndex));
+			}
+
+			const timeoutId = window.setTimeout(() => {
+				item.classList.remove(ACTIVE_CLASS);
+				clearTimers.delete(cellIndex);
+			}, 34);
+			clearTimers.set(cellIndex, timeoutId);
+		}
+
+		function onPointerMove(event) {
+			if (window.innerWidth <= MOBILE_BREAKPOINT || !cols || !rows) return;
+
+			const rect = grid.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+			if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) {
+				lastCellIndex = -1;
+				return;
+			}
+
+			const col = Math.floor(x / cellSize);
+			const row = Math.floor(y / cellSize);
+			const cellIndex = row * cols + col;
+			if (cellIndex === lastCellIndex) return;
+
+			lastCellIndex = cellIndex;
+			activateCell(cellIndex);
+		}
+
+		function onPointerLeave() {
+			lastCellIndex = -1;
+		}
+
+		function onResize() {
+			window.clearTimeout(resizeTimeout);
+			resizeTimeout = window.setTimeout(() => {
+				applySettings();
+				createGrid();
+			}, 150);
+		}
+
+		function onSettings(event) {
+			applySettings(event?.detail || getSettings());
+			if (event?.detail?.cellSize != null) createGrid();
+		}
+
 		applySettings();
-		if (e.detail?.cellSize != null) createGrid();
-	});
+		createGrid();
+		host.addEventListener('pointermove', onPointerMove, { passive: true });
+		host.addEventListener('pointerleave', onPointerLeave);
+		window.addEventListener('resize', onResize);
+		window.addEventListener('cl01w-settings', onSettings);
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initCursorTrailGrid, { once: true });
+	} else {
+		initCursorTrailGrid();
+	}
 </script>
