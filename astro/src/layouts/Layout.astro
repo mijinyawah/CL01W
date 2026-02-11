@@ -24,17 +24,6 @@ const isArticles = currentPath.startsWith('/articles');
 				<p class="sidebar__overlay-title">Back to the experiments?</p>
 				<nav class="sidebar__overlay-nav" aria-label="Mobile">
 					<a
-						class={`sidebar__overlay-link${isProjects ? ' sidebar__overlay-link--active' : ''}`}
-						href="/projects/"
-					>
-						{isProjects && (
-							<span class="sidebar__overlay-arrow" aria-hidden="true">
-								<img src={mobileArrowIcon} alt="" />
-							</span>
-						)}
-						Projects
-					</a>
-					<a
 						class={`sidebar__overlay-link${isArticles ? ' sidebar__overlay-link--active' : ''}`}
 						href="/articles/"
 					>
@@ -44,6 +33,17 @@ const isArticles = currentPath.startsWith('/articles');
 							</span>
 						)}
 						Articles
+					</a>
+					<a
+						class={`sidebar__overlay-link${isProjects ? ' sidebar__overlay-link--active' : ''}`}
+						href="/projects/"
+					>
+						{isProjects && (
+							<span class="sidebar__overlay-arrow" aria-hidden="true">
+								<img src={mobileArrowIcon} alt="" />
+							</span>
+						)}
+						Projects
 					</a>
 				</nav>
 				<div class="sidebar__overlay-spacer" aria-hidden="true"></div>
@@ -66,13 +66,13 @@ const isArticles = currentPath.startsWith('/articles');
 					I'm a brand and mograph designer who likes to experiment with new mediums.
 				</p>
 				<nav class="sidebar__nav" aria-label="Main">
-					<a href="/projects/">Projects</a>
 					<a href="/articles/">Articles</a>
+					<a href="/projects/">Projects</a>
 				</nav>
 				<button type="button" class="sidebar__control-link" id="control-panel-toggle" data-control-panel>
 					CTRL PANEL
 				</button>
-				<p class="sidebar__copyright">©2026 Hafsah Mijinyawa</p>
+				<p class="sidebar__copyright">©2026 HAFSAH MIJINYAWA</p>
 			</div>
 		</aside>
 		<div class="content">
@@ -83,7 +83,7 @@ const isArticles = currentPath.startsWith('/articles');
 	</main>
 	<ControlPanel />
 	<footer class="footer">
-		©2026 Hafsah Mijinyawa
+		©2026 HAFSAH MIJINYAWA
 	</footer>
 </div>
 
