@@ -6,7 +6,7 @@ interface Props {}
 	<!-- JS generates grid items here -->
 </div>
 
-<style>
+<style is:global>
 	.cursor-trail-grid {
 		position: fixed;
 		inset: 0;
@@ -136,8 +136,8 @@ interface Props {}
 			const root = document.documentElement;
 			cellSize = getCellSize(s);
 
-			root.style.setProperty('--trail-color', s.highlightColor || '#001a2b');
-			root.style.setProperty('--trail-opacity', String((s.highlightOpacity ?? 20) / 100));
+			root.style.setProperty('--trail-color', s.highlightColor || '#8f62ff');
+			root.style.setProperty('--trail-opacity', String((s.highlightOpacity ?? 35) / 100));
 			root.style.setProperty('--trail-fade-duration', `${s.trailFadeDuration ?? 2}s`);
 			root.style.setProperty('--trail-fade-delay', `${s.trailFadeDelay ?? 0.4}s`);
 			root.style.setProperty('--trail-scale', String(s.trailScale ?? 1.2));
