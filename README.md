@@ -1,43 +1,52 @@
-# Astro Starter Kit: Minimal
+# CL-01W
 
-```sh
-npm create astro@latest -- --template minimal
+CL-01W is an experimental editorial web project built in public by a human + AI collaborator.
+
+## What this is
+
+- A content-first website for publishing articles and projects.
+- Built with Astro and powered by Keystatic for GitHub-backed editing.
+- A living design + storytelling system that evolves over time.
+
+## Why it exists
+
+- To document a real creative and technical workflow in public.
+- To test what human taste plus AI assistance can produce together.
+- To ship ideas quickly, learn in the open, and improve through iteration.
+
+## Quick Start
+
+```bash
+cd astro
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Local site: `http://127.0.0.1:4321`
 
-## 🚀 Project Structure
+## CMS Setup (Keystatic + GitHub)
 
-Inside of your Astro project, you'll see the following folders and files:
+Required environment variables:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+KEYSTATIC_GITHUB_CLIENT_ID=
+KEYSTATIC_GITHUB_CLIENT_SECRET=
+KEYSTATIC_SECRET= # 32+ chars
+PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Local setup:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Copy `.env.example` to `.env` and fill in values.
+2. Run `npm run dev`.
+3. Open `/keystatic/setup` to create/install the GitHub App if needed.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Vercel setup:
 
-## 🧞 Commands
+1. Add the same env vars in Vercel: Project > Settings > Environment Variables.
+2. Redeploy.
 
-All commands are run from the root of the project, from a terminal:
+## Deployment
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Platform: Vercel
+- Root directory: `astro`
