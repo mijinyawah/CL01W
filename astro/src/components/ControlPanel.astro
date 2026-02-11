@@ -25,12 +25,12 @@ interface Props {}
 					<input type="color" id="cursor-fill" value="#ec8cff" data-setting="cursorFill" />
 				</label>
 				<label class="control-panel__row">
-					<span>Trail color</span>
+					<span>Grid trail color</span>
 					<input type="color" id="highlight-color" value="#8f62ff" data-setting="highlightColor" title="Grid cell trail color" />
 				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
-				<legend>Tweak</legend>
+				<legend>Grid Trail</legend>
 				<label class="control-panel__row">
 					<span>Stroke width</span>
 					<input type="range" id="stroke-width" min="0.5" max="2" step="0.1" value="0.5" data-setting="strokeWidth" />
@@ -39,39 +39,55 @@ interface Props {}
 				<label class="control-panel__row">
 					<span>Stroke opacity</span>
 					<input type="range" id="stroke-opacity" min="0" max="100" value="35" data-setting="strokeOpacity" />
+					<output for="stroke-opacity" id="stroke-opacity-out" aria-live="polite">35</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Grid opacity</span>
+					<input type="range" id="grid-opacity" min="0" max="100" value="100" data-setting="gridOpacity" />
+					<output for="grid-opacity" id="grid-opacity-out" aria-live="polite">100</output>
+				</label>
+				<label class="control-panel__row">
+					<span>Cell size</span>
+					<input type="range" id="cell-size" min="20" max="64" value="44" data-setting="cellSize" />
+					<output for="cell-size" id="cell-size-out" aria-live="polite">44</output>
 				</label>
 				<label class="control-panel__row">
 					<span>Trail opacity</span>
 					<input type="range" id="highlight-opacity" min="0" max="100" value="35" data-setting="highlightOpacity" title="Grid trail cell opacity" />
+					<output for="highlight-opacity" id="highlight-opacity-out" aria-live="polite">35</output>
 				</label>
 				<label class="control-panel__row">
-					<span>Trail fade (s)</span>
+					<span>Fade (s)</span>
 					<input type="range" id="trail-fade-duration" min="0.5" max="5" step="0.1" value="2" data-setting="trailFadeDuration" title="How long the trail lingers" />
 					<output for="trail-fade-duration" id="trail-fade-duration-out" aria-live="polite">2</output>
 				</label>
 				<label class="control-panel__row">
-					<span>Trail delay (s)</span>
+					<span>Fade delay (s)</span>
 					<input type="range" id="trail-fade-delay" min="0" max="1" step="0.1" value="0.4" data-setting="trailFadeDelay" title="Delay before fade-out" />
 					<output for="trail-fade-delay" id="trail-fade-delay-out" aria-live="polite">0.4</output>
 				</label>
 				<label class="control-panel__row">
-					<span>Trail scale</span>
+					<span>Hover scale</span>
 					<input type="range" id="trail-scale" min="1" max="1.5" step="0.05" value="1.2" data-setting="trailScale" title="Hover scale" />
 					<output for="trail-scale" id="trail-scale-out" aria-live="polite">1.2</output>
 				</label>
+			</fieldset>
+			<fieldset class="control-panel__section">
+				<legend>Cursor Dots</legend>
 				<label class="control-panel__row">
 					<span>Trail length</span>
 					<input type="range" id="trail-length" min="0" max="120" value="26" data-setting="trailLength" />
-					<output for="trail-length" id="trail-length-out" aria-live="polite">8</output>
+					<output for="trail-length" id="trail-length-out" aria-live="polite">26</output>
 				</label>
 				<label class="control-panel__row">
 					<span>Trail opacity</span>
 					<input type="range" id="trail-opacity" min="0" max="100" value="100" data-setting="trailOpacity" />
+					<output for="trail-opacity" id="trail-opacity-out" aria-live="polite">100</output>
 				</label>
 				<label class="control-panel__row">
 					<span>Cursor size</span>
 					<input type="range" id="cursor-size" min="4" max="24" value="24" data-setting="cursorSize" />
-					<output for="cursor-size" id="cursor-size-out" aria-live="polite">8</output>
+					<output for="cursor-size" id="cursor-size-out" aria-live="polite">24</output>
 				</label>
 			</fieldset>
 			<fieldset class="control-panel__section">
@@ -182,7 +198,7 @@ interface Props {}
 	}
 
 	.control-panel__row span:first-child {
-		flex: 0 0 72px;
+		flex: 0 0 92px;
 	}
 
 	.control-panel__row input[type='range'] {
@@ -447,13 +463,23 @@ interface Props {}
 				}
 			});
 			const strokeWidthOut = document.getElementById('stroke-width-out');
+			const strokeOpacityOut = document.getElementById('stroke-opacity-out');
+			const gridOpacityOut = document.getElementById('grid-opacity-out');
+			const cellSizeOut = document.getElementById('cell-size-out');
+			const highlightOpacityOut = document.getElementById('highlight-opacity-out');
 			const trailLengthOut = document.getElementById('trail-length-out');
+			const trailOpacityOut = document.getElementById('trail-opacity-out');
 			const cursorSizeOut = document.getElementById('cursor-size-out');
 			const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
 			const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
 			const trailScaleOut = document.getElementById('trail-scale-out');
 			if (strokeWidthOut) strokeWidthOut.textContent = Number(settings.strokeWidth).toFixed(1);
+			if (strokeOpacityOut) strokeOpacityOut.textContent = Math.round(settings.strokeOpacity);
+			if (gridOpacityOut) gridOpacityOut.textContent = Math.round(settings.gridOpacity);
+			if (cellSizeOut) cellSizeOut.textContent = Math.round(settings.cellSize);
+			if (highlightOpacityOut) highlightOpacityOut.textContent = Math.round(settings.highlightOpacity);
 			if (trailLengthOut) trailLengthOut.textContent = settings.trailLength;
+			if (trailOpacityOut) trailOpacityOut.textContent = Math.round(settings.trailOpacity);
 			if (cursorSizeOut) cursorSizeOut.textContent = settings.cursorSize;
 			if (trailFadeDurationOut) trailFadeDurationOut.textContent = Number(settings.trailFadeDuration).toFixed(1);
 			if (trailFadeDelayOut) trailFadeDelayOut.textContent = Number(settings.trailFadeDelay).toFixed(1);
@@ -477,13 +503,23 @@ interface Props {}
 				save(settings);
 				if (key === 'pageBg') applyPageBg(settings.pageBg);
 				const strokeWidthOut = document.getElementById('stroke-width-out');
+				const strokeOpacityOut = document.getElementById('stroke-opacity-out');
+				const gridOpacityOut = document.getElementById('grid-opacity-out');
+				const cellSizeOut = document.getElementById('cell-size-out');
+				const highlightOpacityOut = document.getElementById('highlight-opacity-out');
 				const trailLengthOut = document.getElementById('trail-length-out');
+				const trailOpacityOut = document.getElementById('trail-opacity-out');
 				const cursorSizeOut = document.getElementById('cursor-size-out');
 				const trailFadeDurationOut = document.getElementById('trail-fade-duration-out');
 				const trailFadeDelayOut = document.getElementById('trail-fade-delay-out');
 				const trailScaleOut = document.getElementById('trail-scale-out');
 				if (strokeWidthOut && input.id === 'stroke-width') strokeWidthOut.textContent = Number(input.value).toFixed(1);
+				if (strokeOpacityOut && input.id === 'stroke-opacity') strokeOpacityOut.textContent = input.value;
+				if (gridOpacityOut && input.id === 'grid-opacity') gridOpacityOut.textContent = input.value;
+				if (cellSizeOut && input.id === 'cell-size') cellSizeOut.textContent = input.value;
+				if (highlightOpacityOut && input.id === 'highlight-opacity') highlightOpacityOut.textContent = input.value;
 				if (trailLengthOut && input.id === 'trail-length') trailLengthOut.textContent = input.value;
+				if (trailOpacityOut && input.id === 'trail-opacity') trailOpacityOut.textContent = input.value;
 				if (cursorSizeOut && input.id === 'cursor-size') cursorSizeOut.textContent = input.value;
 				if (trailFadeDurationOut && input.id === 'trail-fade-duration') trailFadeDurationOut.textContent = Number(input.value).toFixed(1);
 				if (trailFadeDelayOut && input.id === 'trail-fade-delay') trailFadeDelayOut.textContent = Number(input.value).toFixed(1);
