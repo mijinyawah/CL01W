@@ -9,7 +9,7 @@
 A personal website documenting Hafsah's experiments building things with AI. The site itself is proof of concept — a human and an AI built it together, and the process is part of the story.
 
 **Project ID:** CL-01W
-**Owner:** Hafsah Mijinyawa (chatter@wetcloudmedia.com)
+**Owner:** Hafsah Mijinyawa
 **Repo:** git@github.com:mijinyawah/cl-01w.git
 **Live URL:** cl-01w.vercel.app
 **Figma wireframes:** https://www.figma.com/design/ZppG0NGKHwQhFylxGUvJ7k
