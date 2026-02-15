@@ -44,7 +44,10 @@ const chirps = defineCollection({
 	type: 'data',
 	schema: z.object({
 		slug: z.string().optional(),
-		date: z.string(),
+		date: z.preprocess(
+			(value) => (value instanceof Date ? value.toISOString() : value),
+			z.string()
+		),
 		content: z.string().max(140),
 		tags: z.array(z.string()).default([]),
 		link: z.union([z.string().url(), z.literal('')]).optional(),

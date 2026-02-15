@@ -20,7 +20,14 @@ const currentIndex = allChirps.findIndex((e) => e.id === entry.id);
 const prev = currentIndex > 0 ? allChirps[currentIndex - 1] : null;
 const next = currentIndex >= 0 && currentIndex < allChirps.length - 1 ? allChirps[currentIndex + 1] : null;
 
-function parseChirpDate(value: string): Date {
+function isValidDate(value: Date): boolean {
+	return !Number.isNaN(value.getTime());
+}
+
+function parseChirpDate(value: string | Date): Date {
+	if (value instanceof Date) {
+		return value;
+	}
 	const hasOffset = /[zZ]|[+-]\d{2}:?\d{2}$/.test(value);
 	if (hasOffset) {
 		return new Date(value);
@@ -34,11 +41,15 @@ function parseChirpDate(value: string): Date {
 	return new Date(utcDate.getTime() + offsetMs);
 }
 
-function getChirpTimestamp(value: string): number {
-	return parseChirpDate(value).getTime();
+function getChirpTimestamp(value: string | Date): number {
+	const time = parseChirpDate(value).getTime();
+	return Number.isNaN(time) ? 0 : time;
 }
 
 function formatDate(d: Date): string {
+	if (!isValidDate(d)) {
+		return '—';
+	}
 	const parts = new Intl.DateTimeFormat('en-US', {
 		timeZone,
 		month: 'short',
@@ -52,6 +63,9 @@ function formatDate(d: Date): string {
 }
 
 function formatTime(d: Date): string {
+	if (!isValidDate(d)) {
+		return '—';
+	}
 	return new Intl.DateTimeFormat('en-US', {
 		timeZone,
 		hour: 'numeric',
