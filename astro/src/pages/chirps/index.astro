@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const timeZone = 'America/Detroit';
+
+const chirps = (await getCollection('chirps'))
+	.filter((entry) => !entry.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function formatDate(d: Date): string {
+	const parts = new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		month: 'short',
+		day: '2-digit',
+		year: 'numeric',
+	}).formatToParts(d);
+	const month = parts.find((part) => part.type === 'month')?.value?.toUpperCase() ?? '';
+	const day = parts.find((part) => part.type === 'day')?.value ?? '';
+	const year = parts.find((part) => part.type === 'year')?.value ?? '';
+	return `${month} ${day} | ${year}`;
+}
+
+function formatTime(d: Date): string {
+	return new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		hour: 'numeric',
+		minute: '2-digit',
+	}).format(d);
+}
+---
+
+<BaseLayout title="CL-01W — Chirps" description="Short updates from the CL-01W experiment log.">
+	<Layout>
+		<div class="chirp-list">
+			{chirps.map((entry) => (
+				<a class="chirp-card" href={`/chirps/${entry.id}/`}>
+					<div class="chirp-card__meta">
+						<span class="chirp-card__pill">{formatDate(entry.data.date)}</span>
+						<span class="chirp-card__time">{formatTime(entry.data.date)}</span>
+					</div>
+					<p class="chirp-card__content">{entry.data.content}</p>
+					{entry.data.tags.length ? (
+						<div class="chirp-card__tags">
+							{entry.data.tags.map((tag) => (
+								<span class="chirp-card__tag">{tag}</span>
+							))}
+						</div>
+					) : null}
+				</a>
+			))}
+		</div>
+	</Layout>
+</BaseLayout>
+
+<style>
+	.chirp-list {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		padding: 0;
+	}
+
+	.chirp-card {
+		display: block;
+		width: 100%;
+		max-width: var(--content-max);
+		margin: 0 auto;
+		padding: 16px 24px;
+		background: var(--snippet-bg);
+		border: 1px solid var(--snippet-border);
+		border-radius: var(--radius-card);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.chirp-card:hover {
+		border-color: var(--meta-border);
+	}
+
+	.chirp-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	.chirp-card__pill {
+		font-family: var(--font-eyebrow);
+		font-weight: 700;
+		font-size: var(--text-eyebrow-size);
+		line-height: var(--text-eyebrow-line);
+		letter-spacing: var(--text-eyebrow-letter);
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	.chirp-card__time {
+		font-family: var(--font-body);
+		font-weight: 600;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		color: var(--meta-text);
+	}
+
+	.chirp-card__content {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: var(--text-body-size);
+		line-height: var(--text-body-line);
+		letter-spacing: var(--text-body-letter);
+		color: var(--content-body);
+		margin: 0 0 12px;
+		white-space: pre-wrap;
+	}
+
+	.chirp-card__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+
+	.chirp-card__tag {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		color: var(--content-title);
+		text-transform: uppercase;
+	}
+
+	@media (max-width: 767px) {
+		.chirp-list {
+			gap: 20px;
+			align-items: center;
+		}
+
+		.chirp-card {
+			width: clamp(300px, 90vw, 317px);
+			max-width: none;
+			padding: 16px 24px;
+		}
+	}
+</style>

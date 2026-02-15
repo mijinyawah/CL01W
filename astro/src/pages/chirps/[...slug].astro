@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export const prerender = false;
+
+const timeZone = 'America/Detroit';
+const slug = Astro.params.slug as string;
+const entry = await getEntry('chirps', slug);
+
+if (!entry || entry.data.draft) {
+	throw new Response('Not found', { status: 404 });
+}
+
+const allChirps = (await getCollection('chirps', (e) => !e.data.draft)).sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const currentIndex = allChirps.findIndex((e) => e.id === entry.id);
+const prev = currentIndex > 0 ? allChirps[currentIndex - 1] : null;
+const next = currentIndex >= 0 && currentIndex < allChirps.length - 1 ? allChirps[currentIndex + 1] : null;
+
+function formatDate(d: Date): string {
+	const parts = new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		month: 'short',
+		day: '2-digit',
+		year: 'numeric',
+	}).formatToParts(d);
+	const month = parts.find((part) => part.type === 'month')?.value?.toUpperCase() ?? '';
+	const day = parts.find((part) => part.type === 'day')?.value ?? '';
+	const year = parts.find((part) => part.type === 'year')?.value ?? '';
+	return `${month} ${day} | ${year}`;
+}
+
+function formatTime(d: Date): string {
+	return new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		hour: 'numeric',
+		minute: '2-digit',
+	}).format(d);
+}
+---
+
+<BaseLayout title="CL-01W — Chirp" description={entry.data.content}>
+	<Layout>
+		<article class="chirp">
+			<header class="chirp__header">
+				<div class="chirp__meta">
+					<span class="chirp__pill">{formatDate(entry.data.date)}</span>
+					<span class="chirp__time">{formatTime(entry.data.date)}</span>
+				</div>
+			</header>
+
+			<div class="chirp__body">
+				<p class="chirp__content">{entry.data.content}</p>
+				{entry.data.tags.length ? (
+					<div class="chirp__tags">
+						{entry.data.tags.map((tag) => (
+							<span class="chirp__tag">{tag}</span>
+						))}
+					</div>
+				) : null}
+				{entry.data.link ? (
+					<a class="chirp__link" href={entry.data.link} target="_blank" rel="noreferrer">
+						{entry.data.link}
+					</a>
+				) : null}
+				{entry.data.image ? (
+					<img class="chirp__image" src={entry.data.image} alt="" loading="lazy" />
+				) : null}
+			</div>
+
+			<footer class="chirp__footer">
+				<nav class="chirp__nav" aria-label="Chirp navigation">
+					{prev ? (
+						<a class="chirp__nav-link" href={`/chirps/${prev.id}/`}>prev</a>
+					) : (
+						<span class="chirp__nav-link chirp__nav-link--placeholder" aria-hidden="true" />
+					)}
+					<a class="chirp__nav-link" href="/chirps/">all chirps</a>
+					{next ? (
+						<a class="chirp__nav-link" href={`/chirps/${next.id}/`}>next</a>
+					) : (
+						<span class="chirp__nav-link chirp__nav-link--placeholder" aria-hidden="true" />
+					)}
+				</nav>
+			</footer>
+		</article>
+	</Layout>
+</BaseLayout>
+
+<style>
+	.chirp {
+		padding: 0 0 40px;
+	}
+
+	.chirp__header {
+		padding: 0 50px 24px;
+	}
+
+	.chirp__meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 0;
+	}
+
+	.chirp__pill {
+		font-family: var(--font-eyebrow);
+		font-weight: 700;
+		font-size: var(--text-eyebrow-size);
+		line-height: var(--text-eyebrow-line);
+		letter-spacing: var(--text-eyebrow-letter);
+		text-transform: uppercase;
+		color: var(--meta-text);
+		border: 0.5px solid var(--meta-border);
+		padding: 0 8px;
+	}
+
+	.chirp__time {
+		font-family: var(--font-body);
+		font-weight: 600;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		color: var(--meta-text);
+	}
+
+	.chirp__body {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 0 50px;
+	}
+
+	.chirp__content {
+		font-family: var(--font-body);
+		font-weight: 400;
+		font-size: var(--text-h2-size);
+		line-height: var(--text-h2-line);
+		letter-spacing: var(--text-h2-letter);
+		color: var(--content-body);
+		margin: 0;
+		white-space: pre-wrap;
+	}
+
+	.chirp__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+
+	.chirp__tag {
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: var(--text-special-02-size);
+		line-height: var(--text-special-02-line);
+		letter-spacing: var(--text-special-02-letter);
+		color: var(--content-title);
+		text-transform: uppercase;
+	}
+
+	.chirp__link {
+		color: #8f62ff;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		word-break: break-word;
+	}
+
+	.chirp__image {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		border: 1px solid var(--snippet-border);
+	}
+
+	.chirp__footer {
+		padding: 40px 50px 0;
+		margin-top: 32px;
+		border-top: 1px solid var(--snippet-border);
+	}
+
+	.chirp__nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		width: 100%;
+		max-width: var(--content-max);
+		margin: 0 auto;
+	}
+
+	.chirp__nav-link--placeholder {
+		visibility: hidden;
+		pointer-events: none;
+		width: 0;
+		overflow: hidden;
+	}
+
+	.chirp__nav-link {
+		font-family: var(--font-pixel);
+		font-size: var(--text-pixel-jumbo-size);
+		line-height: var(--text-pixel-jumbo-line);
+		color: var(--content-title);
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.chirp__nav-link:hover {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 1199px) and (min-width: 768px) {
+		.chirp__nav-link {
+			font-size: var(--text-pixel-mini-size);
+			line-height: var(--text-pixel-mini-line);
+		}
+	}
+
+	@media (max-width: 767px) {
+		.chirp__header {
+			padding: 0 clamp(16px, 6vw, 24px) 24px;
+		}
+
+		.chirp__body {
+			padding: 0 clamp(16px, 6vw, 24px);
+		}
+
+		.chirp__content {
+			font-size: 20px;
+			line-height: 28px;
+		}
+
+		.chirp__footer {
+			padding: 32px clamp(16px, 6vw, 24px) 0;
+		}
+	}
+</style>

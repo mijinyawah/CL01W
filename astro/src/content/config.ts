@@ -40,4 +40,16 @@ const projects = defineCollection({
 	}),
 });
 
-export const collections = { articles, projects };
+const chirps = defineCollection({
+	type: 'data',
+	schema: z.object({
+		date: z.coerce.date(),
+		content: z.string().max(140),
+		tags: z.array(z.string()).default([]),
+		link: z.union([z.string().url(), z.literal('')]).optional(),
+		image: z.string().optional(),
+		draft: z.boolean().default(false),
+	}),
+});
+
+export const collections = { articles, projects, chirps };

@@ -10,6 +10,7 @@ const mobileArrowIcon = 'https://www.figma.com/api/mcp/asset/77960c8b-bbc5-4b06-
 const currentPath = Astro.url?.pathname ?? '';
 const isProjects = currentPath.startsWith('/projects');
 const isArticles = currentPath.startsWith('/articles');
+const isChirps = currentPath.startsWith('/chirps');
 ---
 
 <div class="base-layout">
@@ -44,6 +45,17 @@ const isArticles = currentPath.startsWith('/articles');
 						)}
 						Projects
 					</a>
+					<a
+						class={`sidebar__overlay-link${isChirps ? ' sidebar__overlay-link--active' : ''}`}
+						href="/chirps/"
+					>
+						{isChirps && (
+							<span class="sidebar__overlay-arrow" aria-hidden="true">
+								<img src={mobileArrowIcon} alt="" />
+							</span>
+						)}
+						Chirps
+					</a>
 				</nav>
 				<div class="sidebar__overlay-spacer" aria-hidden="true"></div>
 				<div class="sidebar__overlay-icons" aria-hidden="true">
@@ -67,6 +79,7 @@ const isArticles = currentPath.startsWith('/articles');
 				<nav class="sidebar__nav" aria-label="Main">
 					<a href="/articles/">Articles</a>
 					<a href="/projects/">Projects</a>
+					<a href="/chirps/">Chirps</a>
 				</nav>
 				<button type="button" class="sidebar__control-link" id="control-panel-toggle" data-control-panel>
 					CTRL PANEL

@@ -117,7 +117,7 @@ export default config({
 	ui: {
 		brand: { name: 'CL-01W' },
 		navigation: {
-			Content: ['articles', 'projects'],
+			Content: ['articles', 'projects', 'chirps'],
 		},
 	},
 	collections: {
@@ -180,6 +180,33 @@ export default config({
 				}),
 				draft: fields.checkbox({ label: 'Draft' }),
 				content: fields.mdx({ label: 'Content', components: mdxComponents }),
+			},
+		}),
+		chirps: collection({
+			label: 'Chirps',
+			path: 'src/content/chirps/*',
+			format: { data: 'yaml' },
+			schema: {
+				date: fields.datetime({ label: 'Date', validation: { isRequired: true } }),
+				content: fields.text({
+					label: 'Content',
+					multiline: true,
+					validation: { isRequired: true, length: { max: 140 } },
+				}),
+				tags: fields.array(fields.text({ label: 'Tag' }), {
+					label: 'Tags',
+					itemLabel: (props) => props.value,
+				}),
+				link: fields.text({
+					label: 'Link',
+					description: 'Optional URL. Example: https://example.com',
+				}),
+				image: fields.image({
+					label: 'Image',
+					directory: 'public/keystatic/chirps',
+					publicPath: '/keystatic/chirps/',
+				}),
+				draft: fields.checkbox({ label: 'Draft' }),
 			},
 		}),
 	},
