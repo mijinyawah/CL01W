@@ -187,7 +187,11 @@ export default config({
 			path: 'src/content/chirps/*',
 			format: { data: 'yaml' },
 			schema: {
-				date: fields.datetime({ label: 'Date', validation: { isRequired: true } }),
+				date: fields.text({
+					label: 'Date (ISO)',
+					description: 'Use ISO 8601 with timezone, e.g. 2026-02-15T10:30:00-05:00',
+					validation: { isRequired: true },
+				}),
 				content: fields.text({
 					label: 'Content',
 					multiline: true,
