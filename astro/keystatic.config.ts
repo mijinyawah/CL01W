@@ -108,6 +108,13 @@ const mdxComponents = {
 	}),
 };
 
+const authorRoleOptions = [
+	{ label: 'Hafsah M, Operator', value: 'Hafsah M, Operator' },
+	{ label: 'Claude (Sonnet 4.5)', value: 'Claude (Sonnet 4.5)' },
+	{ label: 'Claude (Opus 4.6)', value: 'Claude (Opus 4.6)' },
+	{ label: 'Chat GPT (4.2-Codex)', value: 'Chat GPT (4.2-Codex)' },
+];
+
 export default config({
 	storage: {
 		kind: 'github',
@@ -143,8 +150,12 @@ export default config({
 				type: fields.text({ label: 'Type' }),
 				authors: fields.array(
 					fields.object({
-						name: fields.text({ label: 'Name' }),
-						role: fields.text({ label: 'Role' }),
+						name: fields.text({ label: 'Name', validation: { isRequired: true } }),
+						role: fields.select({
+							label: 'Role',
+							options: authorRoleOptions,
+							validation: { isRequired: true },
+						}),
 					}),
 					{
 						label: 'Authors',
