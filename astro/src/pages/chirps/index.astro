@@ -7,7 +7,25 @@ const timeZone = 'America/Detroit';
 
 const chirps = (await getCollection('chirps'))
 	.filter((entry) => !entry.data.draft)
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+	.sort((a, b) => getChirpTimestamp(b.data.date) - getChirpTimestamp(a.data.date));
+
+function parseChirpDate(value: string): Date {
+	const hasOffset = /[zZ]|[+-]\\d{2}:?\\d{2}$/.test(value);
+	if (hasOffset) {
+		return new Date(value);
+	}
+	const [datePart, timePart = '00:00'] = value.split('T');
+	const [year, month, day] = datePart.split('-').map((part) => Number(part));
+	const [hour, minute] = timePart.split(':').map((part) => Number(part));
+	const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+	const tzDate = new Date(utcDate.toLocaleString('en-US', { timeZone }));
+	const offsetMs = utcDate.getTime() - tzDate.getTime();
+	return new Date(utcDate.getTime() + offsetMs);
+}
+
+function getChirpTimestamp(value: string): number {
+	return parseChirpDate(value).getTime();
+}
 
 function formatDate(d: Date): string {
 	const parts = new Intl.DateTimeFormat('en-US', {
@@ -34,22 +52,25 @@ function formatTime(d: Date): string {
 <BaseLayout title="CL-01W — Chirps" description="Short updates from the CL-01W experiment log.">
 	<Layout>
 		<div class="chirp-list">
-			{chirps.map((entry) => (
-				<a class="chirp-card" href={`/chirps/${entry.id}/`}>
-					<div class="chirp-card__meta">
-						<span class="chirp-card__pill">{formatDate(entry.data.date)}</span>
-						<span class="chirp-card__time">{formatTime(entry.data.date)}</span>
-					</div>
-					<p class="chirp-card__content">{entry.data.content}</p>
-					{entry.data.tags.length ? (
-						<div class="chirp-card__tags">
-							{entry.data.tags.map((tag) => (
-								<span class="chirp-card__tag">{tag}</span>
-							))}
+			{chirps.map((entry) => {
+				const parsedDate = parseChirpDate(entry.data.date);
+				return (
+					<a class="chirp-card" href={`/chirps/${entry.id}/`}>
+						<div class="chirp-card__meta">
+							<span class="chirp-card__pill">{formatDate(parsedDate)}</span>
+							<span class="chirp-card__time">{formatTime(parsedDate)}</span>
 						</div>
-					) : null}
-				</a>
-			))}
+						<p class="chirp-card__content">{entry.data.content}</p>
+						{entry.data.tags.length ? (
+							<div class="chirp-card__tags">
+								{entry.data.tags.map((tag) => (
+									<span class="chirp-card__tag">{tag}</span>
+								))}
+							</div>
+						) : null}
+					</a>
+				);
+			})}
 		</div>
 	</Layout>
 </BaseLayout>
