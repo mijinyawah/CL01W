@@ -154,7 +154,7 @@ export default config({
 						role: fields.select({
 							label: 'Role',
 							options: authorRoleOptions,
-							validation: { isRequired: true },
+							defaultValue: authorRoleOptions[0].value,
 						}),
 					}),
 					{
