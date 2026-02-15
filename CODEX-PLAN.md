@@ -1,7 +1,7 @@
 # CL-01W Codex Plan
 
 ## Status
-Approved by stakeholder. Implementation must wait for explicit sign-off before any code changes.
+Active maintenance. Core site + Chirps shipped. New scope requires explicit sign-off before implementation.
 
 ## Goals
 1. Translate the Figma “Blog - v2” designs into a production Astro site with 1:1 visual fidelity.
@@ -59,14 +59,14 @@ Approved by stakeholder. Implementation must wait for explicit sign-off before a
 2. Check responsive behavior at 375/768/1200/1440.
 3. Build and deploy via existing Vercel pipeline.
 
-### Phase 7: Chirps — Tweet-Style Microblog
-> Added 2026-02-14. Approved by stakeholder.
+### Phase 7: Chirps — Tweet-Style Microblog (Shipped)
+> Added 2026-02-14. Shipped 2026-02-15.
 
 **Goal:** Add a 140-character microblog feed ("Chirps") with permalinks, Keystatic CMS support, and design matching the existing site aesthetic.
 
 **Schema:** `date` (datetime, required), `content` (string, max 140, required), `tags` (string[], optional), `link` (URL, optional), `image` (optional), `draft` (boolean)
 
-**Steps:**
+**Implementation (completed):**
 
 1. **Content collection** — Add `chirps` data collection to `src/content/config.ts`
    - `type: 'data'` (no MDX body — chirp text lives in frontmatter as YAML)
@@ -110,7 +110,7 @@ Approved by stakeholder. Implementation must wait for explicit sign-off before a
 
 7. **Verify** — `npm run dev`, test feed + detail + Keystatic + nav + mobile
 
-**Design rules:**
+**Design rules (current):**
 - Same card bg/border/hover as articles
 - Body font for chirp text (pixel font reserved for titles)
 - 140-char limit enforced at Keystatic UI + Zod schema (belt and suspenders)
@@ -131,6 +131,7 @@ Approved by stakeholder. Implementation must wait for explicit sign-off before a
 3. Keystatic specifics (schema, content location, deployment) require alignment to avoid breaking routes.
 4. `fields.url` availability in `@keystatic/core` 0.5.48 — fallback to `fields.text` if needed.
 5. Data collection ID format: Astro 5 uses filename (minus extension) as entry `id`. Detail page routes via `chirp.id`, not `chirp.slug`.
+6. Keystatic `fields.datetime` can serialize YAML timestamps; keep chirp dates as ISO strings or resave entries if errors appear.
 
 ## Stakeholder Sign-Off
-Implementation must not begin until the stakeholder explicitly approves the plan.
+Any new phase or scope expansion must be explicitly approved before implementation.
