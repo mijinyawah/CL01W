@@ -4,11 +4,62 @@ interface Props {
 	title?: string;
 }
 
+function parseTimeToSeconds(raw: string | null): string | null {
+	if (!raw) return null;
+	if (/^\d+$/.test(raw)) return raw;
+	const match = raw.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/i);
+	if (!match) return null;
+	const hours = Number(match[1] ?? 0);
+	const minutes = Number(match[2] ?? 0);
+	const seconds = Number(match[3] ?? 0);
+	const total = hours * 3600 + minutes * 60 + seconds;
+	return total ? String(total) : null;
+}
+
+function toYouTubeEmbed(url: string): string {
+	try {
+		const parsed = new URL(url);
+		const host = parsed.hostname.replace(/^www\./, '');
+		const isShort = host === 'youtu.be';
+		const isYouTube = host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com';
+		let id = '';
+
+		if (isShort) {
+			id = parsed.pathname.slice(1).split('/')[0] ?? '';
+		} else if (isYouTube || host.endsWith('youtube.com')) {
+			if (parsed.pathname.startsWith('/watch')) {
+				id = parsed.searchParams.get('v') ?? '';
+			} else if (parsed.pathname.startsWith('/embed/')) {
+				id = parsed.pathname.split('/')[2] ?? '';
+			} else if (parsed.pathname.startsWith('/shorts/')) {
+				id = parsed.pathname.split('/')[2] ?? '';
+			}
+		}
+
+		if (!id) return url;
+
+		const embedBase = host === 'youtube-nocookie.com'
+			? 'https://www.youtube-nocookie.com/embed/'
+			: 'https://www.youtube.com/embed/';
+		const params = new URLSearchParams();
+		const start = parseTimeToSeconds(parsed.searchParams.get('t')) ?? parseTimeToSeconds(parsed.searchParams.get('start'));
+		if (start) params.set('start', start);
+		const list = parsed.searchParams.get('list');
+		if (list) params.set('list', list);
+		params.set('rel', '0');
+		const query = params.toString();
+		return `${embedBase}${id}${query ? `?${query}` : ''}`;
+	} catch {
+		return url;
+	}
+}
+
 const { src, title = 'Video' } = Astro.props;
+const embedSrc = toYouTubeEmbed(src);
 ---
 
 <div class="video-embed">
-	<button type="button" class="video-embed__trigger" data-lightbox data-lightbox-src={src} data-lightbox-type="video" data-lightbox-title={title}>
+	<button type="button" class="video-embed__trigger" data-lightbox data-lightbox-src={embedSrc} data-lightbox-type="video" data-lightbox-title={title}>
 		<span class="video-embed__play" aria-hidden="true">▶</span>
 		<span class="video-embed__label">Play video</span>
 	</button>
