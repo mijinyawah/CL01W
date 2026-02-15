@@ -43,6 +43,7 @@ const projects = defineCollection({
 const chirps = defineCollection({
 	type: 'data',
 	schema: z.object({
+		slug: z.string().optional(),
 		date: z.coerce.date(),
 		content: z.string().max(140),
 		tags: z.array(z.string()).default([]),

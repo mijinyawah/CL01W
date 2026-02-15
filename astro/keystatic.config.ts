@@ -184,9 +184,14 @@ export default config({
 		}),
 		chirps: collection({
 			label: 'Chirps',
+			slugField: 'slug',
 			path: 'src/content/chirps/*',
 			format: { data: 'yaml' },
 			schema: {
+				slug: fields.slug({
+					name: { label: 'ID', description: 'Used in the URL and filename.' },
+					slug: { label: 'Slug' },
+				}),
 				date: fields.text({
 					label: 'Date (ISO)',
 					description: 'Use ISO 8601 with timezone, e.g. 2026-02-15T10:30:00-05:00',
