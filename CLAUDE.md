@@ -1,6 +1,6 @@
 # CL-01W Project Context
 
-> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-09.
+> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-14.
 
 ---
 
@@ -16,20 +16,57 @@ A personal website documenting Hafsah's experiments building things with AI. The
 
 ---
 
-## Current Status: Fresh Start
+## Current Status: Active Development
 
-Previous iteration archived. Astro scaffold and git history preserved. Rebuilding the site from scratch with lessons learned from the first pass.
+Site is live at cl-01w.vercel.app. Three published articles, one placeholder project. Keystatic CMS integrated for content management via GitHub API. Interactive cursor trail grid with control panel. Fully responsive (desktop/tablet/mobile).
+
+**Next feature:** Chirps (see Queued Work below).
 
 ---
 
 ## Tech Stack
 
-- **Framework:** Astro (content-first, minimal JS, MDX support)
+- **Framework:** Astro 5.17.1 (content-first, minimal JS, MDX support)
+- **CMS:** Keystatic (GitHub-backed, `@keystatic/core` 0.5.48)
+- **Integrations:** MDX, React 18, Vercel SSR adapter
 - **Hosting:** Vercel (auto-deploys from GitHub main branch)
-- **Version control:** GitHub via SSH
+- **Version control:** GitHub via SSH (repo: `mijinyawah/CL01W`)
 - **Design:** Figma
 - **Code editor:** Cursor (primary build tool, with Figma MCP)
-- **Project support:** Claude Cowork (planning, content, research)
+- **Project support:** Claude Code (planning, content, research)
+
+## Site Architecture
+
+```
+astro/
+├── astro.config.mjs          # SSR output, Vercel adapter, MDX + React + Keystatic
+├── keystatic.config.ts       # CMS collections (articles, projects) + MDX components
+├── src/
+│   ├── content/
+│   │   ├── config.ts          # Zod schemas for content collections
+│   │   ├── articles/*.mdx     # 3 published articles
+│   │   └── projects/*.mdx     # 1 placeholder project
+│   ├── layouts/
+│   │   ├── BaseLayout.astro   # HTML shell, fonts, meta
+│   │   └── Layout.astro       # Two-column layout (sidebar + content)
+│   ├── pages/
+│   │   ├── index.astro        # Home (article feed)
+│   │   ├── articles/          # Feed + [...slug] detail
+│   │   └── projects/          # Grid page
+│   ├── components/            # ControlPanel, CursorTrailGrid, ImageBlock, etc.
+│   └── styles/tokens.css      # Full design token system
+└── public/keystatic/          # CMS-uploaded images
+```
+
+### Design Tokens (key values)
+- **Page bg:** `#ffeded` (light pink) | **Content bg:** `#08131b` (dark navy) | **Sidebar bg:** `rgba(255,255,255,0.80)`
+- **Card bg:** `rgba(7,81,135,0.49)` | **Card border:** semi-transparent white | **No border-radius**
+- **Accent:** `#ec8cff` (magenta) | **Links:** `#8f62ff` (purple) | **Code accent:** `rgba(74,246,255,0.40)` (cyan)
+- **Body font:** Urbanist 17px | **Pixel font:** Tiny5 | **Code font:** Fira Code
+- **Eyebrow:** 11px uppercase Urbanist, bordered pills
+- **Content max-width:** 685px (`--content-max`)
+- **Breakpoints:** 1440+ desktop, 1200-1439 desktop-mini, 768-1199 tablet, <767 mobile
+- **Date format:** `JAN 14 | 2026` (uppercase month, pipe separator)
 
 ---
 
@@ -80,6 +117,31 @@ Motion designer and video editor. Proficient in Adobe Suite (AE, Illustrator, Ph
 
 ---
 
+## Queued Work: Chirps Feature
+
+Tweet-style microblog. 140-character posts (OG Twitter limit), each with a permalink. Matches existing site design language.
+
+**Schema:** `date` (datetime, required), `content` (string, max 140, required), `tags` (string[], optional), `link` (URL, optional), `image` (optional), `draft` (boolean)
+
+**Implementation — 7 steps:**
+1. Add `chirps` data collection to `src/content/config.ts` (Zod schema, `type: 'data'`)
+2. Add `chirps` collection to `keystatic.config.ts` (`format: { data: 'yaml' }`, 140-char text field, update UI nav)
+3. Create `src/pages/chirps/index.astro` — feed page (reverse-chron timeline, same card styling as articles but compact)
+4. Create `src/pages/chirps/[...slug].astro` — detail page (chirp at 25px, prev/all/next nav, optional link/image)
+5. Update `src/layouts/Layout.astro` — add "Chirps" to desktop nav + mobile overlay nav with active state
+6. Create seed chirp at `src/content/chirps/first-chirp.yaml`
+7. Test: dev server, feed, detail pages, Keystatic CMS, nav active states, mobile layout
+
+**Design rules for chirps:**
+- Same `--snippet-bg`, `--snippet-border`, hover behavior as article cards
+- 16px 24px padding (slightly tighter than articles' 20px 24px)
+- Body font for chirp text (not pixel font — conversational, not headline)
+- Date pill in eyebrow style + time as secondary element
+- Tags in magenta (`--content-title`)
+- `white-space: pre-wrap` for line breaks within 140 chars
+- Mobile: `clamp(300px, 90vw, 317px)` card width
+- Detail page: content at 25px (H2 size), footer with prev/all chirps/next
+
 ## Decisions Log
 
 | Date | Decision | Rationale |
@@ -89,3 +151,6 @@ Motion designer and video editor. Proficient in Adobe Suite (AE, Illustrator, Ph
 | 2026-02-08 | SSH over HTTPS for GitHub | One-time setup, no token management |
 | 2026-02-09 | Fresh start on implementation | First iteration taught the workflow; rebuilding with cleaner approach |
 | 2026-02-09 | CSS trail grid over canvas grid | Pure CSS transitions instead of requestAnimationFrame — simpler, more performant |
+| 2026-02-14 | Chirps as `type: 'data'` collection | No MDX body needed — 140 chars lives in frontmatter. YAML files, not MDX |
+| 2026-02-14 | 140 char limit (OG Twitter) | Enforced at Keystatic UI level + Zod schema level. Belt and suspenders |
+| 2026-02-14 | Body font for chirp text | Chirps are conversational — pixel font reserved for titles/headlines |
