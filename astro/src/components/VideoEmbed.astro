@@ -2,6 +2,7 @@
 interface Props {
 	src: string;
 	title?: string;
+	poster?: string;
 }
 
 function parseTimeToSeconds(raw: string | null): string | null {
@@ -54,12 +55,48 @@ function toYouTubeEmbed(url: string): string {
 	}
 }
 
-const { src, title = 'Video' } = Astro.props;
+function toYouTubeId(url: string): string | null {
+	try {
+		const parsed = new URL(url);
+		const host = parsed.hostname.replace(/^www\./, '');
+		const isShort = host === 'youtu.be';
+		const isYouTube = host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com';
+
+		if (isShort) return parsed.pathname.slice(1).split('/')[0] ?? null;
+		if (!isYouTube && !host.endsWith('youtube.com')) return null;
+
+		if (parsed.pathname.startsWith('/watch')) return parsed.searchParams.get('v');
+		if (parsed.pathname.startsWith('/embed/')) return parsed.pathname.split('/')[2] ?? null;
+		if (parsed.pathname.startsWith('/shorts/')) return parsed.pathname.split('/')[2] ?? null;
+		return null;
+	} catch {
+		return null;
+	}
+}
+
+function toYouTubeThumbnail(url: string): string | null {
+	const id = toYouTubeId(url);
+	if (!id) return null;
+	return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+}
+
+const { src, title = 'Video', poster } = Astro.props;
 const embedSrc = toYouTubeEmbed(src);
+const youtubeThumb = toYouTubeThumbnail(src);
+const thumbSrc = poster || youtubeThumb;
+const thumbStyle = thumbSrc ? `background-image: url('${thumbSrc}');` : undefined;
 ---
 
 <div class="video-embed">
-	<button type="button" class="video-embed__trigger" data-lightbox data-lightbox-src={embedSrc} data-lightbox-type="video" data-lightbox-title={title}>
+	<button
+		type="button"
+		class="video-embed__trigger"
+		style={thumbStyle}
+		data-lightbox
+		data-lightbox-src={embedSrc}
+		data-lightbox-type="video"
+		data-lightbox-title={title}
+	>
 		<span class="video-embed__play" aria-hidden="true">▶</span>
 		<span class="video-embed__label">Play video</span>
 	</button>
@@ -71,6 +108,7 @@ const embedSrc = toYouTubeEmbed(src);
 	}
 
 	.video-embed__trigger {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -79,6 +117,9 @@ const embedSrc = toYouTubeEmbed(src);
 		min-height: 200px;
 		padding: 32px;
 		background: var(--codeblock-bg);
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 		border: 1px solid var(--snippet-border);
 		cursor: pointer;
 		font-family: var(--font-body);
@@ -87,9 +128,22 @@ const embedSrc = toYouTubeEmbed(src);
 		transition: border-color 0.15s ease, background 0.15s ease;
 	}
 
+	.video-embed__trigger::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(5, 18, 28, 0.75) 0%, rgba(5, 18, 28, 0.75) 100%);
+		opacity: 0;
+		transition: opacity 0.15s ease;
+	}
+
 	.video-embed__trigger:hover {
 		border-color: var(--meta-border);
 		background: #0f2635;
+	}
+
+	.video-embed__trigger:hover::before {
+		opacity: 1;
 	}
 
 	.video-embed__play {
@@ -100,6 +154,13 @@ const embedSrc = toYouTubeEmbed(src);
 		height: 56px;
 		font-size: 24px;
 		color: var(--content-title);
+		position: relative;
+		z-index: 1;
+	}
+
+	.video-embed__label {
+		position: relative;
+		z-index: 1;
 	}
 
 	@media (max-width: 767px) {
