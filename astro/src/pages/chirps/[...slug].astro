@@ -112,7 +112,6 @@ const parsedDate = parseChirpDate(entry.data.date);
 					) : (
 						<span class="chirp__nav-link chirp__nav-link--placeholder" aria-hidden="true" />
 					)}
-					<a class="chirp__nav-link" href="/chirps/">all chirps</a>
 					{next ? (
 						<a class="chirp__nav-link" href={`/chirps/${next.id}/`}>next</a>
 					) : (
@@ -235,8 +234,8 @@ const parsedDate = parseChirpDate(entry.data.date);
 
 	.chirp__nav-link {
 		font-family: var(--font-pixel);
-		font-size: var(--text-pixel-jumbo-size);
-		line-height: var(--text-pixel-jumbo-line);
+		font-size: var(--text-pixel-mini-size);
+		line-height: var(--text-pixel-mini-line);
 		color: var(--content-title);
 		text-decoration: none;
 		text-transform: uppercase;

@@ -10,10 +10,19 @@
 	border-radius: 0 !important;
 }
 
+@font-face {
+	font-family: 'BitBlox Monospaced';
+	src: url('/fonts/BitBlox_Monospaced.otf') format('opentype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
+
 	/* Fonts */
 	--font-body: 'Urbanist', sans-serif;
-	--font-pixel: 'Tiny5', monospace;
+	--font-pixel: 'BitBlox Monospaced', monospace;
 	--font-eyebrow: 'Urbanist', sans-serif;
 	--font-ui: var(--font-body);
 	--font-code: 'Fira Code', monospace;
@@ -113,6 +122,7 @@
 	--meta-border: var(--border-light);
 	--meta-text: var(--text-on-dark-muted);
 	--cursor-trail: var(--accent-primary);
+	--panel-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 1439px) and (min-width: 1200px) {
@@ -128,7 +138,7 @@
 		--content-pad-y: 28px;
 		--sidebar-pad-top: 24px;
 		--sidebar-pad-right: 16px;
-		--sidebar-pad-bottom: 20px;
+		--sidebar-pad-bottom: 28px;
 		--sidebar-pad-left: 32px;
 		--sidebar-gap: 36px;
 		--sidebar-text-width: 230px;
@@ -154,7 +164,7 @@
 		--content-pad-y: 50px;
 		--sidebar-pad-top: 24px;
 		--sidebar-pad-right: 16px;
-		--sidebar-pad-bottom: 20px;
+		--sidebar-pad-bottom: 24px;
 		--sidebar-pad-left: 32px;
 		--sidebar-gap: 32px;
 		--sidebar-text-width: 220px;

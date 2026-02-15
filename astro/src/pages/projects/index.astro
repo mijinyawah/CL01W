@@ -100,7 +100,8 @@ const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
 		overflow: hidden;
 	}
 
-	.project-card:hover {
+	a.project-card:hover,
+	a.project-card:focus-visible {
 		outline: 1px solid var(--meta-border);
 	}
 

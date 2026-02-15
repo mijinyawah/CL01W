@@ -74,7 +74,7 @@ const isChirps = currentPath.startsWith('/chirps');
 					</label>
 				</div>
 				<p class="sidebar__about">
-					I'm a brand and mograph designer who likes to experiment with new mediums.
+					All opinions, and power (for now, I guess), belongs to the user.
 				</p>
 				<nav class="sidebar__nav" aria-label="Main">
 					<a href="/articles/">Articles</a>
@@ -133,6 +133,7 @@ const isChirps = currentPath.startsWith('/chirps');
 		height: 100%;
 		min-height: 0;
 		background: var(--sidebar-bg);
+		box-shadow: var(--panel-shadow);
 		border-radius: var(--radius-container);
 		padding: var(--sidebar-pad-top) var(--sidebar-pad-right) var(--sidebar-pad-bottom) var(--sidebar-pad-left);
 		display: flex;
@@ -191,17 +192,25 @@ const isChirps = currentPath.startsWith('/chirps');
 	}
 
 	.sidebar__nav a {
+		display: inline-flex;
+		width: fit-content;
 		font-family: var(--font-body);
 		font-weight: 500;
 		font-size: var(--sidebar-nav-size);
 		line-height: var(--sidebar-nav-line);
 		color: var(--text-secondary);
 		text-decoration: none;
+		background-image: linear-gradient(currentColor, currentColor);
+		background-size: 0 1px;
+		background-position: 0 100%;
+		background-repeat: no-repeat;
+		transition: color 0.2s ease, background-size 0.2s ease;
 	}
 
 	.sidebar__nav a:hover,
 	.sidebar__nav a:focus-visible {
-		text-decoration: underline;
+		color: var(--text-primary);
+		background-size: 100% 1px;
 	}
 
 	.sidebar__control-link {
@@ -254,6 +263,7 @@ const isChirps = currentPath.startsWith('/chirps');
 		height: 100%;
 		min-height: 0;
 		background: var(--content-bg);
+		box-shadow: var(--panel-shadow);
 		border-radius: var(--radius-container);
 		padding: 0;
 		overflow: hidden;
@@ -348,6 +358,7 @@ const isChirps = currentPath.startsWith('/chirps');
 			gap: 24px;
 			background-color: transparent;
 			box-sizing: border-box;
+			box-shadow: none;
 		}
 
 		.sidebar__card {
@@ -538,6 +549,7 @@ const isChirps = currentPath.startsWith('/chirps');
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
+			box-shadow: none;
 		}
 
 		/* Internal text padding so content doesn’t touch screen edges */
@@ -557,6 +569,7 @@ const isChirps = currentPath.startsWith('/chirps');
 			padding: 24px 16px 32px;
 			background: var(--content-bg);
 			color: var(--content-body);
+			text-align: center;
 		}
 	}
 
