@@ -1,26 +1,28 @@
-# CL-01W Project Context
+# CL-01W — AI Experiment Log Site
 
-> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-14.
-
----
-
-## What This Project Is
-
-A personal website documenting Hafsah's experiments building things with AI. The site itself is proof of concept — a human and an AI built it together, and the process is part of the story.
-
-**Project ID:** CL-01W
-**Owner:** Hafsah Mijinyawa
-**Repo:** git@github.com:mijinyawah/cl-01w.git
-**Live URL:** cl-01w.vercel.app
-**Figma wireframes:** https://www.figma.com/design/ZppG0NGKHwQhFylxGUvJ7k
+> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-15.
 
 ---
 
-## Current Status: Active Development
+## Overview
 
-Site is live at cl-01w.vercel.app. Three published articles, one placeholder project. Keystatic CMS integrated for content management via GitHub API. Interactive cursor trail grid with control panel. Fully responsive (desktop/tablet/mobile).
+- **Project ID:** CL-01W
+- **Type:** Website
+- **Owner:** Hafsah Mijinyawa
+- **Repo:** git@github.com:mijinyawah/CL01W.git
+- **Live URL:** cl-01w.vercel.app
+- **Figma wireframes:** https://www.figma.com/design/ZppG0NGKHwQhFylxGUvJ7k
 
-**Next feature:** Chirps (see Queued Work below).
+Astro-based personal site documenting Hafsah's AI build experiments. The site itself is part of the story: a human + AI collaboration with a living record of design, content, and tooling decisions.
+
+---
+
+## Current Status
+
+**Active phase:** Phase 1 — Content + CMS polish  
+**What's happening now:** Chirps are live (feed + detail), Keystatic CMS stable, recent date-schema fixes deployed.  
+**Blocked by:** Nothing.  
+**Next milestone:** Validate Keystatic project creation workflow and do a content QA pass.
 
 ---
 
@@ -45,17 +47,20 @@ astro/
 │   ├── content/
 │   │   ├── config.ts          # Zod schemas for content collections
 │   │   ├── articles/*.mdx     # 3 published articles
-│   │   └── projects/*.mdx     # 1 placeholder project
+│   │   ├── projects/*.mdx     # 1 placeholder project
+│   │   └── chirps/*.yaml      # Chirp data entries (YAML)
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # HTML shell, fonts, meta
 │   │   └── Layout.astro       # Two-column layout (sidebar + content)
 │   ├── pages/
 │   │   ├── index.astro        # Home (article feed)
 │   │   ├── articles/          # Feed + [...slug] detail
-│   │   └── projects/          # Grid page
+│   │   ├── projects/          # Grid page
+│   │   └── chirps/            # Feed + [...slug] detail
 │   ├── components/            # ControlPanel, CursorTrailGrid, ImageBlock, etc.
 │   └── styles/tokens.css      # Full design token system
 └── public/keystatic/          # CMS-uploaded images
+    └── chirps/                # Chirp images (optional)
 ```
 
 ### Design Tokens (key values)
@@ -117,30 +122,15 @@ Motion designer and video editor. Proficient in Adobe Suite (AE, Illustrator, Ph
 
 ---
 
-## Queued Work: Chirps Feature
+## Chirps (Implemented)
 
 Tweet-style microblog. 140-character posts (OG Twitter limit), each with a permalink. Matches existing site design language.
 
-**Schema:** `date` (datetime, required), `content` (string, max 140, required), `tags` (string[], optional), `link` (URL, optional), `image` (optional), `draft` (boolean)
+**Storage:** `astro/src/content/chirps/*.yaml` (data collection)  
+**Schema:** `date` (ISO string), `content` (max 140), `tags` (string[]), `link` (optional URL), `image` (optional), `draft` (boolean)  
+**UI:** feed at `/chirps/`, detail at `/chirps/[slug]`, nav link in sidebar
 
-**Implementation — 7 steps:**
-1. Add `chirps` data collection to `src/content/config.ts` (Zod schema, `type: 'data'`)
-2. Add `chirps` collection to `keystatic.config.ts` (`format: { data: 'yaml' }`, 140-char text field, update UI nav)
-3. Create `src/pages/chirps/index.astro` — feed page (reverse-chron timeline, same card styling as articles but compact)
-4. Create `src/pages/chirps/[...slug].astro` — detail page (chirp at 25px, prev/all/next nav, optional link/image)
-5. Update `src/layouts/Layout.astro` — add "Chirps" to desktop nav + mobile overlay nav with active state
-6. Create seed chirp at `src/content/chirps/first-chirp.yaml`
-7. Test: dev server, feed, detail pages, Keystatic CMS, nav active states, mobile layout
-
-**Design rules for chirps:**
-- Same `--snippet-bg`, `--snippet-border`, hover behavior as article cards
-- 16px 24px padding (slightly tighter than articles' 20px 24px)
-- Body font for chirp text (not pixel font — conversational, not headline)
-- Date pill in eyebrow style + time as secondary element
-- Tags in magenta (`--content-title`)
-- `white-space: pre-wrap` for line breaks within 140 chars
-- Mobile: `clamp(300px, 90vw, 317px)` card width
-- Detail page: content at 25px (H2 size), footer with prev/all chirps/next
+**Date handling:** Keystatic `fields.datetime` can serialize YAML timestamps. The content schema coerces Date → ISO string, and pages accept `string | Date` to avoid build failures or “Invalid time value”.
 
 ## Decisions Log
 
@@ -154,3 +144,11 @@ Tweet-style microblog. 140-character posts (OG Twitter limit), each with a perma
 | 2026-02-14 | Chirps as `type: 'data'` collection | No MDX body needed — 140 chars lives in frontmatter. YAML files, not MDX |
 | 2026-02-14 | 140 char limit (OG Twitter) | Enforced at Keystatic UI level + Zod schema level. Belt and suspenders |
 | 2026-02-14 | Body font for chirp text | Chirps are conversational — pixel font reserved for titles/headlines |
+| 2026-02-15 | Coerce chirp dates to ISO strings in schema | Keystatic datetime writes YAML timestamps; avoids Astro schema mismatch |
+| 2026-02-15 | Normalize chirp timestamps to ISO Z | Prevent invalid time parsing and build failures |
+| 2026-02-15 | Removed two bugged chirps | Unblocked builds and removed invalid data |
+
+## Known Issues & Gotchas
+
+- Keystatic `fields.datetime` may serialize YAML timestamps. Keep chirp `date` values as ISO strings or resave entries if you see “Invalid time value”.
+- If a build error says “Expected type string, received date”, check the chirp YAML for an unquoted date and resave through Keystatic.
