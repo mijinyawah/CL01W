@@ -64,6 +64,7 @@
 	--sidebar-bg: rgba(255, 255, 255, 0.80);
 	--card-bg: rgba(7, 81, 135, 0.49);
 	--codeblock-bg: #001a2b;
+	--blockquote-bg: #001a2b;
 	--quote-bg: rgba(147, 49, 166, 0.44);
 
 	/* Text */
@@ -73,6 +74,7 @@
 	--text-on-dark: #ffffff;
 	--text-on-dark-muted: rgba(255, 255, 255, 0.80);
 	--text-code: rgba(74, 246, 255, 0.40);
+	--blockquote-text: #00fffb;
 
 	/* Accents */
 	--accent-primary: #ec8cff;

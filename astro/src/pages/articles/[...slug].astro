@@ -263,6 +263,16 @@ function formatDate(d: Date): string {
 		color: var(--text-code);
 	}
 
+	.article__body :global(blockquote) {
+		background: var(--blockquote-bg);
+	}
+
+	.article__body :global(blockquote p),
+	.article__body :global(blockquote ul),
+	.article__body :global(blockquote li) {
+		color: var(--blockquote-text);
+	}
+
 	.article__body :global(code) {
 		font-family: var(--font-code);
 		font-size: var(--text-code-size);
@@ -346,11 +356,10 @@ function formatDate(d: Date): string {
 		}
 
 		.article__body :global(blockquote) {
-			background: #001a2b;
 			width: 350px;
 			max-width: 350px;
 			margin: 25px;
-			padding: 20px;
+			padding: 20px 17px;
 		}
 
 		.article__body :global(blockquote ul) {
@@ -363,10 +372,14 @@ function formatDate(d: Date): string {
 			width: 300px;
 		}
 
+		.article__body :global(blockquote p) {
+			padding: 0;
+		}
+
 		.article__body :global(blockquote p),
 		.article__body :global(blockquote ul),
 		.article__body :global(blockquote li) {
-			color: #00fffb;
+			color: var(--blockquote-text);
 		}
 
 		.article__header {
@@ -376,6 +389,7 @@ function formatDate(d: Date): string {
 		.article__title {
 			font-size: 48px;
 			line-height: 52px;
+			margin: 24px 0 24px;
 			overflow-wrap: anywhere;
 		}
 
