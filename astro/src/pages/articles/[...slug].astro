@@ -102,7 +102,7 @@ function formatDate(d: Date): string {
 	}
 
 	.article__header {
-		padding: 0 50px 32px;
+		padding: 28px 50px 32px;
 	}
 
 	.article__meta {
@@ -129,7 +129,7 @@ function formatDate(d: Date): string {
 		font-size: var(--text-pixel-jumbo-size);
 		line-height: var(--text-pixel-jumbo-line);
 		color: var(--content-title);
-		margin: 0 0 24px;
+		margin: 30px 0 24px;
 	}
 
 	.article__byline {
@@ -206,7 +206,7 @@ function formatDate(d: Date): string {
 		line-height: var(--text-body-line);
 		letter-spacing: var(--text-body-letter);
 		color: var(--content-body);
-		padding: 0 50px;
+		padding: 0 30px;
 		max-width: var(--content-max);
 		margin: 0 0 16px;
 	}
@@ -340,7 +340,7 @@ function formatDate(d: Date): string {
 
 	@media (max-width: 1439px) and (min-width: 1200px) {
 		.article__header {
-			padding: 0 36px 28px;
+			padding: 28px 36px 28px;
 		}
 
 		.article__title {
@@ -396,6 +396,12 @@ function formatDate(d: Date): string {
 		.article__nav-link {
 			font-size: var(--text-pixel-mini-size);
 			line-height: var(--text-pixel-mini-line);
+		}
+	}
+
+	@media (min-width: 1200px) {
+		.article__body :global(blockquote p) {
+			margin: 20px 0;
 		}
 	}
 
