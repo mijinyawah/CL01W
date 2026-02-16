@@ -38,6 +38,17 @@ const { type } = Astro.props;
 		border-left-color: #c86400;
 	}
 
+	@media (max-width: 1199px) and (min-width: 768px) {
+		.callout {
+			width: 350px;
+			margin: 0 20px 24px 25px;
+		}
+
+		.callout :global(p) {
+			padding: 0 10px;
+		}
+	}
+
 	@media (max-width: 767px) {
 		.callout {
 			margin: 0 18px 20px;
