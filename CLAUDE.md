@@ -1,6 +1,6 @@
 # CL-01W — AI Experiment Log Site
 
-> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-15.
+> Shared context for any AI working on this project (Cursor, Cowork, Claude Code). Last updated: 2026-02-16.
 
 ---
 
@@ -65,10 +65,11 @@ astro/
 
 ### Design Tokens (key values)
 - **Page bg:** `#ffeded` (light pink) | **Content bg:** `#08131b` (dark navy) | **Sidebar bg:** `rgba(255,255,255,0.80)`
-- **Card bg:** `rgba(7,81,135,0.49)` | **Card border:** semi-transparent white | **No border-radius**
+- **Card bg:** `rgba(7,81,135,0.49)` | **Snippet cards:** transparent w/ border | **No border-radius**
 - **Accent:** `#ec8cff` (magenta) | **Links:** `#8f62ff` (purple) | **Code accent:** `rgba(74,246,255,0.40)` (cyan)
-- **Body font:** Urbanist 17px | **Pixel font:** Tiny5 | **Code font:** Fira Code
+- **Body font:** Urbanist 17px | **Pixel font:** BitBlox Monospaced (local OTF) | **Code font:** Fira Code
 - **Eyebrow:** 11px uppercase Urbanist, bordered pills
+- **Blockquote:** bg `#001A2B`, text `#00FFFB`
 - **Content max-width:** 685px (`--content-max`)
 - **Breakpoints:** 1440+ desktop, 1200-1439 desktop-mini, 768-1199 tablet, <767 mobile
 - **Date format:** `JAN 14 | 2026` (uppercase month, pipe separator)
@@ -92,6 +93,7 @@ astro/
 - Sans-serif for body text
 - Green accent color (#2dd4a0)
 - Metadata in small bordered tag pills
+- Subtle panel drop shadow + underline-reveal hover on sidebar nav
 - Minimal, code-adjacent aesthetic
 
 ### Interactive Background
@@ -147,6 +149,9 @@ Tweet-style microblog. 140-character posts (OG Twitter limit), each with a perma
 | 2026-02-15 | Coerce chirp dates to ISO strings in schema | Keystatic datetime writes YAML timestamps; avoids Astro schema mismatch |
 | 2026-02-15 | Normalize chirp timestamps to ISO Z | Prevent invalid time parsing and build failures |
 | 2026-02-15 | Removed two bugged chirps | Unblocked builds and removed invalid data |
+| 2026-02-16 | Swap pixel font to BitBlox Monospaced | Use local pixel font instead of Google Tiny5 |
+| 2026-02-16 | UI polish pass across breakpoints | Transparent snippet cards, panel shadow, sidebar hover, linked-only project hover, chirp nav sizing, tablet/desktop spacing refinements |
+| 2026-02-16 | Blockquote & callout tablet sizing | Fixed widths, padding, and colors for readability |
 
 ## Known Issues & Gotchas
 
