@@ -210,7 +210,7 @@ export default config({
 				content: fields.text({
 					label: 'Content',
 					multiline: true,
-					validation: { isRequired: true, length: { max: 140 } },
+					validation: { isRequired: true, length: { max: 500 } },
 				}),
 				tags: fields.array(fields.text({ label: 'Tag' }), {
 					label: 'Tags',

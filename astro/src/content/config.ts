@@ -48,7 +48,7 @@ const chirps = defineCollection({
 			(value) => (value instanceof Date ? value.toISOString() : value),
 			z.string()
 		),
-		content: z.string().max(140),
+		content: z.string().max(500),
 		tags: z.array(z.string()).default([]),
 		link: z.union([z.string().url(), z.literal('')]).optional(),
 		image: z.string().optional(),
