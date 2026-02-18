@@ -16,14 +16,7 @@ const articles = defineCollection({
 		date: z.date().optional(),
 		category: z.string().optional(),
 		type: z.string().optional(),
-		authors: z
-			.array(
-				z.object({
-					name: z.string(),
-					role: z.string(),
-				})
-			)
-			.default([]),
+		authors: z.array(z.string()).default([]),
 		draft: z.boolean().default(false),
 	}),
 });

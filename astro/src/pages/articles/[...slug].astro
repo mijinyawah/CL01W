@@ -29,6 +29,11 @@ function formatDate(d: Date): string {
 	const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 	return `${months[d.getMonth()]} ${d.getDate()} | ${d.getFullYear()}`;
 }
+
+function splitAuthor(author: string): { name: string; role: string } {
+	const [name, role] = author.split(' / ');
+	return { name: name ?? author, role: role ?? '' };
+}
 ---
 
 <BaseLayout
@@ -48,12 +53,15 @@ function formatDate(d: Date): string {
 				<h1 class="article__title">{entry.data.title}</h1>
 				{entry.data.authors.length ? (
 					<div class="article__byline">
-						{entry.data.authors.map((author) => (
-							<div class="article__author">
-								<span class="article__author-name">{author.name}</span>
-								<span class="article__author-role">{author.role}</span>
-							</div>
-						))}
+						{entry.data.authors.map((author) => {
+							const { name, role } = splitAuthor(author);
+							return (
+								<div class="article__author">
+									<span class="article__author-name">{name}</span>
+									{role ? <span class="article__author-role">{role}</span> : null}
+								</div>
+							);
+						})}
 					</div>
 				) : null}
 			</header>
