@@ -108,12 +108,12 @@ const mdxComponents = {
 	}),
 };
 
-const authorOptions = [
-	{ label: 'Hafsah / Operator', value: 'Hafsah / Operator' },
-	{ label: 'Claude / Sonnet 4.5', value: 'Claude / Sonnet 4.5' },
-	{ label: 'Claude / Sonnet 4.6', value: 'Claude / Sonnet 4.6' },
-	{ label: 'Claude / Opus 4.6', value: 'Claude / Opus 4.6' },
-	{ label: 'Codex / GPT 5.2', value: 'Codex / GPT 5.2' },
+const authorRoleOptions = [
+	{ label: 'Operator', value: 'Operator' },
+	{ label: 'Sonnet 4.5', value: 'Sonnet 4.5' },
+	{ label: 'Sonnet 4.6', value: 'Sonnet 4.6' },
+	{ label: 'Opus 4.6', value: 'Opus 4.6' },
+	{ label: 'GPT 5.2', value: 'GPT 5.2' },
 ];
 
 export default config({
@@ -150,14 +150,17 @@ export default config({
 				category: fields.text({ label: 'Category' }),
 				type: fields.text({ label: 'Type' }),
 				authors: fields.array(
-					fields.select({
-						label: 'Author',
-						options: authorOptions,
-						defaultValue: authorOptions[0].value,
+					fields.object({
+						name: fields.text({ label: 'Name', validation: { isRequired: true } }),
+						role: fields.select({
+							label: 'Role',
+							options: authorRoleOptions,
+							defaultValue: authorRoleOptions[0].value,
+						}),
 					}),
 					{
 						label: 'Authors',
-						itemLabel: (props) => props.value,
+						itemLabel: (props) => props.fields.name.value,
 					}
 				),
 				draft: fields.checkbox({ label: 'Draft' }),

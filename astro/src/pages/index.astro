@@ -12,10 +12,6 @@ function formatDate(d: Date): string {
 	return `${months[d.getMonth()]} ${d.getDate()} | ${d.getFullYear()}`;
 }
 
-function splitAuthor(author: string): { name: string; role: string } {
-	const [name, role] = author.split(' / ');
-	return { name: name ?? author, role: role ?? '' };
-}
 ---
 
 <BaseLayout
@@ -40,15 +36,12 @@ function splitAuthor(author: string): { name: string; role: string } {
 					<h2 class="snippet-card__title">{entry.data.title}</h2>
 					{entry.data.authors.length ? (
 						<div class="snippet-card__byline">
-							{entry.data.authors.map((author) => {
-								const { name, role } = splitAuthor(author);
-								return (
-									<div class="snippet-card__author">
-										<span class="snippet-card__author-name">{name}</span>
-										{role ? <span class="snippet-card__author-role">{role}</span> : null}
-									</div>
-								);
-							})}
+							{entry.data.authors.map((author) => (
+								<div class="snippet-card__author">
+									<span class="snippet-card__author-name">{author.name}</span>
+									<span class="snippet-card__author-role">{author.role}</span>
+								</div>
+							))}
 						</div>
 					) : null}
 				</a>
